@@ -1,4 +1,4 @@
-package com.bugfullabs.curvnapse.network;
+package com.bugfullabs.curvnapse.server;
 
 import java.util.LinkedList;
 
