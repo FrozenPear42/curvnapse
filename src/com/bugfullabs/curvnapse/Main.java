@@ -19,8 +19,7 @@ public class Main extends Application {
         Group root = new Group();
         Board b = new Board(1000, 800);
         Server server = new Server(1337, 10);
-
-        new ServerConnector("127.0.0.1", 1337);
+        server.start();
 
         root.getChildren().add(b);
         primaryStage.setTitle("Curvnapse");
@@ -29,7 +28,7 @@ public class Main extends Application {
         primaryStage.setScene(new Scene(root));
         primaryStage.setOnCloseRequest(event -> {
             LOG.info("Closing app!");
-            server.stop();
+            server.close();
         });
         primaryStage.show();
 

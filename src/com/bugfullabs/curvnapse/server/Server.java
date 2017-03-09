@@ -7,13 +7,13 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Logger;
 
-public class Server {
+public class Server extends Thread {
     private static final Logger LOG = Logger.getLogger(Server.class.getName());
 
     private Thread mAcceptThread;
     private List<GameThread> mGameThreads;
     private ServerSocket mServerSocket;
-    private LinkedList<Client> mClients;
+    private final LinkedList<Client> mClients;
     private LinkedList<GameLobby> mLobbies;
     private int mMaxGames;
 
@@ -44,13 +44,26 @@ public class Server {
         }
     }
 
-    public void stop() {
+    @Override
+    public void start() {
+        LOG.info("Starting server");
+        super.start();
+    }
+
+    public void close() {
         try {
             mServerSocket.close();
             LOG.info("Closed server socket");
         } catch (Exception e) {
             LOG.warning("Could not stop server socket");
         }
+    }
+
+    @Override
+    public void run() {
+        mClients.parallelStream().filter(Client::hasNewMessage).forEach(c -> {
+            LOG.info(c.getMessage());
+        });
     }
 }
 
