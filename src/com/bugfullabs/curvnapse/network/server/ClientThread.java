@@ -4,6 +4,7 @@ import com.bugfullabs.curvnapse.network.message.Message;
 
 import java.io.*;
 import java.net.Socket;
+import java.net.SocketException;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -32,12 +33,13 @@ public class ClientThread extends Thread {
                 message = (Message) mObjectInputStream.readObject();
                 for (ClientListener listener : mListeners)
                     listener.onClientMessage(this, message);
+            } catch (SocketException e) {
+                LOG.warning("Socket fail");
             } catch (IOException | ClassNotFoundException e) {
                 e.printStackTrace();
             }
         }
     }
-
 
     public void sendMessage(Message pMessage) {
         try {

@@ -1,9 +1,12 @@
 package com.bugfullabs.curvnapse;
 
 import com.bugfullabs.curvnapse.gui.Board;
+import com.bugfullabs.curvnapse.gui.MessageBox;
+import com.bugfullabs.curvnapse.gui.MessageList;
 import com.bugfullabs.curvnapse.network.message.HandshakeMessage;
 import com.bugfullabs.curvnapse.network.message.Message;
 import com.bugfullabs.curvnapse.network.client.ServerConnector;
+import com.bugfullabs.curvnapse.network.message.TextMessage;
 import com.bugfullabs.curvnapse.network.server.Server;
 import javafx.application.Application;
 import javafx.scene.Group;
@@ -20,24 +23,30 @@ public class Main extends Application {
     public void start(Stage primaryStage) throws Exception {
 
         Group root = new Group();
+        MessageBox messageList = new MessageBox();
         Board b = new Board(1000, 800);
-        Server server = new Server(1337, 10);
-        server.start();
 
-        new ServerConnector("127.0.0.1", 1337, "To ja test").sendMessage(new HandshakeMessage("To ja"));
+        try {
+            Server server = new Server(1337, 10);
+            server.start();
+            primaryStage.setOnCloseRequest(event -> {
+                LOG.info("Closing app!");
+                server.close();
+            });
+        } catch (Exception e) {
+            LOG.warning("Could not start server");
+        }
 
-
+        ServerConnector connector = new ServerConnector("127.0.0.1", 1337, "To ja test");
+        messageList.setSendListener(pMessage -> connector.sendMessage(new TextMessage(pMessage)));
         root.getChildren().add(b);
+        root.getChildren().add(messageList);
         primaryStage.setTitle("Curvnapse");
         primaryStage.setWidth(1000);
         primaryStage.setHeight(800);
         primaryStage.setScene(new Scene(root));
-        primaryStage.setOnCloseRequest(event -> {
-            LOG.info("Closing app!");
-            server.close();
-        });
-        primaryStage.show();
 
+        primaryStage.show();
     }
 
     public static void main(String[] args) {

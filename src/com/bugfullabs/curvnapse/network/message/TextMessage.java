@@ -5,11 +5,11 @@ public class TextMessage extends Message {
     private String mMessage;
 
     public TextMessage(String pMessage) {
-        super(Type.HANDSHAKE);
+        super(Type.TEXT);
         mMessage = pMessage;
     }
 
-    public String getmMessage() {
+    public String getMessage() {
         return mMessage;
     }
 }
