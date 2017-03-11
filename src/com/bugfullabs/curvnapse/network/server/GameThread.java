@@ -1,4 +1,4 @@
-package com.bugfullabs.curvnapse.server;
+package com.bugfullabs.curvnapse.network.server;
 
 /**
  * Created by wojciech on 08.03.17.

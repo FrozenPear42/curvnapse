@@ -1,9 +1,9 @@
-package com.bugfullabs.curvnapse.server;
+package com.bugfullabs.curvnapse.network.server;
 
 import java.util.LinkedList;
 
 public class GameLobby {
-    private LinkedList<Client> mClients;
+    private LinkedList<ClientThread> mClientThreads;
     private int mPlayers;
     private int mMaxPlayers;
 

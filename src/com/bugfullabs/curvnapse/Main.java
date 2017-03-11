@@ -1,7 +1,8 @@
 package com.bugfullabs.curvnapse;
 
 import com.bugfullabs.curvnapse.gui.Board;
-import com.bugfullabs.curvnapse.server.Server;
+import com.bugfullabs.curvnapse.network.client.ServerConnector;
+import com.bugfullabs.curvnapse.network.server.Server;
 import javafx.application.Application;
 import javafx.scene.Group;
 import javafx.scene.Scene;

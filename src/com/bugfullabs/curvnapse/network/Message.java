@@ -1,4 +1,4 @@
-package com.bugfullabs.curvnapse;
+package com.bugfullabs.curvnapse.network;
 
 import java.io.Serializable;
 
