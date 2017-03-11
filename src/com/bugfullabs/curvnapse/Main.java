@@ -1,6 +1,8 @@
 package com.bugfullabs.curvnapse;
 
 import com.bugfullabs.curvnapse.gui.Board;
+import com.bugfullabs.curvnapse.network.message.HandshakeMessage;
+import com.bugfullabs.curvnapse.network.message.Message;
 import com.bugfullabs.curvnapse.network.client.ServerConnector;
 import com.bugfullabs.curvnapse.network.server.Server;
 import javafx.application.Application;
@@ -22,7 +24,8 @@ public class Main extends Application {
         Server server = new Server(1337, 10);
         server.start();
 
-        new ServerConnector("127.0.0.1", 1337, "To ja test");
+        new ServerConnector("127.0.0.1", 1337, "To ja test").sendMessage(new HandshakeMessage("To ja"));
+
 
         root.getChildren().add(b);
         primaryStage.setTitle("Curvnapse");

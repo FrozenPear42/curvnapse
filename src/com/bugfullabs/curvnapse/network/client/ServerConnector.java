@@ -1,5 +1,7 @@
 package com.bugfullabs.curvnapse.network.client;
 
+import com.bugfullabs.curvnapse.network.message.Message;
+
 import java.io.*;
 import java.net.Socket;
 import java.util.logging.Logger;
@@ -14,5 +16,13 @@ public class ServerConnector {
         mSocket = new Socket(pIP, pPort);
         mObjectOutputStream = new ObjectOutputStream(mSocket.getOutputStream());
         mObjectInputStream = new ObjectInputStream(mSocket.getInputStream());
+    }
+
+    public void sendMessage(Message pMessage) {
+        try {
+            mObjectOutputStream.writeObject(pMessage);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
