@@ -21,6 +21,8 @@ public class Main extends Application {
         Server server = new Server(1337, 10);
         server.start();
 
+        new ServerConnector("127.0.0.1", 1337, "To ja test");
+
         root.getChildren().add(b);
         primaryStage.setTitle("Curvnapse");
         primaryStage.setWidth(1000);

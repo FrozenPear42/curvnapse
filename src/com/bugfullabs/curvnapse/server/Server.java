@@ -4,50 +4,24 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.logging.Logger;
 
 public class Server extends Thread {
     private static final Logger LOG = Logger.getLogger(Server.class.getName());
 
-    private Thread mAcceptThread;
-    private List<GameThread> mGameThreads;
     private ServerSocket mServerSocket;
-    private final LinkedList<Client> mClients;
+
     private LinkedList<GameLobby> mLobbies;
-    private int mMaxGames;
+    private LinkedList<GameThread> mGameThreads;
+    private MessageDispatcher mMessageDispatcher;
 
     public Server(int pPort, int pMaxGames) throws IOException {
         mServerSocket = new ServerSocket(pPort);
-        mClients = new LinkedList<>();
+        mMessageDispatcher = new MessageDispatcher();
+
         mLobbies = new LinkedList<>();
         mGameThreads = new LinkedList<>();
-        mAcceptThread = new Thread(() -> {
-            Socket clientSocket;
-            LOG.info("Accepting connections...");
-            while (!mServerSocket.isClosed()) {
-                try {
-                    clientSocket = mServerSocket.accept();
-                    mClients.add(new Client(clientSocket));
-                    LOG.info("Connection from " + clientSocket.getInetAddress());
-                } catch (IOException e) {
-                    System.out.print("Could not accept client: " + e.getMessage());
-                }
-            }
-        });
-        mAcceptThread.start();
-    }
-
-    public void broadcastMessage(String pMessage) {
-        for (Client c : mClients) {
-            c.sendMessage(pMessage);
-        }
-    }
-
-    @Override
-    public void start() {
-        LOG.info("Starting server");
-        super.start();
+        mMessageDispatcher.start();
     }
 
     public void close() {
@@ -61,9 +35,17 @@ public class Server extends Thread {
 
     @Override
     public void run() {
-        mClients.parallelStream().filter(Client::hasNewMessage).forEach(c -> {
-            LOG.info(c.getMessage());
-        });
+        Socket clientSocket;
+        LOG.info("Accepting connections...");
+        while (!mServerSocket.isClosed()) {
+            try {
+                clientSocket = mServerSocket.accept();
+                mMessageDispatcher.registerClient(new Client(clientSocket));
+                LOG.info("Connection from " + clientSocket.getInetAddress());
+            } catch (IOException e) {
+                System.out.print("Could not accept client: " + e.getMessage());
+            }
+        }
     }
 }
 
