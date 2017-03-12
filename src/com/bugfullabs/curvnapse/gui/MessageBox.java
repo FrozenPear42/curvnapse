@@ -2,6 +2,8 @@ package com.bugfullabs.curvnapse.gui;
 
 
 import com.bugfullabs.curvnapse.network.message.TextMessage;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
@@ -16,13 +18,19 @@ public class MessageBox extends VBox {
 
     public MessageBox() {
         super();
+        setPadding(new Insets(10.0f));
+        setSpacing(5.0f);
         mMessageList = new MessageList();
         mInputBox = new HBox();
         mTextBox = new TextField();
         mSendButton = new Button(">");
-
         mInputBox.getChildren().add(mTextBox);
         mInputBox.getChildren().add(mSendButton);
+
+        mInputBox.setAlignment(Pos.CENTER);
+        mInputBox.setSpacing(5.0f);
+
+        mTextBox.setPrefColumnCount(20);
 
         mSendButton.setOnAction(event -> {
             mListener.onMessageSend(mTextBox.getText());
