@@ -27,7 +27,6 @@ public class LoginBox extends VBox {
         mIPBox = new LabeledTextBox("IP:");
         mPortBox = new LabeledTextBox("Port:");
         mJoinButton = new Button("Join");
-
         getChildren().addAll(mHost, mNameBox, mIPBox, mPortBox, mJoinButton);
 
         mHost.setOnAction(event -> {
@@ -40,6 +39,9 @@ public class LoginBox extends VBox {
                 mJoinButton.setText("Join");
             }
         });
+
+        mIPBox.setText("127.0.0.1");
+        mPortBox.setText("1337");
 
         mJoinButton.setOnAction(event -> {
             mListener.onLogin(mNameBox.getText(), mIPBox.getText(), mPortBox.getText(), mHost.isSelected());

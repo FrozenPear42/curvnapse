@@ -6,6 +6,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
@@ -31,6 +32,14 @@ public class MessageBox extends VBox {
         mInputBox.setSpacing(5.0f);
 
         mTextBox.setPrefColumnCount(20);
+
+        mInputBox.setOnKeyPressed(pKeyEvent -> {
+            if (pKeyEvent.getCode() == KeyCode.ENTER) {
+                if (mListener != null)
+                    mListener.onMessageSend(mTextBox.getText());
+                mTextBox.setText("");
+            }
+        });
 
         mSendButton.setOnAction(event -> {
             if (mListener != null)

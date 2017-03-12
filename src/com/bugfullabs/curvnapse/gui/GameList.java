@@ -19,15 +19,22 @@ public class GameList extends ListView<Game> {
         setItems(mGames);
     }
 
+    public void updateGame(Game pGame) {
+        mGames.stream().filter(game -> game.getID() == pGame.getID()).forEach(game -> {
+            int idx = mGames.indexOf(game);
+            mGames.remove(idx);
+            mGames.add(idx, pGame);
+        });
+    }
+
     public void addGame(Game pGame) {
         Platform.runLater(() -> mGames.add(pGame));
     }
-
     public void removeGame(Game pGame) {
         Platform.runLater(() -> mGames.remove(pGame));
     }
 
-    class GameListElement extends ListCell<Game> {
+    private class GameListElement extends ListCell<Game> {
         @Override
         public void updateItem(Game pGame, boolean pEmpty) {
             super.updateItem(pGame, pEmpty);
