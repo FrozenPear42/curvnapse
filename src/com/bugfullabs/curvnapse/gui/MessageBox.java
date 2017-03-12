@@ -26,7 +26,6 @@ public class MessageBox extends VBox {
 
         mSendButton.setOnAction(event -> {
             mListener.onMessageSend(mTextBox.getText());
-            mMessageList.addMessage(new TextMessage(mTextBox.getText()));
             mTextBox.setText("");
         });
 

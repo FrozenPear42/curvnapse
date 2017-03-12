@@ -28,13 +28,14 @@ public class ClientThread extends Thread {
     @Override
     public void run() {
         Message message;
-        while (!mSocket.isClosed()) {
+        while (!mSocket.isClosed() && mSocket.isConnected()) {
             try {
                 message = (Message) mObjectInputStream.readObject();
                 for (ClientListener listener : mListeners)
                     listener.onClientMessage(this, message);
             } catch (SocketException e) {
-                LOG.warning("Socket fail");
+                LOG.warning("Socket fail: " + e.getMessage());
+                break;
             } catch (IOException | ClassNotFoundException e) {
                 e.printStackTrace();
             }

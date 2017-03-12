@@ -38,7 +38,12 @@ public class Main extends Application {
         }
 
         ServerConnector connector = new ServerConnector("127.0.0.1", 1337, "To ja test");
-        messageList.setSendListener(pMessage -> connector.sendMessage(new TextMessage(pMessage)));
+        connector.start();
+        connector.registerListener(pMessage -> {
+            if (pMessage instanceof TextMessage)
+                messageList.addMessage((TextMessage) pMessage);
+        });
+        messageList.setSendListener(pMessage -> connector.sendMessage(new TextMessage("Wojciech",pMessage)));
         root.getChildren().add(b);
         root.getChildren().add(messageList);
         primaryStage.setTitle("Curvnapse");

@@ -1,6 +1,7 @@
 package com.bugfullabs.curvnapse.gui;
 
 import com.bugfullabs.curvnapse.network.message.TextMessage;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.control.Label;
@@ -19,7 +20,7 @@ public class MessageList extends ListView<TextMessage> {
     }
 
     public void addMessage(TextMessage pMessage) {
-        mMessages.add(pMessage);
+        Platform.runLater(() -> mMessages.add(pMessage));
     }
 
     class MessageListElement extends ListCell<TextMessage> {
@@ -28,7 +29,7 @@ public class MessageList extends ListView<TextMessage> {
             super.updateItem(pMessage, pEmpty);
             HBox box = new HBox();
             if (pMessage != null) {
-                Label name = new Label("Wojciech: ");
+                Label name = new Label(pMessage.getAuthor() + ": ");
                 Label text = new Label(pMessage.getMessage());
                 box.getChildren().add(name);
                 box.getChildren().add(text);
