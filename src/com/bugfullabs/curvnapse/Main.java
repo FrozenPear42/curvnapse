@@ -1,9 +1,7 @@
 package com.bugfullabs.curvnapse;
 
-import com.bugfullabs.curvnapse.gui.Board;
-import com.bugfullabs.curvnapse.gui.LoginBox;
-import com.bugfullabs.curvnapse.gui.MessageBox;
-import com.bugfullabs.curvnapse.gui.MessageList;
+import com.bugfullabs.curvnapse.gui.*;
+import com.bugfullabs.curvnapse.network.client.Game;
 import com.bugfullabs.curvnapse.network.message.HandshakeMessage;
 import com.bugfullabs.curvnapse.network.message.Message;
 import com.bugfullabs.curvnapse.network.client.ServerConnector;
@@ -30,15 +28,18 @@ public class Main extends Application implements LoginBox.LoginListener {
         root.setAlignment(Pos.CENTER);
         messageList = new MessageBox();
         LoginBox loginBox = new LoginBox();
+        GameList gameList = new GameList();
+        gameList.addGame(new Game());
         Board b = new Board(1000, 800);
 
         loginBox.setLoginListener(this);
         root.getChildren().add(b);
         root.getChildren().add(messageList);
         root.getChildren().add(loginBox);
+        root.getChildren().add(gameList);
 
         primaryStage.setTitle("Curvnapse");
-        primaryStage.setWidth(1600);
+        primaryStage.setWidth(1800);
         primaryStage.setHeight(800);
         primaryStage.setScene(new Scene(root));
 
@@ -76,8 +77,8 @@ public class Main extends Application implements LoginBox.LoginListener {
                     messageList.addMessage(new TextMessage("Server", ((HandshakeMessage) (pMessage)).getName() + " joined!"));
             });
             messageList.setSendListener(pMessage -> connector.sendMessage(new TextMessage(pName, pMessage)));
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            LOG.warning("Could not connect to server");
             return;
         }
     }

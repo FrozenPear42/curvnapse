@@ -33,11 +33,12 @@ public class MessageBox extends VBox {
         mTextBox.setPrefColumnCount(20);
 
         mSendButton.setOnAction(event -> {
-            mListener.onMessageSend(mTextBox.getText());
+            if (mListener != null)
+                mListener.onMessageSend(mTextBox.getText());
             mTextBox.setText("");
         });
 
-    getChildren().addAll(mMessageList, mInputBox);
+        getChildren().addAll(mMessageList, mInputBox);
     }
 
     public void setSendListener(MessageSendListener pListener) {
