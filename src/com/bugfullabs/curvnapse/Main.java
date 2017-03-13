@@ -2,11 +2,8 @@ package com.bugfullabs.curvnapse;
 
 import com.bugfullabs.curvnapse.gui.*;
 import com.bugfullabs.curvnapse.network.client.Game;
-import com.bugfullabs.curvnapse.network.message.GameCreateRequestMessage;
-import com.bugfullabs.curvnapse.network.message.GameUpdateMessage;
-import com.bugfullabs.curvnapse.network.message.HandshakeMessage;
+import com.bugfullabs.curvnapse.network.message.*;
 import com.bugfullabs.curvnapse.network.client.ServerConnector;
-import com.bugfullabs.curvnapse.network.message.TextMessage;
 import com.bugfullabs.curvnapse.network.server.Server;
 import javafx.application.Application;
 import javafx.geometry.Pos;
@@ -21,6 +18,7 @@ public class Main extends Application implements LoginBox.LoginListener {
     private static final Logger LOG = Logger.getLogger(Main.class.getName());
     private MessageBox mMessageList;
     private GameList mGameList;
+    private Board mBoard;
 
     private Scene mLoginScene;
     private Scene mLobbyScene;
@@ -46,7 +44,14 @@ public class Main extends Application implements LoginBox.LoginListener {
         lobbyRoot.getChildren().addAll(mMessageList, mGameList);
         mLobbyScene = new Scene(lobbyRoot);
 
-        Board b = new Board(1000, 800);
+        HBox gameLobbyRoot = new HBox();
+        mGameLobbyScene = new Scene(gameLobbyRoot);
+
+        FlowPane gameRoot = new FlowPane();
+        mBoard = new Board(1000, 800);
+        gameRoot.getChildren().add(mBoard);
+        mGameScene = new Scene(gameRoot);
+
 
         primaryStage.setTitle("Curvnapse");
         primaryStage.setWidth(1800);
@@ -91,17 +96,17 @@ public class Main extends Application implements LoginBox.LoginListener {
                     mMessageList.addMessage(new TextMessage("Server", ((HandshakeMessage) (pMessage)).getName() + " joined!"));
                 else if (pMessage instanceof GameUpdateMessage) {
                     GameUpdateMessage msg = (GameUpdateMessage) pMessage;
-                    mGameList.addGame(msg.getGame());
-
+                    mGameList.updateGame(msg.getGame());
                 }
             });
             mMessageList.setSendListener(pMessage -> connector.sendMessage(new TextMessage(pName, pMessage)));
+            mGameList.setListener(pGame -> connector.sendMessage(new JoinRequestMessage(pGame.getID())));
             connector.sendMessage(new GameCreateRequestMessage("Wichrowski ciota", "", 8));
+
         } catch (Exception e) {
             LOG.warning("Could not connect to server");
             return;
         }
         mMainStage.setScene(mLobbyScene);
-
     }
 }

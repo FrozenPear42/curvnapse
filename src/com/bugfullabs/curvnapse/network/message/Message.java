@@ -1,11 +1,11 @@
 package com.bugfullabs.curvnapse.network.message;
 
 import java.io.Serializable;
-import java.io.StreamCorruptedException;
 
 public class Message implements Serializable {
 
-    public enum Type {UNSPECIFIED, HANDSHAKE, ALIVE, DISCONNECT, TEXT, GAME_CREATE, GAME_UPDATE}
+    public enum Type {UNSPECIFIED, HANDSHAKE, ALIVE, DISCONNECT, TEXT, GAME_CREATE, GAME_UPDATE, GAME_JOIN_REQUEST, GAME_JOIN}
+
 
     private Type mType;
     private String mName;
@@ -14,7 +14,7 @@ public class Message implements Serializable {
         mType = pType;
     }
 
-    public Type getType(){
+    public Type getType() {
         return mType;
     }
 }

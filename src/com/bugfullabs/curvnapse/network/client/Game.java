@@ -21,6 +21,10 @@ public class Game implements Serializable {
         return mName;
     }
 
+    public int getPlayers() {
+        return mPlayers;
+    }
+
     public int getMaxPlayers() {
         return mMaxPlayers;
     }

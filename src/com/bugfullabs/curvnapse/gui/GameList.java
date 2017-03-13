@@ -11,20 +11,34 @@ import javafx.scene.layout.HBox;
 
 public class GameList extends ListView<Game> {
     private ObservableList<Game> mGames;
+    private GameSelectListener mListener;
 
     public GameList() {
         super();
         mGames = FXCollections.observableArrayList();
         setCellFactory(param -> new GameListElement());
         setItems(mGames);
+        getSelectionModel().selectedItemProperty().addListener((pObservableValue, pGameOld, pGameNew) -> {
+            if (mListener != null)
+                mListener.onGameSelected(pGameNew);
+        });
+    }
+
+    public void setListener(GameSelectListener pListener) {
+        mListener = pListener;
     }
 
     public void updateGame(Game pGame) {
-        mGames.stream().filter(game -> game.getID() == pGame.getID()).forEach(game -> {
-            int idx = mGames.indexOf(game);
-            mGames.remove(idx);
-            mGames.add(idx, pGame);
-        });
+        boolean removed = false;
+
+        for (Game game : mGames) {
+            if (game.getID() == pGame.getID()) {
+                mGames.remove(game);
+                removed = true;
+                break;
+            }
+        }
+        mGames.add(pGame);
     }
 
     public void addGame(Game pGame) {
@@ -47,5 +61,9 @@ public class GameList extends ListView<Game> {
                 setGraphic(box);
             }
         }
+    }
+
+    public interface GameSelectListener {
+        void onGameSelected(Game pGame);
     }
 }

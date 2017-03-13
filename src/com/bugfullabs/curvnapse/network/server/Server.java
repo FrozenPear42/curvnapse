@@ -1,10 +1,7 @@
 package com.bugfullabs.curvnapse.network.server;
 
 import com.bugfullabs.curvnapse.network.client.Game;
-import com.bugfullabs.curvnapse.network.message.GameCreateRequestMessage;
-import com.bugfullabs.curvnapse.network.message.GameUpdateMessage;
-import com.bugfullabs.curvnapse.network.message.HandshakeMessage;
-import com.bugfullabs.curvnapse.network.message.Message;
+import com.bugfullabs.curvnapse.network.message.*;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -66,13 +63,16 @@ public class Server extends Thread implements ClientThread.ClientListener {
             HandshakeMessage msg = (HandshakeMessage) pMessage;
             LOG.info("new message from client: " + msg.getName());
             mLobby.addClient(pClientThread, msg.getName());
-        }
-        if (pMessage.getType() == Message.Type.GAME_CREATE) {
+        } else if (pMessage.getType() == Message.Type.GAME_CREATE) {
             GameCreateRequestMessage msg = (GameCreateRequestMessage) pMessage;
             LOG.info("new game request");
             for (ClientThread client : mClients) {
                 client.sendMessage(new GameUpdateMessage(new Game(msg.getName(), msg.getMaxPlayers())));
             }
+        } else if (pMessage.getType() == Message.Type.GAME_JOIN_REQUEST) {
+            JoinRequestMessage msg = (JoinRequestMessage) pMessage;
+            LOG.info("Join request");
+
         }
 
     }
