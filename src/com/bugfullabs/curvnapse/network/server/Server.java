@@ -71,7 +71,7 @@ public class Server extends Thread implements ClientThread.ClientListener {
             GameCreateRequestMessage msg = (GameCreateRequestMessage) pMessage;
             LOG.info("new game request");
             for (ClientThread client : mClients) {
-                client.sendMessage(new GameUpdateMessage(new Game()));
+                client.sendMessage(new GameUpdateMessage(new Game(msg.getName(), msg.getMaxPlayers())));
             }
         }
 

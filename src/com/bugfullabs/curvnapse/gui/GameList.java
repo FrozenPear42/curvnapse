@@ -30,6 +30,7 @@ public class GameList extends ListView<Game> {
     public void addGame(Game pGame) {
         Platform.runLater(() -> mGames.add(pGame));
     }
+
     public void removeGame(Game pGame) {
         Platform.runLater(() -> mGames.remove(pGame));
     }
@@ -40,8 +41,9 @@ public class GameList extends ListView<Game> {
             super.updateItem(pGame, pEmpty);
             if (pGame != null) {
                 HBox box = new HBox(5.0f);
-                Label name = new Label("Ala ma algebre");
-                box.getChildren().addAll(name);
+                Label name = new Label(pGame.getName());
+                Label players = new Label(Integer.toString(pGame.getMaxPlayers()));
+                box.getChildren().addAll(name, players);
                 setGraphic(box);
             }
         }

@@ -10,4 +10,8 @@ public class GameUpdateMessage extends Message {
         super(Type.GAME_UPDATE);
         mGame = pGame;
     }
+
+    public Game getGame() {
+        return mGame;
+    }
 }

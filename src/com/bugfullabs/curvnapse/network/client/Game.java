@@ -2,13 +2,15 @@ package com.bugfullabs.curvnapse.network.client;
 
 import java.io.Serializable;
 
-public class Game implements Serializable{
+public class Game implements Serializable {
     private int mID;
     private String mName;
     private int mPlayers;
     private int mMaxPlayers;
 
-    public Game() {
+    public Game(String pName, int pMaxPlayers) {
+        mName = pName;
+        mMaxPlayers = pMaxPlayers;
     }
 
     public int getID() {
@@ -17,5 +19,9 @@ public class Game implements Serializable{
 
     public String getName() {
         return mName;
+    }
+
+    public int getMaxPlayers() {
+        return mMaxPlayers;
     }
 }

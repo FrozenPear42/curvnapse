@@ -3,6 +3,7 @@ package com.bugfullabs.curvnapse;
 import com.bugfullabs.curvnapse.gui.*;
 import com.bugfullabs.curvnapse.network.client.Game;
 import com.bugfullabs.curvnapse.network.message.GameCreateRequestMessage;
+import com.bugfullabs.curvnapse.network.message.GameUpdateMessage;
 import com.bugfullabs.curvnapse.network.message.HandshakeMessage;
 import com.bugfullabs.curvnapse.network.client.ServerConnector;
 import com.bugfullabs.curvnapse.network.message.TextMessage;
@@ -18,7 +19,8 @@ import java.util.logging.Logger;
 
 public class Main extends Application implements LoginBox.LoginListener {
     private static final Logger LOG = Logger.getLogger(Main.class.getName());
-    private MessageBox messageList;
+    private MessageBox mMessageList;
+    private GameList mGameList;
 
     private Scene mLoginScene;
     private Scene mLobbyScene;
@@ -39,10 +41,9 @@ public class Main extends Application implements LoginBox.LoginListener {
         mLoginScene = new Scene(loginRoot);
 
         FlowPane lobbyRoot = new FlowPane();
-        messageList = new MessageBox();
-        GameList gameList = new GameList();
-        gameList.addGame(new Game());
-        lobbyRoot.getChildren().addAll(messageList, gameList);
+        mMessageList = new MessageBox();
+        mGameList = new GameList();
+        lobbyRoot.getChildren().addAll(mMessageList, mGameList);
         mLobbyScene = new Scene(lobbyRoot);
 
         Board b = new Board(1000, 800);
@@ -85,11 +86,16 @@ public class Main extends Application implements LoginBox.LoginListener {
             connector.start();
             connector.registerListener(pMessage -> {
                 if (pMessage instanceof TextMessage)
-                    messageList.addMessage((TextMessage) pMessage);
+                    mMessageList.addMessage((TextMessage) pMessage);
                 else if (pMessage instanceof HandshakeMessage)
-                    messageList.addMessage(new TextMessage("Server", ((HandshakeMessage) (pMessage)).getName() + " joined!"));
+                    mMessageList.addMessage(new TextMessage("Server", ((HandshakeMessage) (pMessage)).getName() + " joined!"));
+                else if (pMessage instanceof GameUpdateMessage) {
+                    GameUpdateMessage msg = (GameUpdateMessage) pMessage;
+                    mGameList.addGame(msg.getGame());
+
+                }
             });
-            messageList.setSendListener(pMessage -> connector.sendMessage(new TextMessage(pName, pMessage)));
+            mMessageList.setSendListener(pMessage -> connector.sendMessage(new TextMessage(pName, pMessage)));
             connector.sendMessage(new GameCreateRequestMessage("Wichrowski ciota", "", 8));
         } catch (Exception e) {
             LOG.warning("Could not connect to server");

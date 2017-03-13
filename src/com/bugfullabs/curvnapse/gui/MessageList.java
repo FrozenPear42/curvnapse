@@ -20,7 +20,10 @@ public class MessageList extends ListView<TextMessage> {
     }
 
     public void addMessage(TextMessage pMessage) {
-        Platform.runLater(() -> mMessages.add(pMessage));
+        Platform.runLater(() -> {
+            mMessages.add(pMessage);
+            scrollTo(mMessages.size());
+        });
     }
 
     class MessageListElement extends ListCell<TextMessage> {
