@@ -4,7 +4,17 @@ import java.io.Serializable;
 
 public class Message implements Serializable {
 
-    public enum Type {UNSPECIFIED, HANDSHAKE, ALIVE, DISCONNECT, TEXT, GAME_CREATE, GAME_UPDATE, GAME_JOIN_REQUEST, GAME_JOIN}
+    public enum Type {
+        HANDSHAKE,
+        ALIVE,
+        DISCONNECT,
+        TEXT,
+        GAME_CREATE,
+        GAME_UPDATE,
+        GAME_JOIN_REQUEST,
+        GAME_JOIN,
+        ERROR
+    }
 
 
     private Type mType;

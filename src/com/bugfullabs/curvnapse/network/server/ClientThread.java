@@ -13,13 +13,17 @@ import java.util.logging.Logger;
 
 public class ClientThread extends Thread {
     private static final Logger LOG = Logger.getLogger(ClientThread.class.getName());
+    private static int UID = 0;
     private final Socket mSocket;
     private final CopyOnWriteArrayList<ClientListener> mListeners;
     private final ObjectOutputStream mObjectOutputStream;
     private final ObjectInputStream mObjectInputStream;
+    private int mUID;
 
     public ClientThread(Socket pSocket) throws IOException {
         mSocket = pSocket;
+        mUID = UID;
+        UID += 1;
         mObjectOutputStream = new ObjectOutputStream(mSocket.getOutputStream());
         mObjectInputStream = new ObjectInputStream(mSocket.getInputStream());
         mListeners = new CopyOnWriteArrayList<>();
@@ -61,6 +65,15 @@ public class ClientThread extends Thread {
     public void registerListener(ClientListener pClientListener) {
         mListeners.add(pClientListener);
 
+    }
+
+    public void removeListener(ClientListener pClientListener) {
+        mListeners.remove(pClientListener);
+
+    }
+
+    public int getID() {
+        return mUID;
     }
 
     public interface ClientListener {

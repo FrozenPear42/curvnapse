@@ -102,7 +102,7 @@ public class Main extends Application implements LoginBox.LoginListener {
             });
             mMessageList.setSendListener(pMessage -> connector.sendMessage(new TextMessage(pName, pMessage)));
             mGameList.setListener(pGame -> connector.sendMessage(new JoinRequestMessage(pGame.getID())));
-            connector.sendMessage(new GameCreateRequestMessage("Wichrowski ciota", "", 8));
+           // connector.sendMessage(new GameCreateRequestMessage("Wichrowski ciota", "", 8));
 
         } catch (Exception e) {
             LOG.warning("Could not connect to server");

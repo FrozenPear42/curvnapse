@@ -1,7 +1,7 @@
 package com.bugfullabs.curvnapse.network.server;
 
-import com.bugfullabs.curvnapse.network.client.Game;
-import com.bugfullabs.curvnapse.network.message.*;
+import com.bugfullabs.curvnapse.network.message.HandshakeMessage;
+import com.bugfullabs.curvnapse.network.message.Message;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -9,21 +9,19 @@ import java.net.Socket;
 import java.util.LinkedList;
 import java.util.logging.Logger;
 
+import static com.bugfullabs.curvnapse.network.message.Message.Type.HANDSHAKE;
+
 public class Server extends Thread implements ClientThread.ClientListener {
     private static final Logger LOG = Logger.getLogger(Server.class.getName());
 
     private ServerSocket mServerSocket;
     private LinkedList<ClientThread> mClients;
-    private LinkedList<GameLobby> mLobbies;
-    private LinkedList<GameThread> mGameThreads;
     private Lobby mLobby;
 
     public Server(int pPort, int pMaxGames) throws IOException {
         mServerSocket = new ServerSocket(pPort);
-        mLobbies = new LinkedList<>();
-        mGameThreads = new LinkedList<>();
         mClients = new LinkedList<>();
-        mLobby = new Lobby();
+        mLobby = new Lobby(pMaxGames);
     }
 
     public void close() {
@@ -59,22 +57,17 @@ public class Server extends Thread implements ClientThread.ClientListener {
 
     @Override
     public void onClientMessage(ClientThread pClientThread, Message pMessage) {
-        if (pMessage.getType() == Message.Type.HANDSHAKE) {
-            HandshakeMessage msg = (HandshakeMessage) pMessage;
-            LOG.info("new message from client: " + msg.getName());
-            mLobby.addClient(pClientThread, msg.getName());
-        } else if (pMessage.getType() == Message.Type.GAME_CREATE) {
-            GameCreateRequestMessage msg = (GameCreateRequestMessage) pMessage;
-            LOG.info("new game request");
-            for (ClientThread client : mClients) {
-                client.sendMessage(new GameUpdateMessage(new Game(msg.getName(), msg.getMaxPlayers())));
-            }
-        } else if (pMessage.getType() == Message.Type.GAME_JOIN_REQUEST) {
-            JoinRequestMessage msg = (JoinRequestMessage) pMessage;
-            LOG.info("Join request");
-            pClientThread.sendMessage(new JoinMessage());
+        switch (pMessage.getType()) {
+            case HANDSHAKE:
+                HandshakeMessage msg = (HandshakeMessage) pMessage;
+                LOG.info("HANDSHAKE: " + msg.getName());
+                mLobby.addClient(pClientThread, msg.getName());
+                break;
+            default:
+                LOG.warning("Unsupported message: " + pMessage.getType().name());
+                break;
         }
-
     }
+
 }
 
