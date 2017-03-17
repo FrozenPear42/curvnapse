@@ -1,11 +1,11 @@
 package com.bugfullabs.curvnapse;
 
 import com.bugfullabs.curvnapse.gui.*;
-import com.bugfullabs.curvnapse.network.client.Game;
 import com.bugfullabs.curvnapse.network.message.*;
 import com.bugfullabs.curvnapse.network.client.ServerConnector;
 import com.bugfullabs.curvnapse.network.server.Server;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.layout.FlowPane;
@@ -52,7 +52,6 @@ public class Main extends Application implements LoginBox.LoginListener {
         gameRoot.getChildren().add(mBoard);
         mGameScene = new Scene(gameRoot);
 
-
         primaryStage.setTitle("Curvnapse");
         primaryStage.setWidth(1800);
         primaryStage.setHeight(800);
@@ -97,6 +96,8 @@ public class Main extends Application implements LoginBox.LoginListener {
                 else if (pMessage instanceof GameUpdateMessage) {
                     GameUpdateMessage msg = (GameUpdateMessage) pMessage;
                     mGameList.updateGame(msg.getGame());
+                } else if (pMessage.getType() == Message.Type.GAME_JOIN) {
+                    Platform.runLater(() -> mMainStage.setScene(mGameLobbyScene));
                 }
             });
             mMessageList.setSendListener(pMessage -> connector.sendMessage(new TextMessage(pName, pMessage)));
@@ -109,4 +110,5 @@ public class Main extends Application implements LoginBox.LoginListener {
         }
         mMainStage.setScene(mLobbyScene);
     }
+
 }

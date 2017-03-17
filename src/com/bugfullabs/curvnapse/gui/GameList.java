@@ -56,7 +56,7 @@ public class GameList extends ListView<Game> {
             if (pGame != null) {
                 HBox box = new HBox(5.0f);
                 Label name = new Label(pGame.getName());
-                Label players = new Label(Integer.toString(pGame.getMaxPlayers()));
+                Label players = new Label(pGame.getPlayers() + "/" + pGame.getMaxPlayers());
                 box.getChildren().addAll(name, players);
                 setGraphic(box);
             }

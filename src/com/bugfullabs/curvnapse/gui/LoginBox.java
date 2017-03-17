@@ -40,6 +40,9 @@ public class LoginBox extends VBox {
             }
         });
 
+        //FIXME: WORKAROUND
+        mNameBox.setText("WMSG");
+
         mIPBox.setText("127.0.0.1");
         mPortBox.setText("1337");
 

@@ -72,7 +72,7 @@ public class Server extends Thread implements ClientThread.ClientListener {
         } else if (pMessage.getType() == Message.Type.GAME_JOIN_REQUEST) {
             JoinRequestMessage msg = (JoinRequestMessage) pMessage;
             LOG.info("Join request");
-
+            pClientThread.sendMessage(new JoinMessage());
         }
 
     }
