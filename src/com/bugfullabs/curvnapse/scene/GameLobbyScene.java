@@ -65,6 +65,8 @@ public class GameLobbyScene implements ServerConnector.MessageListener {
         mPlayersBox.setPlayersList(mPlayers);
 
         mPlayersBox.setListener(() -> mConnector.sendMessage(new NewPlayerRequestMessage("Player")));
+
+        mStartButton.setOnAction(event -> mConnector.sendMessage(new GameStartRequestMessage()));
     }
 
     public Scene getScene() {
@@ -79,6 +81,9 @@ public class GameLobbyScene implements ServerConnector.MessageListener {
                 break;
             case PLAYER_ADD:
                 Platform.runLater(() -> mPlayers.add(((NewPlayerMessage) pMessage).getPlayer()));
+                break;
+            case GAME_START:
+                LOG.info("Game started");
                 break;
             default:
                 break;

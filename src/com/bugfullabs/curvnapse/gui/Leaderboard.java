@@ -1,7 +1,10 @@
 package com.bugfullabs.curvnapse.gui;
 
-/**
- * Created by wojciech on 06.03.17.
- */
-public class Leaderboard {
+
+import javafx.scene.layout.VBox;
+
+public class Leaderboard extends VBox {
+    public Leaderboard() {
+        super(10.0f);
+    }
 }

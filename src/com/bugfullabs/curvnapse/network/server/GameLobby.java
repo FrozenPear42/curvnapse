@@ -1,15 +1,15 @@
 package com.bugfullabs.curvnapse.network.server;
 
 import com.bugfullabs.curvnapse.network.client.Game;
-import com.bugfullabs.curvnapse.network.message.Message;
-import com.bugfullabs.curvnapse.network.message.NewPlayerMessage;
-import com.bugfullabs.curvnapse.network.message.NewPlayerRequestMessage;
+import com.bugfullabs.curvnapse.network.message.*;
 import com.bugfullabs.curvnapse.player.Player;
 import com.bugfullabs.curvnapse.player.PlayerColor;
 import javafx.scene.paint.Color;
 
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.logging.Logger;
 
 public class GameLobby implements ClientThread.ClientListener {
@@ -35,6 +35,7 @@ public class GameLobby implements ClientThread.ClientListener {
     public void addClient(ClientThread pClient) {
         mClientThreads.add(pClient);
         pClient.registerListener(this);
+        mPlayers.forEach((pInteger, pPlayer) -> pClient.sendMessage(new NewPlayerMessage(pPlayer)));
     }
 
     public int getID() {
@@ -59,6 +60,22 @@ public class GameLobby implements ClientThread.ClientListener {
                     mClientThreads.forEach(clientThread -> clientThread.sendMessage(new NewPlayerMessage(player)));
                 }
                 break;
+            case GAME_START_REQUEST:
+                //FIXME: Move timer as member, allow cancel
+                new Timer("asd").schedule(new TimerTask() {
+                    private int times = 5;
+
+                    @Override
+                    public void run() {
+                        LOG.info("Tick" + times);
+                        mClientThreads.forEach(clientThread -> clientThread.sendMessage(new TextMessage("Server", String.format("Game will start in %d...", times))));
+                        if (times == 0) {
+                            this.cancel();
+                            mClientThreads.forEach(clientThread -> clientThread.sendMessage(new GameStartMessage()));
+                        }
+                        times--;
+                    }
+                }, 0, 1000);
         }
     }
 

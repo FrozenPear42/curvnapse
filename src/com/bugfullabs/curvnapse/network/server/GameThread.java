@@ -1,7 +1,10 @@
 package com.bugfullabs.curvnapse.network.server;
 
-/**
- * Created by wojciech on 08.03.17.
- */
+import java.util.LinkedList;
+
 public class GameThread {
+
+    public GameThread() {
+    }
+
 }
