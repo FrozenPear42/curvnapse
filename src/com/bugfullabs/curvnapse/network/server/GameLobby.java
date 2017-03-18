@@ -4,8 +4,10 @@ import com.bugfullabs.curvnapse.network.client.Game;
 import com.bugfullabs.curvnapse.network.message.Message;
 
 import java.util.LinkedList;
+import java.util.logging.Logger;
 
 public class GameLobby implements ClientThread.ClientListener {
+    private static Logger LOG = Logger.getLogger(GameLobby.class.getName());
     private static int UID = 0;
     private LinkedList<ClientThread> mClientThreads;
     private int mUID;
@@ -37,6 +39,12 @@ public class GameLobby implements ClientThread.ClientListener {
 
     @Override
     public void onClientMessage(ClientThread pClientThread, Message pMessage) {
+        switch (pMessage.getType()) {
+            case TEXT:
+                LOG.info("Got a message");
+                mClientThreads.forEach(clientThread -> clientThread.sendMessage(pMessage));
+                break;
+        }
     }
 
 }

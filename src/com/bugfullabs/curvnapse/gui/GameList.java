@@ -11,21 +11,12 @@ import javafx.scene.layout.HBox;
 
 public class GameList extends ListView<Game> {
     private ObservableList<Game> mGames;
-    private GameSelectListener mListener;
 
     public GameList() {
         super();
         mGames = FXCollections.observableArrayList();
         setCellFactory(param -> new GameListElement());
         setItems(mGames);
-        getSelectionModel().selectedItemProperty().addListener((pObservableValue, pGameOld, pGameNew) -> {
-            if (mListener != null)
-                mListener.onGameSelected(pGameNew);
-        });
-    }
-
-    public void setListener(GameSelectListener pListener) {
-        mListener = pListener;
     }
 
     public void updateGame(Game pGame) {
@@ -61,9 +52,5 @@ public class GameList extends ListView<Game> {
                 setGraphic(box);
             }
         }
-    }
-
-    public interface GameSelectListener {
-        void onGameSelected(Game pGame);
     }
 }

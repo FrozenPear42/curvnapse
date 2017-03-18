@@ -1,11 +1,15 @@
 package com.bugfullabs.curvnapse;
 
 import com.bugfullabs.curvnapse.gui.*;
+import com.bugfullabs.curvnapse.network.client.Game;
 import com.bugfullabs.curvnapse.network.message.*;
 import com.bugfullabs.curvnapse.network.client.ServerConnector;
 import com.bugfullabs.curvnapse.network.server.Server;
+import com.bugfullabs.curvnapse.scene.GameLobbyScene;
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.collections.ObservableArray;
+import javafx.collections.ObservableList;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.layout.FlowPane;
@@ -16,15 +20,17 @@ import java.util.logging.Logger;
 
 public class Main extends Application implements LoginBox.LoginListener {
     private static final Logger LOG = Logger.getLogger(Main.class.getName());
+
     private MessageBox mMessageList;
-    private GameList mGameList;
+    private GameListBox mGameListBox;
     private Board mBoard;
 
     private Scene mLoginScene;
     private Scene mLobbyScene;
-    private Scene mGameLobbyScene;
     private Scene mGameScene;
     private Stage mMainStage;
+
+    private GameLobbyScene mGameLobbyScene;
 
     @Override
     public void start(Stage primaryStage) {
@@ -40,12 +46,9 @@ public class Main extends Application implements LoginBox.LoginListener {
 
         FlowPane lobbyRoot = new FlowPane();
         mMessageList = new MessageBox();
-        mGameList = new GameList();
-        lobbyRoot.getChildren().addAll(mMessageList, mGameList);
+        mGameListBox = new GameListBox();
+        lobbyRoot.getChildren().addAll(mMessageList, mGameListBox);
         mLobbyScene = new Scene(lobbyRoot);
-
-        HBox gameLobbyRoot = new HBox();
-        mGameLobbyScene = new Scene(gameLobbyRoot);
 
         FlowPane gameRoot = new FlowPane();
         mBoard = new Board(1000, 800);
@@ -53,8 +56,8 @@ public class Main extends Application implements LoginBox.LoginListener {
         mGameScene = new Scene(gameRoot);
 
         primaryStage.setTitle("Curvnapse");
-        primaryStage.setWidth(1800);
-        primaryStage.setHeight(800);
+        primaryStage.setWidth(1000);
+        primaryStage.setHeight(500);
         primaryStage.setScene(mLoginScene);
 
         primaryStage.show();
@@ -95,14 +98,26 @@ public class Main extends Application implements LoginBox.LoginListener {
                     mMessageList.addMessage(new TextMessage("Server", ((HandshakeMessage) (pMessage)).getName() + " joined!"));
                 else if (pMessage instanceof GameUpdateMessage) {
                     GameUpdateMessage msg = (GameUpdateMessage) pMessage;
-                    mGameList.updateGame(msg.getGame());
+                    mGameListBox.updateGame(msg.getGame());
+
                 } else if (pMessage.getType() == Message.Type.GAME_JOIN) {
-                    Platform.runLater(() -> mMainStage.setScene(mGameLobbyScene));
+                    Platform.runLater(() -> mMainStage.setScene(new GameLobbyScene(connector).getScene()));
+
                 }
             });
+
             mMessageList.setSendListener(pMessage -> connector.sendMessage(new TextMessage(pName, pMessage)));
-            mGameList.setListener(pGame -> connector.sendMessage(new JoinRequestMessage(pGame.getID())));
-           // connector.sendMessage(new GameCreateRequestMessage("Wichrowski ciota", "", 8));
+            mGameListBox.setListener(new GameListBox.GameListBoxListener() {
+                @Override
+                public void onJoin(Game pGame) {
+                    connector.sendMessage(new JoinRequestMessage(pGame.getID()));
+                }
+
+                @Override
+                public void onCreate() {
+                    connector.sendMessage(new GameCreateRequestMessage("Wichrowski ciota", "", 10));
+                }
+            });
 
         } catch (Exception e) {
             LOG.warning("Could not connect to server");

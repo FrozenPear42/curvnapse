@@ -18,9 +18,8 @@ public class MessageBox extends VBox {
     private MessageSendListener mListener;
 
     public MessageBox() {
-        super();
+        super(10.0f);
         setPadding(new Insets(10.0f));
-        setSpacing(5.0f);
         mMessageList = new MessageList();
         mInputBox = new HBox();
         mTextBox = new TextField();
