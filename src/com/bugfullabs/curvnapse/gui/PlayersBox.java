@@ -42,10 +42,10 @@ public class PlayersBox extends VBox {
             if (pPlayer != null) {
                 VBox box = new VBox(5.0f);
                 Label label = new Label(pPlayer.getName());
-                Label keys = new Label(String.format("Left: %s Right: %s",
+                Label keys = new Label(String.format("Left: %s\nRight: %s",
                         pPlayer.getLeftKey().getName(),
                         pPlayer.getRightKey().getName()));
-                Rectangle color = new Rectangle(10, 10, pPlayer.getColor());
+                Rectangle color = new Rectangle(20, 20, pPlayer.getColor());
                 box.getChildren().addAll(label, keys, color);
                 setGraphic(box);
             }

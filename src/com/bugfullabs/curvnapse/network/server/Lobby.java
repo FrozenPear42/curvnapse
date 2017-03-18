@@ -28,6 +28,7 @@ public class Lobby implements ClientThread.ClientListener {
 
         mClients.add(pClientThread);
         pClientThread.registerListener(this);
+        mGameLobbies.forEach(gameLobby -> pClientThread.sendMessage(new GameUpdateMessage(gameLobby.getGameDescriptor())));
     }
 
     @Override
@@ -57,7 +58,12 @@ public class Lobby implements ClientThread.ClientListener {
             case GAME_JOIN_REQUEST:
                 JoinRequestMessage msg = (JoinRequestMessage) pMessage;
                 LOG.info("Join request");
-                //pClientThread.sendMessage(new JoinMessage());
+                mGameLobbies.stream()
+                        .filter(gameLobby -> msg.getID() == gameLobby.getID())
+                        .findFirst()
+                        .get().addClient(pClientThread);
+                mClients.remove(pClientThread);
+                pClientThread.sendMessage(new JoinMessage(msg.getID()));
                 break;
             default:
                 LOG.warning("Unsupported message");
