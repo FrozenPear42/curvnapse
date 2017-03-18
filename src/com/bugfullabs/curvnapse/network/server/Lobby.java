@@ -49,6 +49,7 @@ public class Lobby implements ClientThread.ClientListener {
                     mGameLobbies.add(lobby);
                     lobby.addClient(pClientThread);
                     mClients.remove(pClientThread);
+                    pClientThread.removeListener(this);
                     pClientThread.sendMessage(new JoinMessage(lobby.getID()));
                     for (ClientThread client : mClients)
                         client.sendMessage(new GameUpdateMessage(lobby.getGameDescriptor()));
@@ -63,6 +64,7 @@ public class Lobby implements ClientThread.ClientListener {
                         .findFirst()
                         .get().addClient(pClientThread);
                 mClients.remove(pClientThread);
+                pClientThread.removeListener(this);
                 pClientThread.sendMessage(new JoinMessage(msg.getID()));
                 break;
             default:

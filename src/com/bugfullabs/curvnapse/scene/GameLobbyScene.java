@@ -4,9 +4,9 @@ import com.bugfullabs.curvnapse.gui.GameOptionsBox;
 import com.bugfullabs.curvnapse.gui.MessageBox;
 import com.bugfullabs.curvnapse.gui.PlayersBox;
 import com.bugfullabs.curvnapse.network.client.ServerConnector;
-import com.bugfullabs.curvnapse.network.message.Message;
-import com.bugfullabs.curvnapse.network.message.TextMessage;
+import com.bugfullabs.curvnapse.network.message.*;
 import com.bugfullabs.curvnapse.player.Player;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
@@ -15,9 +15,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.paint.Color;
 
-import java.util.Observable;
 import java.util.logging.Logger;
 
 
@@ -64,8 +62,9 @@ public class GameLobbyScene implements ServerConnector.MessageListener {
         mMessageBox.setSendListener(pMessage -> mConnector.sendMessage(new TextMessage("MS", pMessage)));
 
         mPlayers = FXCollections.observableArrayList();
-        mPlayers.add(new Player("asd", Color.AQUA, true));
         mPlayersBox.setPlayersList(mPlayers);
+
+        mPlayersBox.setListener(() -> mConnector.sendMessage(new NewPlayerRequestMessage("Player")));
     }
 
     public Scene getScene() {
@@ -77,6 +76,9 @@ public class GameLobbyScene implements ServerConnector.MessageListener {
         switch (pMessage.getType()) {
             case TEXT:
                 mMessageBox.addMessage((TextMessage) pMessage);
+                break;
+            case PLAYER_ADD:
+                Platform.runLater(() -> mPlayers.add(((NewPlayerMessage) pMessage).getPlayer()));
                 break;
             default:
                 break;

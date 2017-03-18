@@ -13,12 +13,12 @@ public class Message implements Serializable {
         GAME_UPDATE,
         GAME_JOIN_REQUEST,
         GAME_JOIN,
+        PLAYER_ADD_REQUEST,
+        PLAYER_ADD,
         ERROR
     }
 
-
     private Type mType;
-    private String mName;
 
     public Message(Type pType) {
         mType = pType;

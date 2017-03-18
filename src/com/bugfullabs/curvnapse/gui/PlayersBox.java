@@ -8,18 +8,13 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
-
-import java.util.Observer;
-
 
 public class PlayersBox extends VBox {
     private Button mAddPlayerButton;
     private ListView<Player> mPlayersList;
+    private PlayerBoxListener mListener;
 
     public PlayersBox() {
         super(10.0f);
@@ -29,10 +24,23 @@ public class PlayersBox extends VBox {
         mPlayersList = new ListView<>();
         mPlayersList.setCellFactory(param -> new PlayersListElement());
         getChildren().addAll(mPlayersList, mAddPlayerButton);
+
+        mAddPlayerButton.setOnAction(event -> {
+            if (mListener != null)
+                mListener.onCreateLocal();
+        });
     }
 
     public void setPlayersList(ObservableList<Player> pList) {
         mPlayersList.setItems(pList);
+    }
+
+    public void setListener(PlayerBoxListener pListener) {
+        mListener = pListener;
+    }
+
+    public interface PlayerBoxListener {
+        void onCreateLocal();
     }
 
     private class PlayersListElement extends ListCell<Player> {
@@ -45,13 +53,11 @@ public class PlayersBox extends VBox {
                 Label keys = new Label(String.format("Left: %s\nRight: %s",
                         pPlayer.getLeftKey().getName(),
                         pPlayer.getRightKey().getName()));
-                Rectangle color = new Rectangle(20, 20, pPlayer.getColor());
+                Rectangle color = new Rectangle(20, 20, pPlayer.getColor().toFXColor());
                 box.getChildren().addAll(label, keys, color);
                 setGraphic(box);
+                setEditable(pPlayer.isLocal());
             }
         }
-    }
-
-    private class PlayerItem extends AnchorPane {
     }
 }
