@@ -1,13 +1,15 @@
 package com.bugfullabs.curvnapse.gui;
 
 
+import javafx.geometry.Insets;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.ArcType;
 
-public class Board extends Pane {
+public class Board extends VBox {
     private int mWidth;
     private int mHeight;
     private Canvas mMainCanvas;
@@ -15,11 +17,14 @@ public class Board extends Pane {
     private Canvas mGridCanvas;
 
     public Board(int pWidth, int pHeight) {
+        super(10.0f);
         mWidth = pWidth;
         mHeight = pHeight;
         mMainCanvas = new Canvas(mWidth, mHeight);
         mBonusCanvas = new Canvas(mWidth, mHeight);
         mGridCanvas = new Canvas(mWidth, mHeight);
+        setPadding(new Insets(10.0f));
+
         getChildren().add(mMainCanvas);
         getChildren().add(mBonusCanvas);
         getChildren().add(mGridCanvas);

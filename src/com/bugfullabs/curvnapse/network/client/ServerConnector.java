@@ -36,6 +36,10 @@ public class ServerConnector extends Thread {
         mListeners.add(pListener);
     }
 
+    public void unregisterListener(MessageListener pListener) {
+        mListeners.remove(pListener);
+    }
+
     @Override
     public void run() {
         while (!mSocket.isClosed()) {

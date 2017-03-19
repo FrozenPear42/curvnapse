@@ -14,7 +14,7 @@ public class Main extends Application {
 
         primaryStage.setTitle("Curvnapse");
         primaryStage.setWidth(1000);
-        primaryStage.setHeight(500);
+        primaryStage.setHeight(700);
 
         primaryStage.setScene(new LoginScene(primaryStage).getScene());
         primaryStage.show();

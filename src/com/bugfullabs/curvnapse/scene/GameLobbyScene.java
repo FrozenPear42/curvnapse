@@ -15,6 +15,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
+import javafx.stage.Stage;
 
 import java.util.logging.Logger;
 
@@ -32,10 +33,11 @@ public class GameLobbyScene implements ServerConnector.MessageListener {
     private Button mStartButton;
 
     private ServerConnector mConnector;
+    private Stage mMainStage;
     private ObservableList<Player> mPlayers;
 
-    public GameLobbyScene(ServerConnector pConnector) {
-
+    public GameLobbyScene(Stage pMainSatage, ServerConnector pConnector) {
+        mMainStage = pMainSatage;
         mConnector = pConnector;
 
         mRoot = new BorderPane();
@@ -84,6 +86,8 @@ public class GameLobbyScene implements ServerConnector.MessageListener {
                 break;
             case GAME_START:
                 LOG.info("Game started");
+                mConnector.unregisterListener(this);
+                Platform.runLater(() -> mMainStage.setScene(new GameScene(mConnector).getScene()));
                 break;
             default:
                 break;

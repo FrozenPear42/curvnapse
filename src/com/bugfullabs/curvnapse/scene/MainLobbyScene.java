@@ -66,7 +66,10 @@ public class MainLobbyScene implements ServerConnector.MessageListener {
             GameUpdateMessage msg = (GameUpdateMessage) pMessage;
             mGameListBox.updateGame(msg.getGame());
         } else if (pMessage.getType() == Message.Type.GAME_JOIN) {
-            Platform.runLater(() -> mMainStage.setScene(new GameLobbyScene(mConnector).getScene()));
+            Platform.runLater(() -> {
+                mMainStage.setScene(new GameLobbyScene(mMainStage, mConnector).getScene());
+                mConnector.unregisterListener(this);
+            });
 
         }
     }

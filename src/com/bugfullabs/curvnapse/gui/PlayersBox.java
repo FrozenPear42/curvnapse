@@ -29,6 +29,7 @@ public class PlayersBox extends VBox {
             if (mListener != null)
                 mListener.onCreateLocal();
         });
+
     }
 
     public void setPlayersList(ObservableList<Player> pList) {
@@ -47,17 +48,17 @@ public class PlayersBox extends VBox {
         @Override
         public void updateItem(Player pPlayer, boolean pEmpty) {
             super.updateItem(pPlayer, pEmpty);
+            VBox box = new VBox(5.0f);
             if (pPlayer != null) {
-                VBox box = new VBox(5.0f);
                 Label label = new Label(pPlayer.getName());
                 Label keys = new Label(String.format("Left: %s\nRight: %s",
                         pPlayer.getLeftKey().getName(),
                         pPlayer.getRightKey().getName()));
                 Rectangle color = new Rectangle(20, 20, pPlayer.getColor().toFXColor());
                 box.getChildren().addAll(label, keys, color);
-                setGraphic(box);
                 setEditable(pPlayer.isLocal());
             }
+            setGraphic(box);
         }
     }
 }

@@ -63,7 +63,7 @@ public class GameLobby implements ClientThread.ClientListener {
             case GAME_START_REQUEST:
                 //FIXME: Move timer as member, allow cancel
                 new Timer("asd").schedule(new TimerTask() {
-                    private int times = 5;
+                    private int times = 1;
 
                     @Override
                     public void run() {
