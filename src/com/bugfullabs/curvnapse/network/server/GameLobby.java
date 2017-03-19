@@ -4,12 +4,10 @@ import com.bugfullabs.curvnapse.network.client.Game;
 import com.bugfullabs.curvnapse.network.message.*;
 import com.bugfullabs.curvnapse.player.Player;
 import com.bugfullabs.curvnapse.player.PlayerColor;
+import com.bugfullabs.curvnapse.utils.ColorBank;
 import javafx.scene.paint.Color;
 
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.*;
 import java.util.logging.Logger;
 
 public class GameLobby implements ClientThread.ClientListener {
@@ -22,6 +20,8 @@ public class GameLobby implements ClientThread.ClientListener {
     private int mPlayersCount;
     private int mPlayersMax;
 
+    private ColorBank mColorBank;
+
     public GameLobby(String pName, int pMaxPlayers) {
         mUID = UID;
         UID += 1;
@@ -30,6 +30,7 @@ public class GameLobby implements ClientThread.ClientListener {
         mPlayersCount = 0;
         mClientThreads = new LinkedList<>();
         mPlayers = new HashMap<>(mPlayersMax);
+        mColorBank = new ColorBank();
     }
 
     public void addClient(ClientThread pClient) {
@@ -54,7 +55,9 @@ public class GameLobby implements ClientThread.ClientListener {
                 break;
             case PLAYER_ADD_REQUEST:
                 if (mPlayersCount < mPlayersMax) {
-                    Player player = new Player(((NewPlayerRequestMessage) pMessage).getName(), new PlayerColor(Color.RED), true);
+                    PlayerColor color = mColorBank.nextColor();
+
+                    Player player = new Player(((NewPlayerRequestMessage) pMessage).getName(), color, true);
                     mPlayers.put(player.getID(), player);
                     mPlayersCount += 1;
                     mClientThreads.forEach(clientThread -> clientThread.sendMessage(new NewPlayerMessage(player)));
@@ -71,11 +74,16 @@ public class GameLobby implements ClientThread.ClientListener {
                         mClientThreads.forEach(clientThread -> clientThread.sendMessage(new TextMessage("Server", String.format("Game will start in %d...", times))));
                         if (times == 0) {
                             this.cancel();
-                            mClientThreads.forEach(clientThread -> clientThread.sendMessage(new GameStartMessage()));
+                            mClientThreads.forEach(clientThread -> clientThread.sendMessage(new GameStartMessage(new ArrayList<>(mPlayers.values()))));
                         }
                         times--;
                     }
                 }, 0, 1000);
+                break;
+
+            case CONTROL_UPDATE:
+                LOG.info("Control");
+                break;
         }
     }
 

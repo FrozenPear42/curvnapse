@@ -2,6 +2,7 @@ package com.bugfullabs.curvnapse.gui;
 
 
 import com.bugfullabs.curvnapse.player.Player;
+import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
@@ -19,6 +20,10 @@ public class Leaderboard extends VBox {
         mPlayersList = new ListView<>();
         mPlayersList.setCellFactory(param -> new PlayersLeaderboardListElement());
         getChildren().addAll(mPlayersList);
+    }
+
+    public void setPlayers(ObservableList<Player> pPlayers) {
+        mPlayersList.setItems(pPlayers);
     }
 
     private class PlayersLeaderboardListElement extends ListCell<Player> {

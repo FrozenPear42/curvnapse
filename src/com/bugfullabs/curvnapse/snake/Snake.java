@@ -56,17 +56,18 @@ public class Snake {
                 mPosition = Vec2.add(mPosition, Vec2.times(mVelocity, pDelta));
                 mLineFragments.get(mLineFragments.size() - 1).updateHead(mPosition);
                 break;
+
             case TURNING_LEFT:
                 mAngle += (mVelocity.length() / mTurnRadius) * pDelta;
                 mPosition.x = mTurnCenter.x - mTurnRadius * Math.sin(mAngle);
                 mPosition.y = mTurnCenter.y + mTurnRadius * Math.cos(mAngle);
                 mArcFragments.get(mLineFragments.size() - 1).updateHead(mAngle);
                 break;
+
             case TURNING_RIGHT:
                 mPosition.x = mTurnCenter.x + mTurnRadius * Math.sin(mAngle);
                 mPosition.y = mTurnCenter.y - mTurnRadius * Math.cos(mAngle);
                 mArcFragments.get(mLineFragments.size() - 1).updateHead(mAngle);
-
                 break;
         }
     }
