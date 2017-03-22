@@ -25,7 +25,7 @@ public class MessageBox extends VBox {
         super(10.0f);
         setPadding(new Insets(10.0f));
 
-        mList = new MessageList();
+        mList = new ListView<>();
         mList.setCellFactory(pTextMessageListView -> new MessageListElement());
 
         mInputBox = new HBox();
