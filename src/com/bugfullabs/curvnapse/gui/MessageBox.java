@@ -1,17 +1,21 @@
 package com.bugfullabs.curvnapse.gui;
 
 
+import com.bugfullabs.curvnapse.network.message.Message;
 import com.bugfullabs.curvnapse.network.message.TextMessage;
+import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.control.Button;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
+import java.util.Observable;
+
 public class MessageBox extends VBox {
-    private MessageList mMessageList;
+    private ListView<TextMessage> mList;
+
     private HBox mInputBox;
     private TextField mTextBox;
     private Button mSendButton;
@@ -20,7 +24,10 @@ public class MessageBox extends VBox {
     public MessageBox() {
         super(10.0f);
         setPadding(new Insets(10.0f));
-        mMessageList = new MessageList();
+
+        mList = new MessageList();
+        mList.setCellFactory(pTextMessageListView -> new MessageListElement());
+
         mInputBox = new HBox();
         mTextBox = new TextField();
         mSendButton = new Button(">");
@@ -46,18 +53,35 @@ public class MessageBox extends VBox {
             mTextBox.setText("");
         });
 
-        getChildren().addAll(mMessageList, mInputBox);
+        getChildren().addAll(mList, mInputBox);
     }
 
     public void setSendListener(MessageSendListener pListener) {
         mListener = pListener;
     }
 
-    public void addMessage(TextMessage pMessage) {
-        mMessageList.addMessage(pMessage);
+    public void setMessages(ObservableList<TextMessage> pMessages) {
+        mList.setItems(pMessages);
+        //TODO: ADD LISTENER
     }
 
     public interface MessageSendListener {
         void onMessageSend(String pMessage);
     }
+
+    class MessageListElement extends ListCell<TextMessage> {
+        @Override
+        public void updateItem(TextMessage pMessage, boolean pEmpty) {
+            super.updateItem(pMessage, pEmpty);
+            HBox box = new HBox();
+            if (pMessage != null) {
+                Label name = new Label(pMessage.getAuthor() + ": ");
+                Label text = new Label(pMessage.getMessage());
+                box.getChildren().add(name);
+                box.getChildren().add(text);
+                setGraphic(box);
+            }
+        }
+    }
+
 }

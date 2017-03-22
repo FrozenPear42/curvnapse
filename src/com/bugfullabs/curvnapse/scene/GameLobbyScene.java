@@ -35,6 +35,8 @@ public class GameLobbyScene implements ServerConnector.MessageListener {
     private ServerConnector mConnector;
     private Stage mMainStage;
     private ObservableList<Player> mPlayers;
+    private ObservableList<TextMessage> mMessages;
+
 
     public GameLobbyScene(Stage pMainSatage, ServerConnector pConnector) {
         mMainStage = pMainSatage;
@@ -61,6 +63,8 @@ public class GameLobbyScene implements ServerConnector.MessageListener {
         mRoot.setPadding(new Insets(10.0f));
         mConnector.registerListener(this);
 
+        mMessages = FXCollections.observableArrayList();
+        mMessageBox.setMessages(mMessages);
         mMessageBox.setSendListener(pMessage -> mConnector.sendMessage(new TextMessage("JA", pMessage)));
 
         mPlayers = FXCollections.observableArrayList();
@@ -79,7 +83,7 @@ public class GameLobbyScene implements ServerConnector.MessageListener {
     public void onClientMessage(Message pMessage) {
         switch (pMessage.getType()) {
             case TEXT:
-                mMessageBox.addMessage((TextMessage) pMessage);
+                Platform.runLater(() -> mMessages.add((TextMessage) pMessage));
                 break;
             case PLAYER_ADD:
                 Platform.runLater(() -> mPlayers.add(((NewPlayerMessage) pMessage).getPlayer()));

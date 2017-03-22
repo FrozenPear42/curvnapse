@@ -8,6 +8,7 @@ import com.bugfullabs.curvnapse.network.message.ControlUpdateMessage;
 import com.bugfullabs.curvnapse.network.message.Message;
 import com.bugfullabs.curvnapse.network.message.TextMessage;
 import com.bugfullabs.curvnapse.player.Player;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.Scene;
@@ -30,6 +31,8 @@ public class GameScene implements ServerConnector.MessageListener {
     private Leaderboard mLeaderboard;
 
     private ObservableList<Player> mPlayers;
+    private ObservableList<TextMessage> mMessages;
+
     private Map<KeyCode, Player> mKeys;
     private List<KeyCode> mActiveKeys;
 
@@ -38,6 +41,7 @@ public class GameScene implements ServerConnector.MessageListener {
     public GameScene(ServerConnector pConnector, List<Player> pPlayers) {
         mConnector = pConnector;
         mPlayers = FXCollections.observableArrayList(pPlayers);
+        mMessages = FXCollections.observableArrayList();
 
         mKeys = new HashMap<>();
         mActiveKeys = new ArrayList<>();
@@ -58,6 +62,7 @@ public class GameScene implements ServerConnector.MessageListener {
 
         mConnector.registerListener(this);
         mMessageBox.setSendListener(pMessage -> mConnector.sendMessage(new TextMessage("MWSG", pMessage)));
+        mMessageBox.setMessages(mMessages);
 
         mLeaderboard.setPlayers(mPlayers);
 
@@ -102,7 +107,7 @@ public class GameScene implements ServerConnector.MessageListener {
     public void onClientMessage(Message pMessage) {
         switch (pMessage.getType()) {
             case TEXT:
-                mMessageBox.addMessage((TextMessage) pMessage);
+                Platform.runLater(() -> mMessages.add((TextMessage) pMessage));
                 break;
         }
     }

@@ -7,6 +7,8 @@ import com.bugfullabs.curvnapse.network.client.Game;
 import com.bugfullabs.curvnapse.network.client.ServerConnector;
 import com.bugfullabs.curvnapse.network.message.*;
 import javafx.application.Platform;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
@@ -24,6 +26,8 @@ public class MainLobbyScene implements ServerConnector.MessageListener {
     private Stage mMainStage;
     private ServerConnector mConnector;
 
+    private ObservableList<TextMessage> mMessages;
+
     public MainLobbyScene(Stage pMainSatage, ServerConnector pConnector) {
         mRoot = new BorderPane();
         mMessageBox = new MessageBox();
@@ -36,6 +40,8 @@ public class MainLobbyScene implements ServerConnector.MessageListener {
         mConnector = pConnector;
         mConnector.registerListener(this);
 
+        mMessages = FXCollections.observableArrayList();
+        mMessageBox.setMessages(mMessages);
         mMessageBox.setSendListener(pMessage -> mConnector.sendMessage(new TextMessage("asd", pMessage)));
         mGameListBox.setListener(new GameListBox.GameListBoxListener() {
             @Override
@@ -59,9 +65,9 @@ public class MainLobbyScene implements ServerConnector.MessageListener {
     @Override
     public void onClientMessage(Message pMessage) {
         if (pMessage.getType() == Message.Type.TEXT)
-            mMessageBox.addMessage((TextMessage) pMessage);
+            Platform.runLater(() -> mMessages.add((TextMessage) pMessage));
         else if (pMessage.getType() == Message.Type.HANDSHAKE)
-            mMessageBox.addMessage(new TextMessage("Server", ((HandshakeMessage) (pMessage)).getName() + " joined!"));
+            Platform.runLater(() -> mMessages.add(new TextMessage("Server", ((HandshakeMessage) (pMessage)).getName() + " joined!")));
         else if (pMessage.getType() == Message.Type.GAME_UPDATE) {
             GameUpdateMessage msg = (GameUpdateMessage) pMessage;
             mGameListBox.updateGame(msg.getGame());
