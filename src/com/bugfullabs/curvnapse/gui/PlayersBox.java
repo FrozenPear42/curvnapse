@@ -51,6 +51,7 @@ public class PlayersBox extends VBox {
             VBox box = new VBox(5.0f);
             if (pPlayer != null) {
                 Label label = new Label(pPlayer.getName());
+                label.setTextFill(pPlayer.getColor().toFXColor());
                 Label keys = new Label(String.format("Left: %s\nRight: %s",
                         pPlayer.getLeftKey().getName(),
                         pPlayer.getRightKey().getName()));

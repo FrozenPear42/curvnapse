@@ -61,7 +61,7 @@ public class GameLobbyScene implements ServerConnector.MessageListener {
         mRoot.setPadding(new Insets(10.0f));
         mConnector.registerListener(this);
 
-        mMessageBox.setSendListener(pMessage -> mConnector.sendMessage(new TextMessage("MS", pMessage)));
+        mMessageBox.setSendListener(pMessage -> mConnector.sendMessage(new TextMessage("JA", pMessage)));
 
         mPlayers = FXCollections.observableArrayList();
         mPlayersBox.setPlayersList(mPlayers);

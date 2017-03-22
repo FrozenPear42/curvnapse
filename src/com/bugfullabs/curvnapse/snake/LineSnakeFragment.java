@@ -2,13 +2,14 @@ package com.bugfullabs.curvnapse.snake;
 
 import com.bugfullabs.curvnapse.utils.Vec2;
 
-public class LineSnakeFragment {
+public class LineSnakeFragment extends SnakeFragment {
     private Vec2 mBegin;
     private Vec2 mEnd;
     private double mSize;
 
 
     public LineSnakeFragment(Vec2 pBegin, Vec2 pEnd, double pSize) {
+        super(Type.LINE);
         mBegin = pBegin;
         mEnd = pEnd;
         mSize = pSize;

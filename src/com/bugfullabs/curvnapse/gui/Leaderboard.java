@@ -33,6 +33,7 @@ public class Leaderboard extends VBox {
             VBox box = new VBox(5.0f);
             if (pPlayer != null) {
                 Label label = new Label(pPlayer.getName());
+                label.setTextFill(pPlayer.getColor().toFXColor());
                 Label points = new Label("100");
                 Rectangle color = new Rectangle(20, 20, pPlayer.getColor().toFXColor());
                 box.getChildren().addAll(label, points, color);

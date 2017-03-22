@@ -55,7 +55,6 @@ public class ServerConnector extends Thread {
         }
     }
 
-
     public interface MessageListener {
         void onClientMessage(Message pMessage);
     }

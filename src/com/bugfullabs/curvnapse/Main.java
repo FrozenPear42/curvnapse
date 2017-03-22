@@ -2,6 +2,7 @@ package com.bugfullabs.curvnapse;
 
 import com.bugfullabs.curvnapse.scene.LoginScene;
 import javafx.application.Application;
+import javafx.fxml.FXMLLoader;
 import javafx.stage.Stage;
 
 import java.util.logging.Logger;
@@ -15,7 +16,6 @@ public class Main extends Application {
         primaryStage.setTitle("Curvnapse");
         primaryStage.setWidth(1000);
         primaryStage.setHeight(700);
-
         primaryStage.setScene(new LoginScene(primaryStage).getScene());
         primaryStage.show();
     }

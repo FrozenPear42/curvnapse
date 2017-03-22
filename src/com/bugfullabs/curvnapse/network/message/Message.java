@@ -18,6 +18,7 @@ public class Message implements Serializable {
         GAME_START_REQUEST,
         GAME_START,
         CONTROL_UPDATE,
+        SNAKE_UPDATE,
         ERROR
     }
 

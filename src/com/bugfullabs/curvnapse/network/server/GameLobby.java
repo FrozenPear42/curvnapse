@@ -70,7 +70,6 @@ public class GameLobby implements ClientThread.ClientListener {
 
                     @Override
                     public void run() {
-                        LOG.info("Tick" + times);
                         mClientThreads.forEach(clientThread -> clientThread.sendMessage(new TextMessage("Server", String.format("Game will start in %d...", times))));
                         if (times == 0) {
                             this.cancel();
