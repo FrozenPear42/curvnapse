@@ -64,7 +64,7 @@ public class MessageBox extends VBox {
         mList.setItems(pMessages);
         //TODO: ADD LISTENER
     }
-
+    
     public interface MessageSendListener {
         void onMessageSend(String pMessage);
     }

@@ -27,6 +27,7 @@ public class MainLobbyScene implements ServerConnector.MessageListener {
     private ServerConnector mConnector;
 
     private ObservableList<TextMessage> mMessages;
+    private ObservableList<Game> mGames;
 
     public MainLobbyScene(Stage pMainSatage, ServerConnector pConnector) {
         mRoot = new BorderPane();
@@ -43,6 +44,9 @@ public class MainLobbyScene implements ServerConnector.MessageListener {
         mMessages = FXCollections.observableArrayList();
         mMessageBox.setMessages(mMessages);
         mMessageBox.setSendListener(pMessage -> mConnector.sendMessage(new TextMessage("asd", pMessage)));
+
+        mGames = FXCollections.observableArrayList();
+        mGameListBox.setGames(mGames);
         mGameListBox.setListener(new GameListBox.GameListBoxListener() {
             @Override
             public void onJoin(Game pGame) {
@@ -70,7 +74,10 @@ public class MainLobbyScene implements ServerConnector.MessageListener {
             Platform.runLater(() -> mMessages.add(new TextMessage("Server", ((HandshakeMessage) (pMessage)).getName() + " joined!")));
         else if (pMessage.getType() == Message.Type.GAME_UPDATE) {
             GameUpdateMessage msg = (GameUpdateMessage) pMessage;
-            mGameListBox.updateGame(msg.getGame());
+            Platform.runLater(() -> {
+                mGames.removeIf(pGame -> msg.getGame().getID() == pGame.getID());
+                mGames.add(msg.getGame());
+            });
         } else if (pMessage.getType() == Message.Type.GAME_JOIN) {
             Platform.runLater(() -> {
                 mMainStage.setScene(new GameLobbyScene(mMainStage, mConnector).getScene());
