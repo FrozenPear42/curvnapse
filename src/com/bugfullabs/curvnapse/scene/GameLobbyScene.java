@@ -1,5 +1,6 @@
 package com.bugfullabs.curvnapse.scene;
 
+import com.bugfullabs.curvnapse.FlowManager;
 import com.bugfullabs.curvnapse.gui.GameOptionsBox;
 import com.bugfullabs.curvnapse.gui.MessageBox;
 import com.bugfullabs.curvnapse.gui.PlayersBox;
@@ -33,14 +34,12 @@ public class GameLobbyScene implements ServerConnector.MessageListener {
     private Button mStartButton;
 
     private ServerConnector mConnector;
-    private Stage mMainStage;
     private ObservableList<Player> mPlayers;
     private ObservableList<TextMessage> mMessages;
 
 
-    public GameLobbyScene(Stage pMainSatage, ServerConnector pConnector) {
-        mMainStage = pMainSatage;
-        mConnector = pConnector;
+    public GameLobbyScene() {
+        mConnector = FlowManager.getInstance().getConnector();
 
         mRoot = new BorderPane();
         mScene = new Scene(mRoot);
@@ -65,7 +64,7 @@ public class GameLobbyScene implements ServerConnector.MessageListener {
 
         mMessages = FXCollections.observableArrayList();
         mMessageBox.setMessages(mMessages);
-        mMessageBox.setSendListener(pMessage -> mConnector.sendMessage(new TextMessage("JA", pMessage)));
+        mMessageBox.setSendListener(pMessage -> mConnector.sendMessage(new TextMessage(FlowManager.getInstance().getUsername(), pMessage)));
 
         mPlayers = FXCollections.observableArrayList();
         mPlayersBox.setPlayersList(mPlayers);
@@ -91,7 +90,7 @@ public class GameLobbyScene implements ServerConnector.MessageListener {
             case GAME_START:
                 LOG.info("Game started");
                 mConnector.unregisterListener(this);
-                Platform.runLater(() -> mMainStage.setScene(new GameScene(mConnector, ((GameStartMessage) pMessage).getPlayers()).getScene()));
+                Platform.runLater(() -> FlowManager.getInstance().gameScene());
                 break;
             default:
                 break;

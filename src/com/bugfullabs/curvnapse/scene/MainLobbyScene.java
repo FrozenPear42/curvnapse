@@ -1,5 +1,6 @@
 package com.bugfullabs.curvnapse.scene;
 
+import com.bugfullabs.curvnapse.FlowManager;
 import com.bugfullabs.curvnapse.Main;
 import com.bugfullabs.curvnapse.gui.GameListBox;
 import com.bugfullabs.curvnapse.gui.MessageBox;
@@ -23,13 +24,12 @@ public class MainLobbyScene implements ServerConnector.MessageListener {
     private MessageBox mMessageBox;
     private GameListBox mGameListBox;
 
-    private Stage mMainStage;
     private ServerConnector mConnector;
 
     private ObservableList<TextMessage> mMessages;
     private ObservableList<Game> mGames;
 
-    public MainLobbyScene(Stage pMainSatage, ServerConnector pConnector) {
+    public MainLobbyScene() {
         mRoot = new BorderPane();
         mMessageBox = new MessageBox();
         mGameListBox = new GameListBox();
@@ -37,13 +37,12 @@ public class MainLobbyScene implements ServerConnector.MessageListener {
         mRoot.setCenter(mGameListBox);
         mScene = new Scene(mRoot);
 
-        mMainStage = pMainSatage;
-        mConnector = pConnector;
+        mConnector = FlowManager.getInstance().getConnector();
         mConnector.registerListener(this);
 
         mMessages = FXCollections.observableArrayList();
         mMessageBox.setMessages(mMessages);
-        mMessageBox.setSendListener(pMessage -> mConnector.sendMessage(new TextMessage("asd", pMessage)));
+        mMessageBox.setSendListener(pMessage -> mConnector.sendMessage(new TextMessage(FlowManager.getInstance().getUsername(), pMessage)));
 
         mGames = FXCollections.observableArrayList();
         mGameListBox.setGames(mGames);
@@ -80,7 +79,7 @@ public class MainLobbyScene implements ServerConnector.MessageListener {
             });
         } else if (pMessage.getType() == Message.Type.GAME_JOIN) {
             Platform.runLater(() -> {
-                mMainStage.setScene(new GameLobbyScene(mMainStage, mConnector).getScene());
+                FlowManager.getInstance().gameLobby();
                 mConnector.unregisterListener(this);
             });
 

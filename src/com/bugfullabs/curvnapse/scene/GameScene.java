@@ -1,5 +1,6 @@
 package com.bugfullabs.curvnapse.scene;
 
+import com.bugfullabs.curvnapse.FlowManager;
 import com.bugfullabs.curvnapse.gui.Board;
 import com.bugfullabs.curvnapse.gui.Leaderboard;
 import com.bugfullabs.curvnapse.gui.MessageBox;
@@ -38,8 +39,8 @@ public class GameScene implements ServerConnector.MessageListener {
 
     private ServerConnector mConnector;
 
-    public GameScene(ServerConnector pConnector, List<Player> pPlayers) {
-        mConnector = pConnector;
+    public GameScene(List<Player> pPlayers) {
+        mConnector = FlowManager.getInstance().getConnector();
         mPlayers = FXCollections.observableArrayList(pPlayers);
         mMessages = FXCollections.observableArrayList();
 
@@ -61,7 +62,7 @@ public class GameScene implements ServerConnector.MessageListener {
         mScene = new Scene(mRoot);
 
         mConnector.registerListener(this);
-        mMessageBox.setSendListener(pMessage -> mConnector.sendMessage(new TextMessage("MWSG", pMessage)));
+        mMessageBox.setSendListener(pMessage -> mConnector.sendMessage(new TextMessage(FlowManager.getInstance().getUsername(), pMessage)));
         mMessageBox.setMessages(mMessages);
 
         mLeaderboard.setPlayers(mPlayers);

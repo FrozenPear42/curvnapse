@@ -1,10 +1,12 @@
 package com.bugfullabs.curvnapse.scene;
 
+import com.bugfullabs.curvnapse.FlowManager;
 import com.bugfullabs.curvnapse.gui.LoginBox;
 import com.bugfullabs.curvnapse.network.client.ServerConnector;
 import com.bugfullabs.curvnapse.network.server.Server;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
@@ -18,17 +20,13 @@ public class LoginScene implements LoginBox.LoginListener {
     private Scene mScene;
     private LoginBox mLoginBox;
 
-    private Stage mMainStage;
-
-    public LoginScene(Stage pMainStage) {
+    public LoginScene() {
         mRoot = new HBox();
         mRoot.setAlignment(Pos.CENTER);
         mLoginBox = new LoginBox();
         mLoginBox.setLoginListener(this);
         mRoot.getChildren().add(mLoginBox);
         mScene = new Scene(mRoot);
-
-        mMainStage = pMainStage;
     }
 
     public Scene getScene() {
@@ -37,31 +35,22 @@ public class LoginScene implements LoginBox.LoginListener {
 
     @Override
     public void onLogin(String pName, String pIP, String pPort, boolean pHost) {
-        if (pName.isEmpty()) {
+        if (pName.isEmpty())
             return;
-        }
+
+        if (pIP.isEmpty())
+            pIP = "localhost";
 
         if (pHost) {
-            try {
-                Server server = new Server(Integer.parseInt(pPort), 100);
-                server.start();
-                mMainStage.setOnCloseRequest(event -> {
-                    LOG.info("Closing app!");
-                    server.close();
-                });
-            } catch (Exception e) {
-                LOG.warning("Could not start server");
-                return;
+            if (!FlowManager.getInstance().createServer(Integer.parseInt(pPort), 100)) {
+                new Alert(Alert.AlertType.ERROR, "Cannot create server").showAndWait();
             }
         }
-
-        try {
-            ServerConnector connector = new ServerConnector(pIP, Integer.parseInt(pPort), pName);
-            connector.start();
-            mMainStage.setScene(new MainLobbyScene(mMainStage, connector).getScene());
-        } catch (Exception e) {
-            LOG.warning("Could not connect to server");
+        if(!FlowManager.getInstance().connectToServer(pName, pIP, Integer.parseInt(pPort))) {
+            new Alert(Alert.AlertType.ERROR, "Cannot join server").showAndWait();
         }
+        FlowManager.getInstance().login(pName);
+        FlowManager.getInstance().mainLobby();
     }
 
 }

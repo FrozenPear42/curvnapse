@@ -2,7 +2,14 @@ package com.bugfullabs.curvnapse;
 
 import com.bugfullabs.curvnapse.network.client.ServerConnector;
 import com.bugfullabs.curvnapse.network.server.Server;
+import com.bugfullabs.curvnapse.player.Player;
+import com.bugfullabs.curvnapse.scene.GameLobbyScene;
+import com.bugfullabs.curvnapse.scene.GameScene;
+import com.bugfullabs.curvnapse.scene.LoginScene;
+import com.bugfullabs.curvnapse.scene.MainLobbyScene;
 import javafx.stage.Stage;
+
+import java.util.ArrayList;
 
 public class FlowManager {
     private static FlowManager mInstance = new FlowManager();
@@ -18,5 +25,56 @@ public class FlowManager {
 
     public void initialize(Stage pMainStage) {
         mMainStage = pMainStage;
+    }
+
+    public boolean createServer(int pPort, int pMaxGames) {
+        try {
+            mServer = new Server(pPort, pMaxGames);
+            mServer.start();
+            mMainStage.setOnCloseRequest(event -> mServer.close());
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+        return true;
+    }
+
+    public boolean connectToServer(String pName, String pIP, int pPort) {
+        try {
+            mServerConnector = new ServerConnector(pIP, pPort, pName);
+            mServerConnector.start();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+        return true;
+    }
+
+    public void login(String pName) {
+        mUsername = pName;
+    }
+
+    public void loginScene() {
+        mMainStage.setScene(new LoginScene().getScene());
+    }
+
+    public void mainLobby() {
+        mMainStage.setScene(new MainLobbyScene().getScene());
+    }
+
+    public void gameLobby() {
+        mMainStage.setScene(new GameLobbyScene().getScene());
+    }
+
+    public void gameScene() {
+        mMainStage.setScene(new GameScene(new ArrayList<>()).getScene());
+    }
+
+    public ServerConnector getConnector() {
+        return mServerConnector;
+    }
+
+    public String getUsername() {
+        return mUsername;
     }
 }
