@@ -17,6 +17,8 @@ public class Leaderboard extends VBox {
     public Leaderboard() {
         super(10.0f);
         setPadding(new Insets(10.f));
+        setAlignment(Pos.CENTER);
+
         mPlayersList = new ListView<>();
         mPlayersList.setCellFactory(param -> new PlayersLeaderboardListElement());
         getChildren().addAll(mPlayersList);

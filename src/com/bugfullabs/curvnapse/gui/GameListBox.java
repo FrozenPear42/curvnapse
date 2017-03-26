@@ -22,6 +22,8 @@ public class GameListBox extends VBox {
     public GameListBox() {
         super(5.0f);
         setPadding(new Insets(10.0f));
+        setAlignment(Pos.CENTER);
+
         mGameList = new ListView<>();
         mGameList.setCellFactory(pGameListView -> new GameListElement());
 
