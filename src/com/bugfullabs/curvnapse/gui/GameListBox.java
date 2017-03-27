@@ -76,7 +76,7 @@ public class GameListBox extends VBox {
             if (pGame != null) {
                 HBox box = new HBox(5.0f);
                 Label name = new Label(pGame.getName());
-                Label players = new Label(pGame.getPlayers() + "/" + pGame.getMaxPlayers());
+                Label players = new Label(pGame.getPlayers().size() + "/" + pGame.getMaxPlayers());
                 box.getChildren().addAll(name, players);
                 setGraphic(box);
             }

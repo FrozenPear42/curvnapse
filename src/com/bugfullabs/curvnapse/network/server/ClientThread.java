@@ -19,6 +19,7 @@ public class ClientThread extends Thread {
     private final ObjectOutputStream mObjectOutputStream;
     private final ObjectInputStream mObjectInputStream;
     private int mUID;
+    private String mUserName;
 
     public ClientThread(Socket pSocket) throws IOException {
         mSocket = pSocket;
@@ -27,6 +28,7 @@ public class ClientThread extends Thread {
         mObjectOutputStream = new ObjectOutputStream(mSocket.getOutputStream());
         mObjectInputStream = new ObjectInputStream(mSocket.getInputStream());
         mListeners = new CopyOnWriteArrayList<>();
+        mUserName = "Player " + mUID;
     }
 
     @Override
@@ -45,6 +47,7 @@ public class ClientThread extends Thread {
             }
         }
     }
+
 
     public void sendMessage(Message pMessage) {
         try {
@@ -72,9 +75,14 @@ public class ClientThread extends Thread {
 
     }
 
+    public void setUserName(String pName) {
+        mUserName = pName;
+    }
+
     public int getID() {
         return mUID;
     }
+
 
     public interface ClientListener {
         void onClientMessage(ClientThread pClientThread, Message pMessage);

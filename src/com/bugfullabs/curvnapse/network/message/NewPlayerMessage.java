@@ -2,6 +2,7 @@ package com.bugfullabs.curvnapse.network.message;
 
 import com.bugfullabs.curvnapse.player.Player;
 
+/** @deprecated fuj, bez sensu*/
 public class NewPlayerMessage extends Message {
     private Player mPlayer;
 

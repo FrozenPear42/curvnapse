@@ -1,18 +1,19 @@
 package com.bugfullabs.curvnapse.network.message;
 
+import com.bugfullabs.curvnapse.network.client.Game;
 import com.bugfullabs.curvnapse.player.Player;
 
 import java.util.List;
 
 public class GameStartMessage extends Message {
-    private List<Player> mPlayers;
+    Game mGame;
 
-    public GameStartMessage(List<Player> pList) {
+    public GameStartMessage(Game pGame) {
         super(Type.GAME_START);
-        mPlayers = pList;
+        mGame = pGame;
     }
-
-    public List<Player> getPlayers() {
-        return mPlayers;
+    
+    public Game getGame() {
+        return mGame;
     }
 }

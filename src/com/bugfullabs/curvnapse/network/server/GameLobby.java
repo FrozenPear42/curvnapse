@@ -12,39 +12,32 @@ import java.util.logging.Logger;
 
 public class GameLobby implements ClientThread.ClientListener {
     private static Logger LOG = Logger.getLogger(GameLobby.class.getName());
-    private static int UID = 0;
     private LinkedList<ClientThread> mClientThreads;
-    private HashMap<Integer, Player> mPlayers;
-    private int mUID;
-    private String mName;
-    private int mPlayersCount;
-    private int mPlayersMax;
+    private Game mGame;
 
-    private ColorBank mColorBank;
+    private GameUpdateListener mListener;
 
     public GameLobby(String pName, int pMaxPlayers) {
-        mUID = UID;
-        UID += 1;
-        mName = pName;
-        mPlayersMax = pMaxPlayers;
-        mPlayersCount = 0;
         mClientThreads = new LinkedList<>();
-        mPlayers = new HashMap<>(mPlayersMax);
-        mColorBank = new ColorBank();
+        mGame = new Game(pName, pMaxPlayers);
     }
 
     public void addClient(ClientThread pClient) {
         mClientThreads.add(pClient);
         pClient.registerListener(this);
-        mPlayers.forEach((pInteger, pPlayer) -> pClient.sendMessage(new NewPlayerMessage(pPlayer)));
+        mGame.getPlayers().forEach(player -> pClient.sendMessage(new NewPlayerMessage(player)));
     }
 
     public int getID() {
-        return mUID;
+        return mGame.getID();
     }
 
     public Game getGameDescriptor() {
-        return new Game(mName, mPlayersMax);
+        return mGame;
+    }
+
+    public void setListener(GameUpdateListener pListener) {
+        mListener = pListener;
     }
 
     @Override
@@ -54,14 +47,9 @@ public class GameLobby implements ClientThread.ClientListener {
                 mClientThreads.forEach(clientThread -> clientThread.sendMessage(pMessage));
                 break;
             case PLAYER_ADD_REQUEST:
-                if (mPlayersCount < mPlayersMax) {
-                    PlayerColor color = mColorBank.nextColor();
-
-                    Player player = new Player(((NewPlayerRequestMessage) pMessage).getName(), color, true);
-                    mPlayers.put(player.getID(), player);
-                    mPlayersCount += 1;
-                    mClientThreads.forEach(clientThread -> clientThread.sendMessage(new NewPlayerMessage(player)));
-                }
+                Player p = mGame.addPlayer(((NewPlayerRequestMessage) pMessage).getName(), pClientThread.getID());
+                if (p != null)
+                    mClientThreads.forEach(clientThread -> clientThread.sendMessage(new NewPlayerMessage(p)));
                 break;
             case GAME_START_REQUEST:
                 //FIXME: Move timer as member, allow cancel
@@ -73,7 +61,7 @@ public class GameLobby implements ClientThread.ClientListener {
                         mClientThreads.forEach(clientThread -> clientThread.sendMessage(new TextMessage("Server", String.format("Game will start in %d...", times))));
                         if (times == 0) {
                             this.cancel();
-                            mClientThreads.forEach(clientThread -> clientThread.sendMessage(new GameStartMessage(new ArrayList<>(mPlayers.values()))));
+                            mClientThreads.forEach(clientThread -> clientThread.sendMessage(new GameStartMessage(mGame)));
                         }
                         times--;
                     }
@@ -84,6 +72,10 @@ public class GameLobby implements ClientThread.ClientListener {
                 LOG.info("Control");
                 break;
         }
+    }
+
+    public interface GameUpdateListener {
+        void onGameUpdate(Game pGame);
     }
 
 }

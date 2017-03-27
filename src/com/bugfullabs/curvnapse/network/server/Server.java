@@ -61,7 +61,8 @@ public class Server extends Thread implements ClientThread.ClientListener {
             case HANDSHAKE:
                 HandshakeMessage msg = (HandshakeMessage) pMessage;
                 LOG.info("HANDSHAKE: " + msg.getName());
-                mLobby.addClient(pClientThread, msg.getName());
+                pClientThread.setUserName(msg.getName());
+                mLobby.addClient(pClientThread);
                 break;
             default:
                 LOG.warning("Unsupported message: " + pMessage.getType().name());

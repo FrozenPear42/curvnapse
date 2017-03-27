@@ -22,13 +22,17 @@ public class Lobby implements ClientThread.ClientListener {
         mGameLobbies = new ArrayList<>(mMaxGames);
     }
 
-    public void addClient(ClientThread pClientThread, String pName) {
+    public void addClient(ClientThread pClientThread) {
         for (ClientThread client : mClients)
-            client.sendMessage(new HandshakeMessage(pName));
+            client.sendMessage(new HandshakeMessage(pClientThread.getName()));
 
         mClients.add(pClientThread);
         pClientThread.registerListener(this);
         mGameLobbies.forEach(gameLobby -> pClientThread.sendMessage(new GameUpdateMessage(gameLobby.getGameDescriptor())));
+    }
+
+    public void removeClient(ClientThread pClientThread) {
+        //TODO: implement
     }
 
     @Override
@@ -46,6 +50,7 @@ public class Lobby implements ClientThread.ClientListener {
                 if (mGameLobbies.size() < mMaxGames) {
                     LOG.info("Game created"); //TODO: more detailed log
                     GameLobby lobby = new GameLobby(gameCreateRequest.getName(), gameCreateRequest.getMaxPlayers());
+                    lobby.setListener(game -> mClients.forEach(client -> client.sendMessage(new GameUpdateMessage(game))));
                     mGameLobbies.add(lobby);
                     lobby.addClient(pClientThread);
                     mClients.remove(pClientThread);
