@@ -2,6 +2,7 @@ package com.bugfullabs.curvnapse.network.server;
 
 import com.bugfullabs.curvnapse.network.client.Game;
 import com.bugfullabs.curvnapse.network.message.*;
+import javafx.application.Platform;
 import sun.rmi.runtime.Log;
 
 import java.util.ArrayList;
@@ -55,7 +56,7 @@ public class Lobby implements ClientThread.ClientListener {
                     lobby.addClient(pClientThread);
                     mClients.remove(pClientThread);
                     pClientThread.removeListener(this);
-                    pClientThread.sendMessage(new JoinMessage(lobby.getID()));
+                    pClientThread.sendMessage(new JoinMessage(lobby.getGameDescriptor()));
                     for (ClientThread client : mClients)
                         client.sendMessage(new GameUpdateMessage(lobby.getGameDescriptor()));
                 }
@@ -64,13 +65,15 @@ public class Lobby implements ClientThread.ClientListener {
             case GAME_JOIN_REQUEST:
                 JoinRequestMessage msg = (JoinRequestMessage) pMessage;
                 LOG.info("Join request");
-                mGameLobbies.stream()
-                        .filter(gameLobby -> msg.getID() == gameLobby.getID())
-                        .findFirst()
-                        .get().addClient(pClientThread);
+                GameLobby lobby =
+                        mGameLobbies.stream()
+                                .filter(gameLobby -> msg.getID() == gameLobby.getID())
+                                .findFirst()
+                                .get();
+                lobby.addClient(pClientThread);
                 mClients.remove(pClientThread);
                 pClientThread.removeListener(this);
-                pClientThread.sendMessage(new JoinMessage(msg.getID()));
+                pClientThread.sendMessage(new JoinMessage(lobby.getGameDescriptor()));
                 break;
             default:
                 LOG.warning("Unsupported message");

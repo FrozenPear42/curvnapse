@@ -1,7 +1,5 @@
 package com.bugfullabs.curvnapse.network.client;
 
-import com.bugfullabs.curvnapse.network.message.NewPlayerMessage;
-import com.bugfullabs.curvnapse.network.message.NewPlayerRequestMessage;
 import com.bugfullabs.curvnapse.player.Player;
 import com.bugfullabs.curvnapse.player.PlayerColor;
 import com.bugfullabs.curvnapse.utils.ColorBank;
@@ -17,7 +15,7 @@ public class Game implements Serializable {
     private String mName;
     private int mMaxPlayers;
     private List<Player> mPlayers;
-    private ColorBank mColorBank;
+    private transient ColorBank mColorBank;
 
     public Game(String pName, int pMaxPlayers) {
         mID = UID;

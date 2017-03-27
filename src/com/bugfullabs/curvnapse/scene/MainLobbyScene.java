@@ -79,7 +79,7 @@ public class MainLobbyScene implements ServerConnector.MessageListener {
             });
         } else if (pMessage.getType() == Message.Type.GAME_JOIN) {
             Platform.runLater(() -> {
-                FlowManager.getInstance().gameLobby();
+                FlowManager.getInstance().gameLobby(((JoinMessage) pMessage).getGame());
                 mConnector.unregisterListener(this);
             });
 

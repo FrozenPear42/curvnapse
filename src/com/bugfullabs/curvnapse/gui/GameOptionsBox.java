@@ -25,6 +25,10 @@ public class GameOptionsBox extends VBox {
         getChildren().addAll(mHeader);
     }
 
+    public void setName(String pName) {
+        mHeader.setText(pName);
+    }
+
 
     class PowerUpGrid extends GridPane {
         private ToggleImageButton mPowerups[];

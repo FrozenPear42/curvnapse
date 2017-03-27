@@ -14,7 +14,6 @@ public class Message implements Serializable {
         GAME_JOIN_REQUEST,
         GAME_JOIN,
         PLAYER_ADD_REQUEST,
-        PLAYER_ADD,
         GAME_START_REQUEST,
         GAME_START,
         CONTROL_UPDATE,

@@ -4,6 +4,7 @@ import com.bugfullabs.curvnapse.FlowManager;
 import com.bugfullabs.curvnapse.gui.GameOptionsBox;
 import com.bugfullabs.curvnapse.gui.MessageBox;
 import com.bugfullabs.curvnapse.gui.PlayersBox;
+import com.bugfullabs.curvnapse.network.client.Game;
 import com.bugfullabs.curvnapse.network.client.ServerConnector;
 import com.bugfullabs.curvnapse.network.message.*;
 import com.bugfullabs.curvnapse.player.Player;
@@ -34,12 +35,14 @@ public class GameLobbyScene implements ServerConnector.MessageListener {
     private Button mStartButton;
 
     private ServerConnector mConnector;
+    private Game mGame;
     private ObservableList<Player> mPlayers;
     private ObservableList<TextMessage> mMessages;
 
 
-    public GameLobbyScene() {
+    public GameLobbyScene(Game pGame) {
         mConnector = FlowManager.getInstance().getConnector();
+        mGame = pGame;
 
         mRoot = new BorderPane();
         mScene = new Scene(mRoot);
@@ -60,6 +63,7 @@ public class GameLobbyScene implements ServerConnector.MessageListener {
         mRoot.setRight(mPlayersBox);
         mRoot.setBottom(mButtons);
         mRoot.setPadding(new Insets(10.0f));
+
         mConnector.registerListener(this);
 
         mMessages = FXCollections.observableArrayList();
@@ -78,14 +82,21 @@ public class GameLobbyScene implements ServerConnector.MessageListener {
         return mScene;
     }
 
+    private void update(Game pGame) {
+        mGame = pGame;
+        mPlayers.removeAll();
+        mPlayers.addAll(mGame.getPlayers());
+        mGameOptionsBox.setName(mGame.getName());
+    }
+
     @Override
     public void onClientMessage(Message pMessage) {
         switch (pMessage.getType()) {
             case TEXT:
                 Platform.runLater(() -> mMessages.add((TextMessage) pMessage));
                 break;
-            case PLAYER_ADD:
-                Platform.runLater(() -> mPlayers.add(((NewPlayerMessage) pMessage).getPlayer()));
+            case GAME_UPDATE:
+                Platform.runLater(() -> update(((GameUpdateMessage) pMessage).getGame()));
                 break;
             case GAME_START:
                 LOG.info("Game started");

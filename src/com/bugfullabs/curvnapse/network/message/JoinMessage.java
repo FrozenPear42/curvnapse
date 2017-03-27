@@ -1,14 +1,16 @@
 package com.bugfullabs.curvnapse.network.message;
 
-public class JoinMessage extends Message {
-    private int mID;
+import com.bugfullabs.curvnapse.network.client.Game;
 
-    public JoinMessage(int pID) {
+public class JoinMessage extends Message {
+    private Game mGame;
+
+    public JoinMessage(Game pGame) {
         super(Type.GAME_JOIN);
-        mID = pID;
+        mGame = pGame;
     }
 
-    public int getID() {
-        return mID;
+    public Game getGame() {
+        return mGame;
     }
 }

@@ -25,7 +25,7 @@ public class GameLobby implements ClientThread.ClientListener {
     public void addClient(ClientThread pClient) {
         mClientThreads.add(pClient);
         pClient.registerListener(this);
-        mGame.getPlayers().forEach(player -> pClient.sendMessage(new NewPlayerMessage(player)));
+        mGame.getPlayers().forEach(player -> pClient.sendMessage(new GameUpdateMessage(mGame)));
     }
 
     public int getID() {
@@ -49,7 +49,9 @@ public class GameLobby implements ClientThread.ClientListener {
             case PLAYER_ADD_REQUEST:
                 Player p = mGame.addPlayer(((NewPlayerRequestMessage) pMessage).getName(), pClientThread.getID());
                 if (p != null)
-                    mClientThreads.forEach(clientThread -> clientThread.sendMessage(new NewPlayerMessage(p)));
+                    mClientThreads.forEach(clientThread -> clientThread.sendMessage(new GameUpdateMessage(mGame)));
+                if (mListener != null)
+                    mListener.onGameUpdate(mGame);
                 break;
             case GAME_START_REQUEST:
                 //FIXME: Move timer as member, allow cancel

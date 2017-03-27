@@ -1,5 +1,6 @@
 package com.bugfullabs.curvnapse;
 
+import com.bugfullabs.curvnapse.network.client.Game;
 import com.bugfullabs.curvnapse.network.client.ServerConnector;
 import com.bugfullabs.curvnapse.network.server.Server;
 import com.bugfullabs.curvnapse.player.Player;
@@ -62,8 +63,8 @@ public class FlowManager {
         mMainStage.setScene(new MainLobbyScene().getScene());
     }
 
-    public void gameLobby() {
-        mMainStage.setScene(new GameLobbyScene().getScene());
+    public void gameLobby(Game pGame) {
+        mMainStage.setScene(new GameLobbyScene(pGame).getScene());
     }
 
     public void gameScene() {
