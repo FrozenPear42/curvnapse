@@ -70,10 +70,12 @@ public class GameLobbyScene implements ServerConnector.MessageListener {
         mMessageBox.setMessages(mMessages);
         mMessageBox.setSendListener(pMessage -> mConnector.sendMessage(new TextMessage(FlowManager.getInstance().getUsername(), pMessage)));
 
-        mPlayers = FXCollections.observableArrayList();
+        mPlayers = FXCollections.observableArrayList(mGame.getPlayers());
         mPlayersBox.setPlayersList(mPlayers);
 
         mPlayersBox.setListener(() -> mConnector.sendMessage(new NewPlayerRequestMessage("Player")));
+
+        mGameOptionsBox.setName(mGame.getName());
 
         mStartButton.setOnAction(event -> mConnector.sendMessage(new GameStartRequestMessage()));
     }
@@ -84,7 +86,7 @@ public class GameLobbyScene implements ServerConnector.MessageListener {
 
     private void update(Game pGame) {
         mGame = pGame;
-        mPlayers.removeAll();
+        mPlayers.clear();
         mPlayers.addAll(mGame.getPlayers());
         mGameOptionsBox.setName(mGame.getName());
     }
@@ -96,7 +98,11 @@ public class GameLobbyScene implements ServerConnector.MessageListener {
                 Platform.runLater(() -> mMessages.add((TextMessage) pMessage));
                 break;
             case GAME_UPDATE:
-                Platform.runLater(() -> update(((GameUpdateMessage) pMessage).getGame()));
+                Game game = ((GameUpdateMessage) pMessage).getGame();
+                Platform.runLater(() -> {
+                    LOG.info("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA, jest: " + game.getTest().size());
+                    update(game);
+                });
                 break;
             case GAME_START:
                 LOG.info("Game started");

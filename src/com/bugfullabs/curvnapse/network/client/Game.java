@@ -14,7 +14,9 @@ public class Game implements Serializable {
     private int mID;
     private String mName;
     private int mMaxPlayers;
-    private List<Player> mPlayers;
+    private int mHostID;
+    private ArrayList<Player> mPlayers;
+    private ArrayList<Integer> mTest;
     private transient ColorBank mColorBank;
 
     public Game(String pName, int pMaxPlayers) {
@@ -23,6 +25,7 @@ public class Game implements Serializable {
         mName = pName;
         mMaxPlayers = pMaxPlayers;
         mPlayers = new ArrayList<>(mMaxPlayers);
+        mTest = new ArrayList<>(10);
         mColorBank = new ColorBank();
     }
 
@@ -38,6 +41,10 @@ public class Game implements Serializable {
         return mPlayers;
     }
 
+    public ArrayList<Integer> getTest() {
+        return mTest;
+    }
+
     public int getMaxPlayers() {
         return mMaxPlayers;
     }
@@ -46,6 +53,7 @@ public class Game implements Serializable {
         if (mPlayers.size() < mMaxPlayers) {
             PlayerColor color = mColorBank.nextColor();
             Player player = new Player(pName, color, true);
+            mTest.add(player.getID());
             mPlayers.add(player);
             return player;
         }

@@ -3,7 +3,6 @@ package com.bugfullabs.curvnapse;
 import com.bugfullabs.curvnapse.network.client.Game;
 import com.bugfullabs.curvnapse.network.client.ServerConnector;
 import com.bugfullabs.curvnapse.network.server.Server;
-import com.bugfullabs.curvnapse.player.Player;
 import com.bugfullabs.curvnapse.scene.GameLobbyScene;
 import com.bugfullabs.curvnapse.scene.GameScene;
 import com.bugfullabs.curvnapse.scene.LoginScene;

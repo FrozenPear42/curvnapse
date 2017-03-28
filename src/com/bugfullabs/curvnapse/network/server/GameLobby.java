@@ -48,10 +48,15 @@ public class GameLobby implements ClientThread.ClientListener {
                 break;
             case PLAYER_ADD_REQUEST:
                 Player p = mGame.addPlayer(((NewPlayerRequestMessage) pMessage).getName(), pClientThread.getID());
-                if (p != null)
-                    mClientThreads.forEach(clientThread -> clientThread.sendMessage(new GameUpdateMessage(mGame)));
-                if (mListener != null)
+                if (p != null) {
+                    mClientThreads.forEach(client -> client.sendMessage(new GameUpdateMessage(mGame)));
+                    mClientThreads.forEach(client -> client.sendMessage(new TextMessage("NOWY", Integer.toString(mGame.getPlayers().size()))));
+                }
+                if (mListener != null) {
                     mListener.onGameUpdate(mGame);
+                    mClientThreads.forEach(client -> client.sendMessage(new TextMessage("LISTE", Integer.toString(mGame.getPlayers().size()))));
+                }
+                mClientThreads.forEach(client -> client.sendMessage(new TextMessage("AAA", Integer.toString(mGame.getPlayers().size()))));
                 break;
             case GAME_START_REQUEST:
                 //FIXME: Move timer as member, allow cancel

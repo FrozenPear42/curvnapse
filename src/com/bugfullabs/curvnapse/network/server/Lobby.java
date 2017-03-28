@@ -51,11 +51,12 @@ public class Lobby implements ClientThread.ClientListener {
                 if (mGameLobbies.size() < mMaxGames) {
                     LOG.info("Game created"); //TODO: more detailed log
                     GameLobby lobby = new GameLobby(gameCreateRequest.getName(), gameCreateRequest.getMaxPlayers());
-                    lobby.setListener(game -> mClients.forEach(client -> client.sendMessage(new GameUpdateMessage(game))));
                     mGameLobbies.add(lobby);
                     lobby.addClient(pClientThread);
                     mClients.remove(pClientThread);
                     pClientThread.removeListener(this);
+
+                    lobby.setListener(game -> mClients.forEach(client -> client.sendMessage(new GameUpdateMessage(game))));
                     pClientThread.sendMessage(new JoinMessage(lobby.getGameDescriptor()));
                     for (ClientThread client : mClients)
                         client.sendMessage(new GameUpdateMessage(lobby.getGameDescriptor()));

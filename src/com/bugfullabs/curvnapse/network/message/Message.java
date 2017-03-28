@@ -2,7 +2,7 @@ package com.bugfullabs.curvnapse.network.message;
 
 import java.io.Serializable;
 
-public class Message implements Serializable {
+public abstract class Message implements Serializable {
 
     public enum Type {
         HANDSHAKE,
