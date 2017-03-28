@@ -1,7 +1,6 @@
 package com.bugfullabs.curvnapse.scene;
 
 import com.bugfullabs.curvnapse.FlowManager;
-import com.bugfullabs.curvnapse.Main;
 import com.bugfullabs.curvnapse.gui.GameListBox;
 import com.bugfullabs.curvnapse.gui.MessageBox;
 import com.bugfullabs.curvnapse.network.client.Game;
@@ -12,7 +11,6 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
-import javafx.stage.Stage;
 
 import java.util.logging.Logger;
 
@@ -38,6 +36,7 @@ public class MainLobbyScene implements ServerConnector.MessageListener {
         mScene = new Scene(mRoot);
 
         mConnector = FlowManager.getInstance().getConnector();
+        mConnector.sendMessage(new UpdateRequest());
         mConnector.registerListener(this);
 
         mMessages = FXCollections.observableArrayList();
@@ -49,16 +48,14 @@ public class MainLobbyScene implements ServerConnector.MessageListener {
         mGameListBox.setListener(new GameListBox.GameListBoxListener() {
             @Override
             public void onJoin(Game pGame) {
-                mConnector.sendMessage(new JoinRequestMessage(pGame.getID()));
+                mConnector.sendMessage(new JoinRequest(pGame.getID()));
             }
 
             @Override
             public void onCreate() {
-                mConnector.sendMessage(new GameCreateRequestMessage("Wichrowski ciota", "", 10));
+                mConnector.sendMessage(new GameCreateRequest("Wichrowski ciota", "", 10));
             }
         });
-
-
     }
 
     public Scene getScene() {

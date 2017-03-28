@@ -1,9 +1,9 @@
 package com.bugfullabs.curvnapse.network.message;
 
-public class JoinRequestMessage extends Message {
+public class JoinRequest extends Message {
     private int mID;
 
-    public JoinRequestMessage(int pID) {
+    public JoinRequest(int pID) {
         super(Type.GAME_JOIN_REQUEST);
         mID = pID;
     }

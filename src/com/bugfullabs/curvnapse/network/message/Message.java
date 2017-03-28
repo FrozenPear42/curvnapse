@@ -10,6 +10,7 @@ public abstract class Message implements Serializable {
         ALIVE,
         DISCONNECT,
         TEXT,
+        UPDATE_REQUEST,
         GAME_CREATE,
         GAME_UPDATE,
         GAME_JOIN_REQUEST,

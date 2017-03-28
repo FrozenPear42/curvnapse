@@ -1,11 +1,11 @@
 package com.bugfullabs.curvnapse.network.message;
 
-public class GameCreateRequestMessage extends Message {
+public class GameCreateRequest extends Message {
     private String mName;
     private String mPassword;
     private int mMaxPlayers;
 
-    public GameCreateRequestMessage(String pName, String pPassword, int pMaxPlayers) {
+    public GameCreateRequest(String pName, String pPassword, int pMaxPlayers) {
         super(Type.GAME_CREATE);
         mName = pName;
         mPassword = pPassword;

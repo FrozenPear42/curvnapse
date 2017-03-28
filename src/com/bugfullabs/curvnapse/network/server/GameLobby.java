@@ -3,9 +3,6 @@ package com.bugfullabs.curvnapse.network.server;
 import com.bugfullabs.curvnapse.network.client.Game;
 import com.bugfullabs.curvnapse.network.message.*;
 import com.bugfullabs.curvnapse.player.Player;
-import com.bugfullabs.curvnapse.player.PlayerColor;
-import com.bugfullabs.curvnapse.utils.ColorBank;
-import javafx.scene.paint.Color;
 
 import java.util.*;
 import java.util.logging.Logger;
@@ -32,7 +29,7 @@ public class GameLobby implements ClientThread.ClientListener {
         return mGame.getID();
     }
 
-    public Game getGameDescriptor() {
+    public Game getGame() {
         return mGame;
     }
 
@@ -46,8 +43,11 @@ public class GameLobby implements ClientThread.ClientListener {
             case TEXT:
                 mClientThreads.forEach(clientThread -> clientThread.sendMessage(pMessage));
                 break;
+            case UPDATE_REQUEST:
+                pClientThread.sendMessage(new GameUpdateMessage(mGame));
+                break;
             case PLAYER_ADD_REQUEST:
-                Player p = mGame.addPlayer(((NewPlayerRequestMessage) pMessage).getName(), pClientThread.getID());
+                Player p = mGame.addPlayer(((NewPlayerRequest) pMessage).getName(), pClientThread.getID());
                 if (p != null) {
                     mClientThreads.forEach(client -> client.sendMessage(new GameUpdateMessage(mGame)));
                     mClientThreads.forEach(client -> client.sendMessage(new TextMessage("NOWY", Integer.toString(mGame.getPlayers().size()))));

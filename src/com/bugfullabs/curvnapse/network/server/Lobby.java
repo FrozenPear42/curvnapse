@@ -1,9 +1,6 @@
 package com.bugfullabs.curvnapse.network.server;
 
-import com.bugfullabs.curvnapse.network.client.Game;
 import com.bugfullabs.curvnapse.network.message.*;
-import javafx.application.Platform;
-import sun.rmi.runtime.Log;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -29,7 +26,6 @@ public class Lobby implements ClientThread.ClientListener {
 
         mClients.add(pClientThread);
         pClientThread.registerListener(this);
-        mGameLobbies.forEach(gameLobby -> pClientThread.sendMessage(new GameUpdateMessage(gameLobby.getGameDescriptor())));
     }
 
     public void removeClient(ClientThread pClientThread) {
@@ -45,9 +41,12 @@ public class Lobby implements ClientThread.ClientListener {
                 for (ClientThread client : mClients)
                     client.sendMessage(textMessage);
                 break;
+            case UPDATE_REQUEST:
+                mGameLobbies.forEach(gameLobby -> pClientThread.sendMessage(new GameUpdateMessage(gameLobby.getGame())));
+                break;
 
             case GAME_CREATE:
-                GameCreateRequestMessage gameCreateRequest = (GameCreateRequestMessage) pMessage;
+                GameCreateRequest gameCreateRequest = (GameCreateRequest) pMessage;
                 if (mGameLobbies.size() < mMaxGames) {
                     LOG.info("Game created"); //TODO: more detailed log
                     GameLobby lobby = new GameLobby(gameCreateRequest.getName(), pClientThread.getID(), gameCreateRequest.getMaxPlayers());
@@ -57,14 +56,14 @@ public class Lobby implements ClientThread.ClientListener {
                     pClientThread.removeListener(this);
 
                     lobby.setListener(game -> mClients.forEach(client -> client.sendMessage(new GameUpdateMessage(game))));
-                    pClientThread.sendMessage(new JoinMessage(lobby.getGameDescriptor()));
+                    pClientThread.sendMessage(new JoinMessage(lobby.getGame()));
                     for (ClientThread client : mClients)
-                        client.sendMessage(new GameUpdateMessage(lobby.getGameDescriptor()));
+                        client.sendMessage(new GameUpdateMessage(lobby.getGame()));
                 }
                 break;
 
             case GAME_JOIN_REQUEST:
-                JoinRequestMessage msg = (JoinRequestMessage) pMessage;
+                JoinRequest msg = (JoinRequest) pMessage;
                 LOG.info("Join request");
                 GameLobby lobby =
                         mGameLobbies.stream()
@@ -74,7 +73,7 @@ public class Lobby implements ClientThread.ClientListener {
                 lobby.addClient(pClientThread);
                 mClients.remove(pClientThread);
                 pClientThread.removeListener(this);
-                pClientThread.sendMessage(new JoinMessage(lobby.getGameDescriptor()));
+                pClientThread.sendMessage(new JoinMessage(lobby.getGame()));
                 break;
             default:
                 LOG.warning("Unsupported message");

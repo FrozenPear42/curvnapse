@@ -17,7 +17,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
-import javafx.stage.Stage;
 
 import java.util.logging.Logger;
 
@@ -73,9 +72,9 @@ public class GameLobbyScene implements ServerConnector.MessageListener {
         mPlayers = FXCollections.observableArrayList();
         mPlayersBox.setPlayersList(mPlayers);
 
-        mPlayersBox.setListener(() -> mConnector.sendMessage(new NewPlayerRequestMessage("Player")));
+        mPlayersBox.setListener(() -> mConnector.sendMessage(new NewPlayerRequest("Player")));
 
-        mStartButton.setOnAction(event -> mConnector.sendMessage(new GameStartRequestMessage()));
+        mStartButton.setOnAction(event -> mConnector.sendMessage(new GameStartRequest()));
 
         update(mGame);
     }

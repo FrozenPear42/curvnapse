@@ -1,9 +1,9 @@
 package com.bugfullabs.curvnapse.network.message;
 
-public class NewPlayerRequestMessage extends Message {
+public class NewPlayerRequest extends Message {
     private String mName;
 
-    public NewPlayerRequestMessage(String pName) {
+    public NewPlayerRequest(String pName) {
         super(Type.PLAYER_ADD_REQUEST);
         mName = pName;
     }
