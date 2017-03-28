@@ -1,6 +1,6 @@
 package com.bugfullabs.curvnapse.gui;
 
-import com.bugfullabs.curvnapse.network.client.Game;
+import com.bugfullabs.curvnapse.game.Game;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;

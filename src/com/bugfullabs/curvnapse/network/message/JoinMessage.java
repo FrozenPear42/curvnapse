@@ -1,6 +1,6 @@
 package com.bugfullabs.curvnapse.network.message;
 
-import com.bugfullabs.curvnapse.network.client.Game;
+import com.bugfullabs.curvnapse.game.Game;
 
 public class JoinMessage extends Message {
     private Game mGame;

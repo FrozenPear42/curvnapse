@@ -1,6 +1,6 @@
 package com.bugfullabs.curvnapse.network.server;
 
-import com.bugfullabs.curvnapse.network.client.Game;
+import com.bugfullabs.curvnapse.game.Game;
 import com.bugfullabs.curvnapse.network.message.*;
 import com.bugfullabs.curvnapse.player.Player;
 

@@ -1,4 +1,4 @@
-package com.bugfullabs.curvnapse.network.client;
+package com.bugfullabs.curvnapse.game;
 
 import com.bugfullabs.curvnapse.player.Player;
 import com.bugfullabs.curvnapse.player.PlayerColor;

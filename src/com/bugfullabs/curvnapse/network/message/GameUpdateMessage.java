@@ -1,7 +1,7 @@
 package com.bugfullabs.curvnapse.network.message;
 
 
-import com.bugfullabs.curvnapse.network.client.Game;
+import com.bugfullabs.curvnapse.game.Game;
 
 public class GameUpdateMessage extends Message {
     private static int UID = 0;

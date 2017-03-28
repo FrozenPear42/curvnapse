@@ -1,9 +1,6 @@
 package com.bugfullabs.curvnapse.network.message;
 
-import com.bugfullabs.curvnapse.network.client.Game;
-import com.bugfullabs.curvnapse.player.Player;
-
-import java.util.List;
+import com.bugfullabs.curvnapse.game.Game;
 
 public class GameStartMessage extends Message {
     Game mGame;
