@@ -3,6 +3,7 @@ package com.bugfullabs.curvnapse.network.server;
 import com.bugfullabs.curvnapse.game.Game;
 import com.bugfullabs.curvnapse.network.message.*;
 import com.bugfullabs.curvnapse.player.Player;
+import com.bugfullabs.curvnapse.player.PlayerColor;
 
 import java.util.*;
 import java.util.logging.Logger;
@@ -10,7 +11,7 @@ import java.util.logging.Logger;
 public class GameLobby implements ClientThread.ClientListener {
     private static Logger LOG = Logger.getLogger(GameLobby.class.getName());
     private LinkedList<ClientThread> mClientThreads;
-    private Game mGame;
+    private final Game mGame;
 
     private GameUpdateListener mListener;
 
@@ -37,6 +38,19 @@ public class GameLobby implements ClientThread.ClientListener {
         mListener = pListener;
     }
 
+    private void addPlayer(String pName, int pID) {
+        mGame.setName("asd");
+        Player p = mGame.addPlayer(pName, pID);
+        if (p != null) {
+            mClientThreads.forEach(client -> client.sendMessage(new GameUpdateMessage(mGame)));
+        }
+
+        if (mListener != null) {
+            mListener.onGameUpdate(mGame);
+            mClientThreads.forEach(client -> client.sendMessage(new TextMessage("LISTE", Integer.toString(mGame.getPlayers().size()))));
+        }
+    }
+
     @Override
     public void onClientMessage(ClientThread pClientThread, Message pMessage) {
         switch (pMessage.getType()) {
@@ -47,16 +61,7 @@ public class GameLobby implements ClientThread.ClientListener {
                 pClientThread.sendMessage(new GameUpdateMessage(mGame));
                 break;
             case PLAYER_ADD_REQUEST:
-                Player p = mGame.addPlayer(((NewPlayerRequest) pMessage).getName(), pClientThread.getID());
-                if (p != null) {
-                    mClientThreads.forEach(client -> client.sendMessage(new GameUpdateMessage(mGame)));
-                    mClientThreads.forEach(client -> client.sendMessage(new TextMessage("NOWY", Integer.toString(mGame.getPlayers().size()))));
-                }
-                if (mListener != null) {
-                    mListener.onGameUpdate(mGame);
-                    mClientThreads.forEach(client -> client.sendMessage(new TextMessage("LISTE", Integer.toString(mGame.getPlayers().size()))));
-                }
-                mClientThreads.forEach(client -> client.sendMessage(new TextMessage("AAA", Integer.toString(mGame.getPlayers().size()))));
+                addPlayer(((NewPlayerRequest) pMessage).getName(), pClientThread.getID());
                 break;
             case GAME_START_REQUEST:
                 //FIXME: Move timer as member, allow cancel

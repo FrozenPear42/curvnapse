@@ -1,6 +1,7 @@
 package com.bugfullabs.curvnapse.gui;
 
 
+import com.bugfullabs.curvnapse.FlowManager;
 import com.bugfullabs.curvnapse.player.Player;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
@@ -39,7 +40,6 @@ public class Leaderboard extends VBox {
                 Label points = new Label("100");
                 Rectangle color = new Rectangle(20, 20, pPlayer.getColor().toFXColor());
                 box.getChildren().addAll(label, points, color);
-                setEditable(pPlayer.isLocal());
             }
             setGraphic(box);
         }

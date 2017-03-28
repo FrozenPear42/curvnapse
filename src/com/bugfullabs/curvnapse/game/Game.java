@@ -8,7 +8,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Game implements Serializable {
+public class Game implements Serializable, Cloneable {
     private static int UID = 0;
 
     private int mID;
@@ -50,15 +50,19 @@ public class Game implements Serializable {
         return mHostID;
     }
 
+    public void setName(String pName) {
+        mName = pName;
+    }
+
     public int getMaxPlayers() {
         return mMaxPlayers;
     }
 
     public Player addPlayer(String pName, int pOwner) {
+        mTest.add(12);
         if (mPlayers.size() < mMaxPlayers) {
             PlayerColor color = mColorBank.nextColor();
-            Player player = new Player(pName, color, true);
-            mTest.add(player.getID());
+            Player player = new Player(pName, color, pOwner);
             mPlayers.add(player);
             return player;
         }

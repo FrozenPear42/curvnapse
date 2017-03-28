@@ -1,5 +1,6 @@
 package com.bugfullabs.curvnapse.gui;
 
+import com.bugfullabs.curvnapse.FlowManager;
 import com.bugfullabs.curvnapse.player.Player;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
@@ -57,7 +58,7 @@ public class PlayersBox extends VBox {
                         pPlayer.getRightKey().getName()));
                 Rectangle color = new Rectangle(20, 20, pPlayer.getColor().toFXColor());
                 box.getChildren().addAll(label, keys, color);
-                setEditable(pPlayer.isLocal());
+                setEditable(pPlayer.getOwner() == FlowManager.getInstance().getUserID());
             }
             setGraphic(box);
         }
