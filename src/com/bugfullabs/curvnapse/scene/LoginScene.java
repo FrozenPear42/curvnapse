@@ -4,6 +4,7 @@ import com.bugfullabs.curvnapse.FlowManager;
 import com.bugfullabs.curvnapse.gui.LoginBox;
 import com.bugfullabs.curvnapse.network.client.ServerConnector;
 import com.bugfullabs.curvnapse.network.server.Server;
+import javafx.application.Platform;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
@@ -12,6 +13,7 @@ import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import sun.rmi.runtime.Log;
 
+import java.lang.management.PlatformLoggingMXBean;
 import java.util.logging.Logger;
 
 public class LoginScene implements LoginBox.LoginListener {
@@ -46,11 +48,19 @@ public class LoginScene implements LoginBox.LoginListener {
                 new Alert(Alert.AlertType.ERROR, "Cannot create server").showAndWait();
             }
         }
-        if(!FlowManager.getInstance().connectToServer(pName, pIP, Integer.parseInt(pPort))) {
+        if (!FlowManager.getInstance().connectToServer(pIP, Integer.parseInt(pPort))) {
             new Alert(Alert.AlertType.ERROR, "Cannot join server").showAndWait();
         }
-        FlowManager.getInstance().login(pName);
-        FlowManager.getInstance().mainLobby();
+
+        FlowManager.getInstance().getConnector().handshake(pName, pID ->
+                Platform.runLater(() -> {
+                    if (pID == -1) {
+                        new Alert(Alert.AlertType.ERROR, "Ups...").showAndWait();
+                    } else {
+                        FlowManager.getInstance().login(pName, pID);
+                        FlowManager.getInstance().mainLobby();
+                    }
+                }));
     }
 
 }

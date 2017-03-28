@@ -19,10 +19,11 @@ public class Game implements Serializable {
     private ArrayList<Integer> mTest;
     private transient ColorBank mColorBank;
 
-    public Game(String pName, int pMaxPlayers) {
+    public Game(String pName, int pHostID, int pMaxPlayers) {
         mID = UID;
         UID += 1;
         mName = pName;
+        mHostID = pHostID;
         mMaxPlayers = pMaxPlayers;
         mPlayers = new ArrayList<>(mMaxPlayers);
         mTest = new ArrayList<>(10);
@@ -43,6 +44,10 @@ public class Game implements Serializable {
 
     public ArrayList<Integer> getTest() {
         return mTest;
+    }
+
+    public int getHostID() {
+        return mHostID;
     }
 
     public int getMaxPlayers() {

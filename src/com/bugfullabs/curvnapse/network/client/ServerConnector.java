@@ -2,6 +2,7 @@ package com.bugfullabs.curvnapse.network.client;
 
 import com.bugfullabs.curvnapse.network.message.HandshakeMessage;
 import com.bugfullabs.curvnapse.network.message.Message;
+import com.bugfullabs.curvnapse.network.message.WelcomeMessage;
 import com.bugfullabs.curvnapse.network.server.ClientThread;
 
 import java.io.*;
@@ -16,12 +17,11 @@ public class ServerConnector extends Thread {
     private final ObjectInputStream mObjectInputStream;
     private final CopyOnWriteArrayList<ServerConnector.MessageListener> mListeners;
 
-    public ServerConnector(String pIP, int pPort, String pName) throws IOException {
+    public ServerConnector(String pIP, int pPort) throws IOException {
         mSocket = new Socket(pIP, pPort);
         mObjectOutputStream = new ObjectOutputStream(mSocket.getOutputStream());
         mObjectInputStream = new ObjectInputStream(mSocket.getInputStream());
         mListeners = new CopyOnWriteArrayList<>();
-        sendMessage(new HandshakeMessage(pName));
     }
 
     public void sendMessage(Message pMessage) {
@@ -38,6 +38,16 @@ public class ServerConnector extends Thread {
 
     public void unregisterListener(MessageListener pListener) {
         mListeners.remove(pListener);
+    }
+
+    public void handshake(String pName, HandshakeResultListener pListener) {
+        final MessageListener listener = pMessage -> {
+            if (pMessage.getType() == Message.Type.WELCOME) {
+                pListener.onHandshakeResult(((WelcomeMessage) pMessage).getUserID());
+            }
+        };
+        registerListener(listener);
+        sendMessage(new HandshakeMessage(pName));
     }
 
     @Override
@@ -57,5 +67,9 @@ public class ServerConnector extends Thread {
 
     public interface MessageListener {
         void onClientMessage(Message pMessage);
+    }
+
+    public interface HandshakeResultListener {
+        void onHandshakeResult(int pID);
     }
 }

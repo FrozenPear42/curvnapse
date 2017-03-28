@@ -12,4 +12,5 @@ public class HandshakeMessage extends Message {
     public String getName() {
         return mName;
     }
+
 }

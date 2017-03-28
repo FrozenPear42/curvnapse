@@ -2,6 +2,7 @@ package com.bugfullabs.curvnapse.network.server;
 
 import com.bugfullabs.curvnapse.network.message.HandshakeMessage;
 import com.bugfullabs.curvnapse.network.message.Message;
+import com.bugfullabs.curvnapse.network.message.WelcomeMessage;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -62,6 +63,7 @@ public class Server extends Thread implements ClientThread.ClientListener {
                 HandshakeMessage msg = (HandshakeMessage) pMessage;
                 LOG.info("HANDSHAKE: " + msg.getName());
                 pClientThread.setUserName(msg.getName());
+                pClientThread.sendMessage(new WelcomeMessage(pClientThread.getID()));
                 mLobby.addClient(pClientThread);
                 break;
             default:

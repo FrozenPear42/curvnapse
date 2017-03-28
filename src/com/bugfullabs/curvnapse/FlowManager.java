@@ -18,6 +18,7 @@ public class FlowManager {
     private Server mServer;
     private ServerConnector mServerConnector;
     private String mUsername;
+    private int mUserID;
 
     public static FlowManager getInstance() {
         return mInstance;
@@ -39,9 +40,9 @@ public class FlowManager {
         return true;
     }
 
-    public boolean connectToServer(String pName, String pIP, int pPort) {
+    public boolean connectToServer(String pIP, int pPort) {
         try {
-            mServerConnector = new ServerConnector(pIP, pPort, pName);
+            mServerConnector = new ServerConnector(pIP, pPort);
             mServerConnector.start();
         } catch (Exception e) {
             e.printStackTrace();
@@ -50,8 +51,9 @@ public class FlowManager {
         return true;
     }
 
-    public void login(String pName) {
+    public void login(String pName, int pUserID) {
         mUsername = pName;
+        mUserID = pUserID;
     }
 
     public void loginScene() {
@@ -76,5 +78,9 @@ public class FlowManager {
 
     public String getUsername() {
         return mUsername;
+    }
+
+    public int getUserID() {
+        return mUserID;
     }
 }

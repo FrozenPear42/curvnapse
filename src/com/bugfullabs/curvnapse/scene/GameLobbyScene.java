@@ -70,14 +70,14 @@ public class GameLobbyScene implements ServerConnector.MessageListener {
         mMessageBox.setMessages(mMessages);
         mMessageBox.setSendListener(pMessage -> mConnector.sendMessage(new TextMessage(FlowManager.getInstance().getUsername(), pMessage)));
 
-        mPlayers = FXCollections.observableArrayList(mGame.getPlayers());
+        mPlayers = FXCollections.observableArrayList();
         mPlayersBox.setPlayersList(mPlayers);
 
         mPlayersBox.setListener(() -> mConnector.sendMessage(new NewPlayerRequestMessage("Player")));
 
-        mGameOptionsBox.setName(mGame.getName());
-
         mStartButton.setOnAction(event -> mConnector.sendMessage(new GameStartRequestMessage()));
+
+        update(mGame);
     }
 
     public Scene getScene() {
@@ -89,6 +89,8 @@ public class GameLobbyScene implements ServerConnector.MessageListener {
         mPlayers.clear();
         mPlayers.addAll(mGame.getPlayers());
         mGameOptionsBox.setName(mGame.getName());
+        mGameOptionsBox.setDisable(mGame.getHostID() != FlowManager.getInstance().getUserID());
+        LOG.info("Me: " + FlowManager.getInstance().getUserID() + " HOST: " + mGame.getHostID());
     }
 
     @Override

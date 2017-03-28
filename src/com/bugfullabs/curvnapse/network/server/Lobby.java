@@ -25,7 +25,7 @@ public class Lobby implements ClientThread.ClientListener {
 
     public void addClient(ClientThread pClientThread) {
         for (ClientThread client : mClients)
-            client.sendMessage(new HandshakeMessage(pClientThread.getName()));
+            client.sendMessage(new TextMessage("Server", client.getUsername() + " has joined"));
 
         mClients.add(pClientThread);
         pClientThread.registerListener(this);
@@ -50,7 +50,7 @@ public class Lobby implements ClientThread.ClientListener {
                 GameCreateRequestMessage gameCreateRequest = (GameCreateRequestMessage) pMessage;
                 if (mGameLobbies.size() < mMaxGames) {
                     LOG.info("Game created"); //TODO: more detailed log
-                    GameLobby lobby = new GameLobby(gameCreateRequest.getName(), gameCreateRequest.getMaxPlayers());
+                    GameLobby lobby = new GameLobby(gameCreateRequest.getName(), pClientThread.getID(), gameCreateRequest.getMaxPlayers());
                     mGameLobbies.add(lobby);
                     lobby.addClient(pClientThread);
                     mClients.remove(pClientThread);

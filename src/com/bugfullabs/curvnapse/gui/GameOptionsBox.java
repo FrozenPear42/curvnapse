@@ -29,7 +29,6 @@ public class GameOptionsBox extends VBox {
         mHeader.setText(pName);
     }
 
-
     class PowerUpGrid extends GridPane {
         private ToggleImageButton mPowerups[];
 

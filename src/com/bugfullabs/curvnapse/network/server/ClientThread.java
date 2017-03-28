@@ -84,6 +84,10 @@ public class ClientThread extends Thread {
     }
 
 
+    public String getUsername() {
+        return mUserName;
+    }
+
     public interface ClientListener {
         void onClientMessage(ClientThread pClientThread, Message pMessage);
     }
