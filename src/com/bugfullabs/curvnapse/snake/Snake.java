@@ -1,5 +1,6 @@
 package com.bugfullabs.curvnapse.snake;
 
+import com.bugfullabs.curvnapse.player.PlayerColor;
 import com.bugfullabs.curvnapse.utils.Vec2;
 import com.sun.javafx.geom.Vec2d;
 import com.sun.javafx.geom.Vec3d;
@@ -27,12 +28,15 @@ public class Snake {
     private Vec2 mTurnCenter;
     private double mTurnRadius;
 
+    private PlayerColor mColor;
+
     private List<ArcSnakeFragment> mArcFragments;
     private List<LineSnakeFragment> mLineFragments;
 
     private State mState;
 
-    public Snake(int pUID, Vec2 pPosition, double pAngle) {
+    public Snake(int pUID, Vec2 pPosition, double pAngle, PlayerColor pColor) {
+        mColor = pColor;
         mUID = pUID;
         mPosition = pPosition;
         mAngle = pAngle;
@@ -74,14 +78,14 @@ public class Snake {
     }
 
     public void turnLeft() {
-        mAngle += Math.PI/2;
+        mAngle -= Math.PI / 2;
         mVelocity = Vec2.directed(DEFAULT_SPEED, mAngle);
         doLine();
         //mState = State.TURNING_LEFT;
     }
 
     public void turnRight() {
-        mAngle -= Math.PI/2;
+        mAngle += Math.PI / 2;
         mVelocity = Vec2.directed(DEFAULT_SPEED, mAngle);
         doLine();
         //mState = State.TURNING_RIGHT;
@@ -92,12 +96,12 @@ public class Snake {
     }
 
     private void doLine() {
-        LineSnakeFragment line = new LineSnakeFragment(mPosition, mPosition, mSize);
+        LineSnakeFragment line = new LineSnakeFragment(mPosition, mPosition, mSize, mColor, mSize);
         mLineFragments.add(line);
     }
 
     private void doArc() {
-        ArcSnakeFragment arc = new ArcSnakeFragment();
+        ArcSnakeFragment arc = new ArcSnakeFragment(mColor, mSize);
         mArcFragments.add(arc);
     }
 

@@ -51,12 +51,12 @@ public class GameThread implements ClientThread.ClientListener {
     }
 
     private Snake createNewSnake(Player pPlayer) {
-        return new Snake(pPlayer.getID(), new Vec2(100, 100), Math.PI/2);
+        return new Snake(pPlayer.getID(), new Vec2(100, 100), Math.PI / 2, pPlayer.getColor());
     }
+
     @Override
     public void onClientMessage(ClientThread pClientThread, Message pMessage) {
         if (pMessage.getType() == Message.Type.CONTROL_UPDATE) {
-            pClientThread.sendMessage(new ServerTextMessage("OOOO"));
             ControlUpdateMessage msg = (ControlUpdateMessage) pMessage;
             Snake snake = mSnakes.entrySet().stream().filter(e -> e.getKey().getID() == msg.getPlayerID()).findFirst().get().getValue();
             if (msg.getAction() == ControlUpdateMessage.Action.UP)

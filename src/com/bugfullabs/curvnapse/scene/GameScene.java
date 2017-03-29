@@ -71,13 +71,13 @@ public class GameScene implements ServerConnector.MessageListener {
 
         mSnakeFragments = new ArrayList<>();
 
-        mTimer = new Timer();
-        mTimer.scheduleAtFixedRate(new TimerTask() {
-            @Override
-            public void run() {
-                mBoard.update(mSnakeFragments);
-            }
-        }, 0, 1000 / 60);
+//        mTimer = new Timer();
+//        mTimer.scheduleAtFixedRate(new TimerTask() {
+//            @Override
+//            public void run() {
+//                mBoard.update(mSnakeFragments);
+//            }
+//        }, 0, 1000 / 60);
 
         mConnector.registerListener(this);
         mMessageBox.setSendListener(pMessage -> mConnector.sendMessage(new TextMessage(FlowManager.getInstance().getUsername(), pMessage)));
@@ -132,6 +132,7 @@ public class GameScene implements ServerConnector.MessageListener {
                 msg.getSnakeFragments().forEach(fragment -> {
                     mSnakeFragments.removeIf(frag -> frag.getUID() == fragment.getUID());
                     mSnakeFragments.add(fragment);
+                    mBoard.update(mSnakeFragments);
                 });
                 break;
         }

@@ -51,11 +51,12 @@ public class Board extends VBox {
 
     public synchronized void update(List<SnakeFragment> pSnakeFragments) {
         GraphicsContext mainCtx = mMainCanvas.getGraphicsContext2D();
-        mainCtx.setStroke(Color.GREEN);
-        mainCtx.setLineWidth(5);
         mainCtx.setLineCap(StrokeLineCap.ROUND);
 
         pSnakeFragments.forEach(fragment -> {
+            mainCtx.setStroke(fragment.getColor().toFXColor());
+            mainCtx.setLineWidth(fragment.getWidth());
+
             if (fragment.getType() == SnakeFragment.Type.LINE) {
                 LineSnakeFragment line = (LineSnakeFragment) fragment;
                 mainCtx.strokeLine(line.getBegin().x, line.getBegin().y, line.getEnd().x, line.getEnd().y);
