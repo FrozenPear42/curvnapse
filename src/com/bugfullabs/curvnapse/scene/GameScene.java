@@ -1,14 +1,17 @@
 package com.bugfullabs.curvnapse.scene;
 
 import com.bugfullabs.curvnapse.FlowManager;
+import com.bugfullabs.curvnapse.game.Game;
 import com.bugfullabs.curvnapse.gui.Board;
 import com.bugfullabs.curvnapse.gui.Leaderboard;
 import com.bugfullabs.curvnapse.gui.MessageBox;
 import com.bugfullabs.curvnapse.network.client.ServerConnector;
 import com.bugfullabs.curvnapse.network.message.ControlUpdateMessage;
 import com.bugfullabs.curvnapse.network.message.Message;
+import com.bugfullabs.curvnapse.network.message.SnakeFragmentsMessage;
 import com.bugfullabs.curvnapse.network.message.TextMessage;
 import com.bugfullabs.curvnapse.player.Player;
+import com.bugfullabs.curvnapse.snake.SnakeFragment;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -17,10 +20,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.logging.Logger;
 
 public class GameScene implements ServerConnector.MessageListener {
@@ -31,17 +31,24 @@ public class GameScene implements ServerConnector.MessageListener {
     private MessageBox mMessageBox;
     private Leaderboard mLeaderboard;
 
+    private Game mGame;
+
     private ObservableList<Player> mPlayers;
     private ObservableList<TextMessage> mMessages;
+    private ArrayList<SnakeFragment> mSnakeFragments;
 
     private Map<KeyCode, Player> mKeys;
     private List<KeyCode> mActiveKeys;
 
     private ServerConnector mConnector;
 
-    public GameScene(List<Player> pPlayers) {
+    private Timer mTimer;
+
+    public GameScene(Game pGame) {
+        mGame = pGame;
+
         mConnector = FlowManager.getInstance().getConnector();
-        mPlayers = FXCollections.observableArrayList(pPlayers);
+        mPlayers = FXCollections.observableArrayList(mGame.getPlayers());
         mMessages = FXCollections.observableArrayList();
 
         mKeys = new HashMap<>();
@@ -60,6 +67,17 @@ public class GameScene implements ServerConnector.MessageListener {
         mRoot.setCenter(mBoard);
         mRoot.setRight(mLeaderboard);
         mScene = new Scene(mRoot);
+
+
+        mSnakeFragments = new ArrayList<>();
+
+        mTimer = new Timer();
+        mTimer.scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                mBoard.update(mSnakeFragments);
+            }
+        }, 0, 1000 / 60);
 
         mConnector.registerListener(this);
         mMessageBox.setSendListener(pMessage -> mConnector.sendMessage(new TextMessage(FlowManager.getInstance().getUsername(), pMessage)));
@@ -97,7 +115,6 @@ public class GameScene implements ServerConnector.MessageListener {
             }
         });
 
-        mBoard.update();
     }
 
     public Scene getScene() {
@@ -109,6 +126,13 @@ public class GameScene implements ServerConnector.MessageListener {
         switch (pMessage.getType()) {
             case TEXT:
                 Platform.runLater(() -> mMessages.add((TextMessage) pMessage));
+                break;
+            case SNAKE_UPDATE:
+                SnakeFragmentsMessage msg = (SnakeFragmentsMessage) pMessage;
+                msg.getSnakeFragments().forEach(fragment -> {
+                    mSnakeFragments.removeIf(frag -> frag.getUID() == fragment.getUID());
+                    mSnakeFragments.add(fragment);
+                });
                 break;
         }
     }

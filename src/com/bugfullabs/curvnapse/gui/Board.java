@@ -1,6 +1,8 @@
 package com.bugfullabs.curvnapse.gui;
 
 
+import com.bugfullabs.curvnapse.snake.LineSnakeFragment;
+import com.bugfullabs.curvnapse.snake.SnakeFragment;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.canvas.Canvas;
@@ -9,6 +11,9 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.ArcType;
+import javafx.scene.shape.StrokeLineCap;
+
+import java.util.List;
 
 public class Board extends VBox {
     private StackPane mRoot;
@@ -44,9 +49,19 @@ public class Board extends VBox {
         gridCtx.strokeRect(0, 0, mWidth, mHeight);
     }
 
-    public void update() {
+    public synchronized void update(List<SnakeFragment> pSnakeFragments) {
         GraphicsContext mainCtx = mMainCanvas.getGraphicsContext2D();
-        mainCtx.setFill(Color.GREEN);
-        mainCtx.fillArc(100, 100, 10, 10, 0, 360, ArcType.ROUND);
+        mainCtx.setStroke(Color.GREEN);
+        mainCtx.setLineWidth(5);
+        mainCtx.setLineCap(StrokeLineCap.ROUND);
+
+        pSnakeFragments.forEach(fragment -> {
+            if (fragment.getType() == SnakeFragment.Type.LINE) {
+                LineSnakeFragment line = (LineSnakeFragment) fragment;
+                mainCtx.strokeLine(line.getBegin().x, line.getBegin().y, line.getEnd().x, line.getEnd().y);
+            } else {
+                mainCtx.fillArc(100, 100, 10, 10, 0, 360, ArcType.ROUND);
+            }
+        });
     }
 }

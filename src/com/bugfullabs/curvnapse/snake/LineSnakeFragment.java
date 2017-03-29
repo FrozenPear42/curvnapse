@@ -2,7 +2,9 @@ package com.bugfullabs.curvnapse.snake;
 
 import com.bugfullabs.curvnapse.utils.Vec2;
 
-public class LineSnakeFragment extends SnakeFragment {
+import java.io.Serializable;
+
+public class LineSnakeFragment extends SnakeFragment implements Serializable {
     private Vec2 mBegin;
     private Vec2 mEnd;
     private double mSize;

@@ -1,6 +1,8 @@
 package com.bugfullabs.curvnapse.utils;
 
-public class Vec2 {
+import java.io.Serializable;
+
+public class Vec2 implements Serializable {
     public double x;
     public double y;
 

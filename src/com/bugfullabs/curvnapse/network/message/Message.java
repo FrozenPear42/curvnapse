@@ -7,7 +7,6 @@ public abstract class Message implements Serializable {
     public enum Type {
         HANDSHAKE,
         WELCOME,
-        ALIVE,
         DISCONNECT,
         TEXT,
         UPDATE_REQUEST,

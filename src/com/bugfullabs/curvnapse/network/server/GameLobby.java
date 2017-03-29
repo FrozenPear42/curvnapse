@@ -12,7 +12,7 @@ public class GameLobby implements ClientThread.ClientListener {
     private static Logger LOG = Logger.getLogger(GameLobby.class.getName());
     private LinkedList<ClientThread> mClientThreads;
     private final Game mGame;
-
+    private GameThread mThread;
     private GameUpdateListener mListener;
 
     public GameLobby(String pName, int pHost, int pMaxPlayers) {
@@ -72,6 +72,8 @@ public class GameLobby implements ClientThread.ClientListener {
                         if (times == 0) {
                             this.cancel();
                             mClientThreads.forEach(clientThread -> clientThread.sendMessage(new GameStartMessage(mGame)));
+                            mThread = new GameThread(mGame, mClientThreads);
+                            mClientThreads.forEach(client -> client.registerListener(mThread));
                         }
                         times--;
                     }

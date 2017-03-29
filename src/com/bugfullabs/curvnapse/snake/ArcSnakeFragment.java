@@ -1,6 +1,8 @@
 package com.bugfullabs.curvnapse.snake;
 
-public class ArcSnakeFragment extends SnakeFragment {
+import java.io.Serializable;
+
+public class ArcSnakeFragment extends SnakeFragment implements Serializable{
 
     public ArcSnakeFragment() {
         super(Type.ARC);

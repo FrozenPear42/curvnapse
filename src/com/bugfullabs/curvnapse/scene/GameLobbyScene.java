@@ -105,7 +105,7 @@ public class GameLobbyScene implements ServerConnector.MessageListener {
             case GAME_START:
                 LOG.info("Game started");
                 mConnector.unregisterListener(this);
-                Platform.runLater(() -> FlowManager.getInstance().gameScene());
+                Platform.runLater(() -> FlowManager.getInstance().gameScene(mGame));
                 break;
             default:
                 break;

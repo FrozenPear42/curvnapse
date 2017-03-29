@@ -8,14 +8,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Snake {
-    public static final double DEFAULT_SPEED = 10.0f;
+    public static final double DEFAULT_SPEED = 0.1f;
     public static final double DEFAULT_SIZE = 5.0f;
     public static final double DEFAULT_TURN_RADIUS = 10.0f;
 
     private enum State {
         TURNING_LEFT,
         TURNING_RIGHT,
-        FORWARD
+        FORWARD,
+        STOP
     }
 
     private int mUID;
@@ -50,7 +51,7 @@ public class Snake {
         doLine();
     }
 
-    private void step(double pDelta) {
+    public void step(double pDelta) {
         switch (mState) {
             case FORWARD:
                 mPosition = Vec2.add(mPosition, Vec2.times(mVelocity, pDelta));
@@ -72,13 +73,41 @@ public class Snake {
         }
     }
 
+    public void turnLeft() {
+        mAngle += Math.PI/2;
+        mVelocity = Vec2.directed(DEFAULT_SPEED, mAngle);
+        doLine();
+        //mState = State.TURNING_LEFT;
+    }
+
+    public void turnRight() {
+        mAngle -= Math.PI/2;
+        mVelocity = Vec2.directed(DEFAULT_SPEED, mAngle);
+        doLine();
+        //mState = State.TURNING_RIGHT;
+    }
+
+    public void turnEnd() {
+        //mState = State.FORWARD;
+    }
+
     private void doLine() {
         LineSnakeFragment line = new LineSnakeFragment(mPosition, mPosition, mSize);
         mLineFragments.add(line);
     }
 
     private void doArc() {
+        ArcSnakeFragment arc = new ArcSnakeFragment();
+        mArcFragments.add(arc);
+    }
 
+    public SnakeFragment getLastFragment() {
+        if (mState == State.FORWARD)
+            return mLineFragments.get(mLineFragments.size() - 1);
+        else if (mState == State.TURNING_RIGHT || mState == State.TURNING_LEFT)
+            return mArcFragments.get(mArcFragments.size() - 1);
+
+        return null;
     }
 
 }

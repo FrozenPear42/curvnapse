@@ -68,8 +68,8 @@ public class FlowManager {
         mMainStage.setScene(new GameLobbyScene(pGame).getScene());
     }
 
-    public void gameScene() {
-        mMainStage.setScene(new GameScene(new ArrayList<>()).getScene());
+    public void gameScene(Game pGame) {
+        mMainStage.setScene(new GameScene(pGame).getScene());
     }
 
     public ServerConnector getConnector() {
