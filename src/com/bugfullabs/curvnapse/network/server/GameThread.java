@@ -37,9 +37,14 @@ public class GameThread implements ClientThread.ClientListener {
 
                 mSnakes.forEach((player, snake) -> {
                     snake.step(delta);
-                    fragments.add(snake.getLastFragment());
-                });
+                    if (snake.isAlive())
+                        fragments.add(snake.getLastFragment());
 
+                    if (snake.getPosition().x < 0 || snake.getPosition().x > mGame.getBoardWidth())
+                        snake.kill();
+                    if (snake.getPosition().y < 0 || snake.getPosition().y > mGame.getBoardHeight())
+                        snake.kill();
+                });
                 mClients.forEach(client -> client.sendMessage(new SnakeFragmentsMessage(fragments)));
 
             }
@@ -51,7 +56,13 @@ public class GameThread implements ClientThread.ClientListener {
     }
 
     private Snake createNewSnake(Player pPlayer) {
-        return new Snake(pPlayer.getID(), new Vec2(100, 100), Math.PI / 2, pPlayer.getColor());
+        Random rnd = new Random();
+        //TODO: add margin, avoid conflict
+        int x = rnd.nextInt(mGame.getBoardWidth());
+        int y = rnd.nextInt(mGame.getBoardHeight());
+        double angle = rnd.nextDouble() * Math.PI;
+
+        return new Snake(pPlayer.getID(), new Vec2(x, y), angle, pPlayer.getColor());
     }
 
     @Override

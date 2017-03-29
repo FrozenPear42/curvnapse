@@ -54,7 +54,7 @@ public class ClientThread extends Thread {
             mObjectOutputStream.writeObject(pMessage);
             mObjectOutputStream.reset();
         } catch (IOException e) {
-            e.printStackTrace();
+            LOG.warning(e.getMessage());
         }
     }
 

@@ -79,10 +79,6 @@ public class GameLobby implements ClientThread.ClientListener {
                     }
                 }, 0, 1000);
                 break;
-
-            case CONTROL_UPDATE:
-                LOG.info("Control");
-                break;
         }
     }
 

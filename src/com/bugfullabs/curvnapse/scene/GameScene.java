@@ -42,8 +42,6 @@ public class GameScene implements ServerConnector.MessageListener {
 
     private ServerConnector mConnector;
 
-    private Timer mTimer;
-
     public GameScene(Game pGame) {
         mGame = pGame;
 
@@ -61,23 +59,14 @@ public class GameScene implements ServerConnector.MessageListener {
 
         mRoot = new BorderPane();
         mMessageBox = new MessageBox();
-        mBoard = new Board(400, 500);
+        mBoard = new Board(mGame.getBoardWidth(), mGame.getBoardHeight());
         mLeaderboard = new Leaderboard();
         mRoot.setLeft(mMessageBox);
         mRoot.setCenter(mBoard);
         mRoot.setRight(mLeaderboard);
         mScene = new Scene(mRoot);
 
-
         mSnakeFragments = new ArrayList<>();
-
-//        mTimer = new Timer();
-//        mTimer.scheduleAtFixedRate(new TimerTask() {
-//            @Override
-//            public void run() {
-//                mBoard.update(mSnakeFragments);
-//            }
-//        }, 0, 1000 / 60);
 
         mConnector.registerListener(this);
         mMessageBox.setSendListener(pMessage -> mConnector.sendMessage(new TextMessage(FlowManager.getInstance().getUsername(), pMessage)));

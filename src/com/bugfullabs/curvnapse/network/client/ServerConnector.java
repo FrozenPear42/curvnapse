@@ -24,7 +24,7 @@ public class ServerConnector extends Thread {
         mListeners = new CopyOnWriteArrayList<>();
     }
 
-    public void sendMessage(Message pMessage) {
+    public synchronized void sendMessage(Message pMessage) {
         try {
             mObjectOutputStream.writeObject(pMessage);
             mObjectOutputStream.reset();

@@ -66,9 +66,6 @@ public class Server extends Thread implements ClientThread.ClientListener {
                 pClientThread.sendMessage(new WelcomeMessage(pClientThread.getID()));
                 mLobby.addClient(pClientThread);
                 break;
-            default:
-                LOG.warning("Unsupported message: " + pMessage.getType().name());
-                break;
         }
     }
 

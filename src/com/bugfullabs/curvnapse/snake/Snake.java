@@ -105,6 +105,18 @@ public class Snake {
         mArcFragments.add(arc);
     }
 
+    public Vec2 getPosition() {
+        return mPosition;
+    }
+
+    public void kill() {
+        mState = State.STOP;
+    }
+
+    public boolean isAlive() {
+        return mState != State.STOP;
+    }
+
     public SnakeFragment getLastFragment() {
         if (mState == State.FORWARD)
             return mLineFragments.get(mLineFragments.size() - 1);

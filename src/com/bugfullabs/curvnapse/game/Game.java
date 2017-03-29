@@ -18,6 +18,8 @@ public class Game implements Serializable, Cloneable {
     private ArrayList<Player> mPlayers;
     private ArrayList<Integer> mTest;
     private transient ColorBank mColorBank;
+    private int mBoardWidth;
+    private int mBoardHeight;
 
     public Game(String pName, int pHostID, int pMaxPlayers) {
         mID = UID;
@@ -28,6 +30,8 @@ public class Game implements Serializable, Cloneable {
         mPlayers = new ArrayList<>(mMaxPlayers);
         mTest = new ArrayList<>(10);
         mColorBank = new ColorBank();
+        mBoardWidth = 500;
+        mBoardHeight = 500;
     }
 
     public int getID() {
@@ -52,6 +56,14 @@ public class Game implements Serializable, Cloneable {
 
     public void setName(String pName) {
         mName = pName;
+    }
+
+    public int getBoardWidth() {
+        return mBoardWidth;
+    }
+
+    public int getBoardHeight() {
+        return mBoardHeight;
     }
 
     public int getMaxPlayers() {
