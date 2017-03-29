@@ -52,6 +52,7 @@ public class ClientThread extends Thread {
     public void sendMessage(Message pMessage) {
         try {
             mObjectOutputStream.writeObject(pMessage);
+            mObjectOutputStream.reset();
         } catch (IOException e) {
             e.printStackTrace();
         }

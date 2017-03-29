@@ -39,7 +39,6 @@ public class GameLobby implements ClientThread.ClientListener {
     }
 
     private void addPlayer(String pName, int pID) {
-        mGame.setName("asd");
         Player p = mGame.addPlayer(pName, pID);
         if (p != null) {
             mClientThreads.forEach(client -> client.sendMessage(new GameUpdateMessage(mGame)));
@@ -47,7 +46,6 @@ public class GameLobby implements ClientThread.ClientListener {
 
         if (mListener != null) {
             mListener.onGameUpdate(mGame);
-            mClientThreads.forEach(client -> client.sendMessage(new TextMessage("LISTE", Integer.toString(mGame.getPlayers().size()))));
         }
     }
 

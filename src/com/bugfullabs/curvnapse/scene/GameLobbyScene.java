@@ -100,10 +100,7 @@ public class GameLobbyScene implements ServerConnector.MessageListener {
                 break;
             case GAME_UPDATE:
                 Game game = ((GameUpdateMessage) pMessage).getGame();
-                Platform.runLater(() -> {
-                    LOG.info("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA, jest: " + game.getTest().size());
-                    update(game);
-                });
+                Platform.runLater(() -> update(game));
                 break;
             case GAME_START:
                 LOG.info("Game started");
