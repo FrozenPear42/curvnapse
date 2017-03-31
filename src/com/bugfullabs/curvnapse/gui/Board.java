@@ -1,8 +1,10 @@
 package com.bugfullabs.curvnapse.gui;
 
 
+import com.bugfullabs.curvnapse.snake.ArcSnakeFragment;
 import com.bugfullabs.curvnapse.snake.LineSnakeFragment;
 import com.bugfullabs.curvnapse.snake.SnakeFragment;
+import com.bugfullabs.curvnapse.utils.MathUtils;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.canvas.Canvas;
@@ -61,7 +63,17 @@ public class Board extends VBox {
                 LineSnakeFragment line = (LineSnakeFragment) fragment;
                 mainCtx.strokeLine(line.getBegin().x, line.getBegin().y, line.getEnd().x, line.getEnd().y);
             } else {
-                mainCtx.fillArc(100, 100, 10, 10, 0, 360, ArcType.ROUND);
+                ArcSnakeFragment arc = (ArcSnakeFragment) fragment;
+                //FIXME: OMG SO AWFUL
+                double sA = Math.min(MathUtils.radToDeg(arc.getStartAngle()), MathUtils.radToDeg(arc.getAngle()));
+                double a = Math.max(MathUtils.radToDeg(arc.getStartAngle()), MathUtils.radToDeg(arc.getAngle()));
+
+
+                //mainCtx.strokeArc(arc.getCenter().x - arc.getRadius(), arc.getCenter().y - arc.getRadius(),
+                //        2 * arc.getRadius(), 2 * arc.getRadius(),
+                //        sA, a, ArcType.OPEN);
+                mainCtx.setFill(Color.AQUAMARINE);
+                mainCtx.fillArc(arc.getCenter().x, arc.getCenter().y, 10, 10, 0, 360, ArcType.ROUND);
             }
         });
     }

@@ -61,6 +61,10 @@ public class GameThread implements ClientThread.ClientListener {
         int x = rnd.nextInt(mGame.getBoardWidth());
         int y = rnd.nextInt(mGame.getBoardHeight());
         double angle = rnd.nextDouble() * Math.PI;
+        //TODO: TEMPORAL WORKAROUND
+        x = 250;
+        y = 250;
+        angle = 0;
 
         return new Snake(pPlayer.getID(), new Vec2(x, y), angle, pPlayer.getColor());
     }

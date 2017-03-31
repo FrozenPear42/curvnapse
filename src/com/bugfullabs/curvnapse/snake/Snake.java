@@ -1,6 +1,7 @@
 package com.bugfullabs.curvnapse.snake;
 
 import com.bugfullabs.curvnapse.player.PlayerColor;
+import com.bugfullabs.curvnapse.utils.MathUtils;
 import com.bugfullabs.curvnapse.utils.Vec2;
 import com.sun.javafx.geom.Vec2d;
 import com.sun.javafx.geom.Vec3d;
@@ -9,9 +10,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Snake {
-    public static final double DEFAULT_SPEED = 0.1f;
+    public static final double DEFAULT_SPEED = 0.02f;
     public static final double DEFAULT_SIZE = 5.0f;
-    public static final double DEFAULT_TURN_RADIUS = 10.0f;
+    public static final double DEFAULT_TURN_RADIUS = 40.0f;
 
     private enum State {
         TURNING_LEFT,
@@ -64,45 +65,65 @@ public class Snake {
 
             case TURNING_LEFT:
                 mAngle += (mVelocity.length() / mTurnRadius) * pDelta;
-                mPosition.x = mTurnCenter.x - mTurnRadius * Math.sin(mAngle);
-                mPosition.y = mTurnCenter.y + mTurnRadius * Math.cos(mAngle);
-                mArcFragments.get(mLineFragments.size() - 1).updateHead(mAngle);
+                mAngle = MathUtils.normalizeAngle(mAngle);
+                mPosition.x = mTurnCenter.x + mTurnRadius * Math.sin(mAngle);
+                mPosition.y = mTurnCenter.y - mTurnRadius * Math.cos(mAngle);
+                mArcFragments.get(mArcFragments.size() - 1).updateHead((mVelocity.length() / mTurnRadius) * pDelta);
                 break;
 
             case TURNING_RIGHT:
-                mPosition.x = mTurnCenter.x + mTurnRadius * Math.sin(mAngle);
-                mPosition.y = mTurnCenter.y - mTurnRadius * Math.cos(mAngle);
-                mArcFragments.get(mLineFragments.size() - 1).updateHead(mAngle);
+                mAngle -= (mVelocity.length() / mTurnRadius) * pDelta;
+                mAngle = MathUtils.normalizeAngle(mAngle);
+                mPosition.x = mTurnCenter.x - mTurnRadius * Math.sin(mAngle);
+                mPosition.y = mTurnCenter.y + mTurnRadius * Math.cos(mAngle);
+                mArcFragments.get(mArcFragments.size() - 1).updateHead(-(mVelocity.length() / mTurnRadius) * pDelta);
                 break;
         }
     }
 
     public void turnLeft() {
-        mAngle -= Math.PI / 2;
-        mVelocity = Vec2.directed(DEFAULT_SPEED, mAngle);
-        doLine();
-        //mState = State.TURNING_LEFT;
+        if (!isAlive())
+            return;
+        doArc(true);
+        mState = State.TURNING_LEFT;
     }
 
     public void turnRight() {
-        mAngle += Math.PI / 2;
-        mVelocity = Vec2.directed(DEFAULT_SPEED, mAngle);
-        doLine();
-        //mState = State.TURNING_RIGHT;
+        if (!isAlive())
+            return;
+        doArc(false);
+        mState = State.TURNING_RIGHT;
     }
 
     public void turnEnd() {
-        //mState = State.FORWARD;
+        if (!isAlive())
+            return;
+        mAngle = MathUtils.normalizeAngle(mAngle + Math.PI);
+        doLine();
+        mState = State.FORWARD;
     }
 
     private void doLine() {
+        mVelocity = Vec2.directed(mVelocity.length(), mAngle);
         LineSnakeFragment line = new LineSnakeFragment(mPosition, mPosition, mSize, mColor, mSize);
         mLineFragments.add(line);
     }
 
-    private void doArc() {
-        ArcSnakeFragment arc = new ArcSnakeFragment(mColor, mSize);
-        mArcFragments.add(arc);
+    private void doArc(boolean pLeft) {
+        if (pLeft) {
+            double startAngle = MathUtils.normalizeAngle(mAngle + Math.PI / 2);
+            mTurnCenter.x = mPosition.x + mTurnRadius * Math.sin(mAngle);
+            mTurnCenter.y = mPosition.y - mTurnRadius * Math.cos(mAngle);
+            ArcSnakeFragment arc = new ArcSnakeFragment(startAngle, mTurnRadius, mTurnCenter, mColor, mSize);
+            mArcFragments.add(arc);
+        } else {
+            double startAngle = MathUtils.normalizeAngle(mAngle - Math.PI / 2);
+            mTurnCenter.x = mPosition.x - mTurnRadius * Math.sin(mAngle);
+            mTurnCenter.y = mPosition.y + mTurnRadius * Math.cos(mAngle);
+
+            ArcSnakeFragment arc = new ArcSnakeFragment(startAngle, mTurnRadius, mTurnCenter, mColor, mSize);
+            mArcFragments.add(arc);
+        }
     }
 
     public Vec2 getPosition() {

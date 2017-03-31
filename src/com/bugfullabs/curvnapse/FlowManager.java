@@ -2,11 +2,13 @@ package com.bugfullabs.curvnapse;
 
 import com.bugfullabs.curvnapse.game.Game;
 import com.bugfullabs.curvnapse.network.client.ServerConnector;
+import com.bugfullabs.curvnapse.network.message.*;
 import com.bugfullabs.curvnapse.network.server.Server;
 import com.bugfullabs.curvnapse.scene.GameLobbyScene;
 import com.bugfullabs.curvnapse.scene.GameScene;
 import com.bugfullabs.curvnapse.scene.LoginScene;
 import com.bugfullabs.curvnapse.scene.MainLobbyScene;
+import javafx.application.Platform;
 import javafx.stage.Stage;
 
 import java.util.ArrayList;
@@ -70,6 +72,25 @@ public class FlowManager {
 
     public void gameScene(Game pGame) {
         mMainStage.setScene(new GameScene(pGame).getScene());
+    }
+
+    public void testMode() {
+        String ip = "localhost";
+        int port = 1337;
+        Game game;
+        createServer(port, 10);
+        connectToServer(ip, port);
+        mServerConnector.registerListener(message -> {
+            if (message.getType() == Message.Type.GAME_UPDATE) {
+                mServerConnector.sendMessage(new GameStartRequest());
+                Platform.runLater(() -> gameScene(((GameUpdateMessage) message).getGame()));
+            }
+            if (message.getType() == Message.Type.GAME_JOIN) {
+                mServerConnector.sendMessage(new NewPlayerRequest("asd"));
+            }
+        });
+        mServerConnector.handshake("test", pID -> mUserID = pID);
+        mServerConnector.sendMessage(new GameCreateRequest("asd", "", 10));
     }
 
     public ServerConnector getConnector() {
