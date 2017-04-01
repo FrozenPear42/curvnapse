@@ -67,6 +67,7 @@ public class GameScene implements ServerConnector.MessageListener {
         mRoot.setCenter(mBoard);
         mRoot.setRight(mLeaderboard);
         mScene = new Scene(mRoot);
+        mScene.getStylesheets().add("resources/JMetro.css");
 
         mSnakeFragments = new ArrayList<>();
 
@@ -108,6 +109,8 @@ public class GameScene implements ServerConnector.MessageListener {
                     mConnector.sendMessage(new ControlUpdateMessage(p.getID(), ControlUpdateMessage.Direction.RIGHT, ControlUpdateMessage.Action.UP));
             }
         });
+
+        mBoard.updatePowerUps();
 
     }
 

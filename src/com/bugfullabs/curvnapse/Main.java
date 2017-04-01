@@ -9,7 +9,7 @@ public class Main extends Application {
     public void start(Stage primaryStage) {
 
         primaryStage.setTitle("Curvnapse");
-        primaryStage.setWidth(1000);
+        primaryStage.setWidth(1100);
         primaryStage.setHeight(700);
         primaryStage.show();
 

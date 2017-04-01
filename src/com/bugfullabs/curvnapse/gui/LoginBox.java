@@ -20,7 +20,7 @@ public class LoginBox extends VBox {
         super();
         setPadding(new Insets(10.0f));
         setAlignment(Pos.CENTER);
-        setSpacing(5.0f);
+        setSpacing(10.0f);
 
         mHost = new CheckBox("Host?");
         mNameBox = new LabeledTextBox("Name:");
@@ -60,7 +60,7 @@ public class LoginBox extends VBox {
         private TextField mText;
 
         LabeledTextBox(String pLabel) {
-            super();
+            super(5.0f);
             setAlignment(Pos.CENTER);
             mLabel = new Label(pLabel);
             mText = new TextField();

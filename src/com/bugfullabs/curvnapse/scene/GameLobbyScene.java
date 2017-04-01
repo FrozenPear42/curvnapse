@@ -45,6 +45,7 @@ public class GameLobbyScene implements ServerConnector.MessageListener {
 
         mRoot = new BorderPane();
         mScene = new Scene(mRoot);
+        mScene.getStylesheets().add("resources/JMetro.css");
 
         mMessageBox = new MessageBox();
         mGameOptionsBox = new GameOptionsBox();

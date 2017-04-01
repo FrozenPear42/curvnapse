@@ -23,6 +23,7 @@ public class Leaderboard extends VBox {
         mPlayersList = new ListView<>();
         mPlayersList.setCellFactory(param -> new PlayersLeaderboardListElement());
         getChildren().addAll(mPlayersList);
+        setMaxWidth(200);
     }
 
     public void setPlayers(ObservableList<Player> pPlayers) {

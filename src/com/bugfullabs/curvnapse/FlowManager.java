@@ -9,6 +9,7 @@ import com.bugfullabs.curvnapse.scene.GameScene;
 import com.bugfullabs.curvnapse.scene.LoginScene;
 import com.bugfullabs.curvnapse.scene.MainLobbyScene;
 import javafx.application.Platform;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
 import java.util.ArrayList;
@@ -21,6 +22,12 @@ public class FlowManager {
     private ServerConnector mServerConnector;
     private String mUsername;
     private int mUserID;
+
+    private Image mPowerUps;
+
+    private FlowManager() {
+        mPowerUps = new Image("/resources/power_ups.png");
+    }
 
     public static FlowManager getInstance() {
         return mInstance;
@@ -103,5 +110,9 @@ public class FlowManager {
 
     public int getUserID() {
         return mUserID;
+    }
+
+    public Image getPowerUps() {
+        return mPowerUps;
     }
 }

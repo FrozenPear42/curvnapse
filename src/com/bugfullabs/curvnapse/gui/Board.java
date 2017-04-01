@@ -1,6 +1,7 @@
 package com.bugfullabs.curvnapse.gui;
 
 
+import com.bugfullabs.curvnapse.FlowManager;
 import com.bugfullabs.curvnapse.snake.ArcSnakeFragment;
 import com.bugfullabs.curvnapse.snake.LineSnakeFragment;
 import com.bugfullabs.curvnapse.snake.SnakeFragment;
@@ -9,6 +10,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.image.Image;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -49,6 +51,16 @@ public class Board extends VBox {
         gridCtx.setLineWidth(5);
         gridCtx.setStroke(Color.WHITE);
         gridCtx.strokeRect(0, 0, mWidth, mHeight);
+    }
+
+    public synchronized void updatePowerUps() {
+        GraphicsContext ctx = mBonusCanvas.getGraphicsContext2D();
+        Image powerUps = FlowManager.getInstance().getPowerUps();
+        int x = 1;
+        int y = 1;
+
+        ctx.drawImage(powerUps, 48*x, 48*y, 48, 48, 100, 100, 24, 24);
+
     }
 
     public synchronized void update(List<SnakeFragment> pSnakeFragments) {

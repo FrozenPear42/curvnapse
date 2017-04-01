@@ -16,7 +16,6 @@ public class Game implements Serializable, Cloneable {
     private int mMaxPlayers;
     private int mHostID;
     private ArrayList<Player> mPlayers;
-    private ArrayList<Integer> mTest;
     private transient ColorBank mColorBank;
     private int mBoardWidth;
     private int mBoardHeight;
@@ -28,7 +27,6 @@ public class Game implements Serializable, Cloneable {
         mHostID = pHostID;
         mMaxPlayers = pMaxPlayers;
         mPlayers = new ArrayList<>(mMaxPlayers);
-        mTest = new ArrayList<>(10);
         mColorBank = new ColorBank();
         mBoardWidth = 500;
         mBoardHeight = 500;
@@ -44,10 +42,6 @@ public class Game implements Serializable, Cloneable {
 
     public List<Player> getPlayers() {
         return mPlayers;
-    }
-
-    public ArrayList<Integer> getTest() {
-        return mTest;
     }
 
     public int getHostID() {
@@ -71,7 +65,6 @@ public class Game implements Serializable, Cloneable {
     }
 
     public Player addPlayer(String pName, int pOwner) {
-        mTest.add(12);
         if (mPlayers.size() < mMaxPlayers) {
             PlayerColor color = mColorBank.nextColor();
             Player player = new Player(pName, color, pOwner);

@@ -37,7 +37,8 @@ public class MainLobbyScene implements ServerConnector.MessageListener {
         mRoot.setLeft(mMessageBox);
         mRoot.setCenter(mGameListBox);
         mScene = new Scene(mRoot);
-
+        mScene.getStylesheets().add("resources/JMetro.css");
+        
         mConnector = FlowManager.getInstance().getConnector();
         mConnector.sendMessage(new UpdateRequest());
         mConnector.registerListener(this);

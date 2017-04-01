@@ -56,6 +56,7 @@ public class MessageBox extends VBox {
         });
 
         getChildren().addAll(mList, mInputBox);
+        setMaxWidth(320);
     }
 
     public void setSendListener(MessageSendListener pListener) {
@@ -82,7 +83,7 @@ public class MessageBox extends VBox {
             if (pMessage != null) {
                 Label name = new Label(pMessage.getAuthor() + ": ");
                 Label text = new Label(pMessage.getMessage());
-                text.setMaxWidth(250);
+                text.setMaxWidth(220);
                 text.setWrapText(true);
                 box.getChildren().add(name);
                 box.getChildren().add(text);

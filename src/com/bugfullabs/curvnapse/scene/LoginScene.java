@@ -29,6 +29,7 @@ public class LoginScene implements LoginBox.LoginListener {
         mLoginBox.setLoginListener(this);
         mRoot.getChildren().add(mLoginBox);
         mScene = new Scene(mRoot);
+        mScene.getStylesheets().add("resources/JMetro.css");
     }
 
     public Scene getScene() {
