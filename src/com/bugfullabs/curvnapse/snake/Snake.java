@@ -8,11 +8,13 @@ import com.sun.javafx.geom.Vec3d;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 public class Snake {
-    public static final double DEFAULT_SPEED = 0.02f;
+    private static final Logger LOG = Logger.getLogger("SNAKE");
+    public static final double DEFAULT_SPEED = 0.05f;
     public static final double DEFAULT_SIZE = 5.0f;
-    public static final double DEFAULT_TURN_RADIUS = 40.0f;
+    public static final double DEFAULT_TURN_RADIUS = 20.0f;
 
     private enum State {
         TURNING_LEFT,
@@ -57,26 +59,30 @@ public class Snake {
     }
 
     public void step(double pDelta) {
+        double deltaAngle = (mVelocity.length() / mTurnRadius) * pDelta;
         switch (mState) {
             case FORWARD:
                 mPosition = Vec2.add(mPosition, Vec2.times(mVelocity, pDelta));
                 mLineFragments.get(mLineFragments.size() - 1).updateHead(mPosition);
+                mLineFragments.get(mLineFragments.size() - 1).updateLastPos(mPosition);
                 break;
 
             case TURNING_LEFT:
-                mAngle += (mVelocity.length() / mTurnRadius) * pDelta;
+                mAngle += deltaAngle;
                 mAngle = MathUtils.normalizeAngle(mAngle);
                 mPosition.x = mTurnCenter.x + mTurnRadius * Math.sin(mAngle);
-                mPosition.y = mTurnCenter.y - mTurnRadius * Math.cos(mAngle);
-                mArcFragments.get(mArcFragments.size() - 1).updateHead((mVelocity.length() / mTurnRadius) * pDelta);
+                mPosition.y = mTurnCenter.y + mTurnRadius * Math.cos(mAngle);
+                mArcFragments.get(mArcFragments.size() - 1).updateHead(deltaAngle);
+                mArcFragments.get(mArcFragments.size() - 1).updateLastPos(mPosition);
                 break;
 
             case TURNING_RIGHT:
                 mAngle -= (mVelocity.length() / mTurnRadius) * pDelta;
                 mAngle = MathUtils.normalizeAngle(mAngle);
                 mPosition.x = mTurnCenter.x - mTurnRadius * Math.sin(mAngle);
-                mPosition.y = mTurnCenter.y + mTurnRadius * Math.cos(mAngle);
-                mArcFragments.get(mArcFragments.size() - 1).updateHead(-(mVelocity.length() / mTurnRadius) * pDelta);
+                mPosition.y = mTurnCenter.y - mTurnRadius * Math.cos(mAngle);
+                mArcFragments.get(mArcFragments.size() - 1).updateHead(-deltaAngle);
+                mArcFragments.get(mArcFragments.size() - 1).updateLastPos(mPosition);
                 break;
         }
     }
@@ -98,27 +104,29 @@ public class Snake {
     public void turnEnd() {
         if (!isAlive())
             return;
-        mAngle = MathUtils.normalizeAngle(mAngle + Math.PI);
+        LOG.info(Double.toString(MathUtils.radToDeg(mAngle)));
         doLine();
         mState = State.FORWARD;
     }
 
     private void doLine() {
         mVelocity = Vec2.directed(mVelocity.length(), mAngle);
+        mVelocity.y = -mVelocity.y;
+
         LineSnakeFragment line = new LineSnakeFragment(mPosition, mPosition, mSize, mColor, mSize);
         mLineFragments.add(line);
     }
 
     private void doArc(boolean pLeft) {
         if (pLeft) {
-            double startAngle = MathUtils.normalizeAngle(mAngle + Math.PI / 2);
-            mTurnCenter.x = mPosition.x + mTurnRadius * Math.sin(mAngle);
+            double startAngle = MathUtils.normalizeAngle(mAngle - Math.PI / 2);
+            mTurnCenter.x = mPosition.x - mTurnRadius * Math.sin(mAngle);
             mTurnCenter.y = mPosition.y - mTurnRadius * Math.cos(mAngle);
             ArcSnakeFragment arc = new ArcSnakeFragment(startAngle, mTurnRadius, mTurnCenter, mColor, mSize);
             mArcFragments.add(arc);
         } else {
-            double startAngle = MathUtils.normalizeAngle(mAngle - Math.PI / 2);
-            mTurnCenter.x = mPosition.x - mTurnRadius * Math.sin(mAngle);
+            double startAngle = MathUtils.normalizeAngle(mAngle + Math.PI / 2);
+            mTurnCenter.x = mPosition.x + mTurnRadius * Math.sin(mAngle);
             mTurnCenter.y = mPosition.y + mTurnRadius * Math.cos(mAngle);
 
             ArcSnakeFragment arc = new ArcSnakeFragment(startAngle, mTurnRadius, mTurnCenter, mColor, mSize);

@@ -65,15 +65,13 @@ public class Board extends VBox {
             } else {
                 ArcSnakeFragment arc = (ArcSnakeFragment) fragment;
                 //FIXME: OMG SO AWFUL
-                double sA = Math.min(MathUtils.radToDeg(arc.getStartAngle()), MathUtils.radToDeg(arc.getAngle()));
-                double a = Math.max(MathUtils.radToDeg(arc.getStartAngle()), MathUtils.radToDeg(arc.getAngle()));
+                double sA = MathUtils.radToDeg(arc.getStartAngle());
+                double a = MathUtils.radToDeg(arc.getAngle());
 
 
-                //mainCtx.strokeArc(arc.getCenter().x - arc.getRadius(), arc.getCenter().y - arc.getRadius(),
-                //        2 * arc.getRadius(), 2 * arc.getRadius(),
-                //        sA, a, ArcType.OPEN);
-                mainCtx.setFill(Color.AQUAMARINE);
-                mainCtx.fillArc(arc.getCenter().x, arc.getCenter().y, 10, 10, 0, 360, ArcType.ROUND);
+                mainCtx.strokeArc(arc.getCenter().x - arc.getRadius(), arc.getCenter().y - arc.getRadius(),
+                        2 * arc.getRadius(), 2 * arc.getRadius(),
+                        sA, a, ArcType.OPEN);
             }
         });
     }
