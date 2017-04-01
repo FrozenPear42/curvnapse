@@ -44,6 +44,11 @@ public class GameLobby implements ClientThread.ClientListener {
             propagateUpdate();
     }
 
+    private void updatePlayer(Player pPlayer) {
+        mGame.getPlayers().replaceAll(p -> p.getID() == pPlayer.getID() ? pPlayer : p);
+        propagateUpdate();
+    }
+
     private void propagateUpdate() {
         mClientThreads.forEach(client -> client.sendMessage(new GameUpdateMessage(mGame)));
         if (mListener != null) {
@@ -68,6 +73,10 @@ public class GameLobby implements ClientThread.ClientListener {
             case PLAYER_ADD_REQUEST:
                 addPlayer(((NewPlayerRequest) pMessage).getName(), pClientThread.getID());
                 break;
+            case PLAYER_UPDATE_REQUEST:
+                updatePlayer(((PlayerUpdateRequest) pMessage).getPlayer());
+                break;
+
             case GAME_START_REQUEST:
                 //FIXME: Move timer as member, allow cancel
                 new Timer("asd").schedule(new TimerTask() {

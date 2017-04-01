@@ -72,7 +72,17 @@ public class GameLobbyScene implements ServerConnector.MessageListener {
         mPlayers = FXCollections.observableArrayList();
         mPlayersBox.setPlayersList(mPlayers);
 
-        mPlayersBox.setListener(() -> mConnector.sendMessage(new NewPlayerRequest("Player")));
+        mPlayersBox.setListener(new PlayersBox.PlayerBoxListener() {
+            @Override
+            public void onCreateLocal() {
+                mConnector.sendMessage(new NewPlayerRequest("Player"));
+            }
+
+            @Override
+            public void onPlayerEdit(Player pPlayer) {
+                mConnector.sendMessage(new PlayerUpdateRequest(pPlayer));
+            }
+        });
 
         mStartButton.setOnAction(event -> mConnector.sendMessage(new GameStartRequest()));
 

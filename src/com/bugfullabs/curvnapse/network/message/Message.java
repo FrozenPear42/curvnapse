@@ -20,7 +20,7 @@ public abstract class Message implements Serializable {
         GAME_START,
         CONTROL_UPDATE,
         SNAKE_UPDATE,
-        ERROR
+        PLAYER_UPDATE_REQUEST, ERROR
     }
 
     private Type mType;

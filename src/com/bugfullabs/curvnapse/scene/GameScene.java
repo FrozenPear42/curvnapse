@@ -76,7 +76,7 @@ public class GameScene implements ServerConnector.MessageListener {
 
         mLeaderboard.setPlayers(mPlayers);
 
-        mRoot.setOnKeyPressed(event -> {
+        mScene.setOnKeyPressed(event -> {
             KeyCode code = event.getCode();
             if (mActiveKeys.contains(code)) {
                 event.consume();
@@ -96,7 +96,7 @@ public class GameScene implements ServerConnector.MessageListener {
             }
         });
 
-        mRoot.setOnKeyReleased(event -> {
+        mScene.setOnKeyReleased(event -> {
             KeyCode code = event.getCode();
             mActiveKeys.remove(code);
             if (mKeys.containsKey(code)) {
