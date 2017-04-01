@@ -60,6 +60,7 @@ public class PlayersBox extends VBox {
 
                 Label label = new Label(pPlayer.getName());
                 label.setTextFill(pPlayer.getColor().toFXColor());
+                label.setStyle("-fx-text-fill: "+ pPlayer.getColor().toHex());
 
                 HBox buttons = new HBox(10.0f);
                 buttons.setAlignment(Pos.CENTER);

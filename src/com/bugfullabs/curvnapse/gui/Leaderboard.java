@@ -9,8 +9,13 @@ import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Font;
 
 public class Leaderboard extends VBox {
     private ListView<Player> mPlayersList;
@@ -34,13 +39,13 @@ public class Leaderboard extends VBox {
         @Override
         public void updateItem(Player pPlayer, boolean pEmpty) {
             super.updateItem(pPlayer, pEmpty);
-            VBox box = new VBox(5.0f);
+            HBox box = new HBox(10.0f);
             if (pPlayer != null) {
+                Label points = new Label("100");
+                points.setStyle("-fx-background-color: "+ pPlayer.getColor().toHex() +"; -fx-font-weight: bolder");
                 Label label = new Label(pPlayer.getName());
                 label.setTextFill(pPlayer.getColor().toFXColor());
-                Label points = new Label("100");
-                Rectangle color = new Rectangle(20, 20, pPlayer.getColor().toFXColor());
-                box.getChildren().addAll(label, points, color);
+                box.getChildren().addAll(points, label);
             }
             setGraphic(box);
         }
