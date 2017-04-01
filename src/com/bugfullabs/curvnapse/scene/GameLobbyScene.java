@@ -90,6 +90,17 @@ public class GameLobbyScene implements ServerConnector.MessageListener {
         mGameOptionsBox.setName(mGame.getName());
         mGameOptionsBox.setDisable(mGame.getHostID() != FlowManager.getInstance().getUserID());
         LOG.info("Me: " + FlowManager.getInstance().getUserID() + " HOST: " + mGame.getHostID());
+        mGameOptionsBox.setListener(new GameOptionsBox.GameOptionsChangeListener() {
+            @Override
+            public void onGameNameChange(String pName) {
+                mConnector.sendMessage(new GameUpdateNameRequest(pName));
+            }
+
+            @Override
+            public void onPowerUpSelectionChange(boolean[] pPowerUps) {
+
+            }
+        });
     }
 
     @Override

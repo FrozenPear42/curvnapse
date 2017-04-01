@@ -52,10 +52,12 @@ public class GameScene implements ServerConnector.MessageListener {
         mKeys = new HashMap<>();
         mActiveKeys = new ArrayList<>();
 
-        mPlayers.forEach(pPlayer -> {
-            mKeys.put(pPlayer.getLeftKey(), pPlayer);
-            mKeys.put(pPlayer.getRightKey(), pPlayer);
-        });
+        mPlayers.stream()
+                .filter(player -> player.getOwner() == FlowManager.getInstance().getUserID())
+                .forEach(pPlayer -> {
+                    mKeys.put(pPlayer.getLeftKey(), pPlayer);
+                    mKeys.put(pPlayer.getRightKey(), pPlayer);
+                });
 
         mRoot = new BorderPane();
         mMessageBox = new MessageBox();
@@ -84,10 +86,13 @@ public class GameScene implements ServerConnector.MessageListener {
             if (mKeys.containsKey(code)) {
                 event.consume();
                 Player p = mKeys.get(code);
-                if (p.getLeftKey() == code)
+                if (p.getLeftKey() == code) {
+                    mActiveKeys.remove(p.getRightKey());
                     mConnector.sendMessage(new ControlUpdateMessage(p.getID(), ControlUpdateMessage.Direction.LEFT, ControlUpdateMessage.Action.DOWN));
-                else
+                } else {
+                    mActiveKeys.remove(p.getLeftKey());
                     mConnector.sendMessage(new ControlUpdateMessage(p.getID(), ControlUpdateMessage.Direction.RIGHT, ControlUpdateMessage.Action.DOWN));
+                }
             }
         });
 
@@ -118,11 +123,14 @@ public class GameScene implements ServerConnector.MessageListener {
                 break;
             case SNAKE_UPDATE:
                 SnakeFragmentsMessage msg = (SnakeFragmentsMessage) pMessage;
-                msg.getSnakeFragments().forEach(fragment -> {
-                    mSnakeFragments.removeIf(frag -> frag.getUID() == fragment.getUID());
-                    mSnakeFragments.add(fragment);
-                    mBoard.update(mSnakeFragments);
-                });
+                mBoard.update(((SnakeFragmentsMessage) pMessage).getSnakeFragments());
+                //TODO: convert to be more MVC
+//                msg.getSnakeFragments().forEach(fragment -> {
+//                    mSnakeFragments.removeIf(frag -> frag.getUID() == fragment.getUID());
+//                    mSnakeFragments.add(fragment);
+//                    mBoard.update(mSnakeFragments);
+//                });
+//
                 break;
         }
     }

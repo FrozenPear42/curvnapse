@@ -14,7 +14,6 @@ public class SnakeFragment implements Serializable {
     private long mUID;
     private PlayerColor mColor;
     private double mWidth;
-    private Vec2 mLastPos;
 
     public SnakeFragment(Type pType, PlayerColor pColor, double pWidth) {
         mType = pType;
@@ -22,7 +21,6 @@ public class SnakeFragment implements Serializable {
         mWidth = pWidth;
         mUID = UID;
         UID += 1;
-        mLastPos = new Vec2();
     }
 
     public Type getType() {
@@ -41,11 +39,4 @@ public class SnakeFragment implements Serializable {
         return mUID;
     }
 
-    public void updateLastPos(Vec2 pLastPos) {
-        mLastPos = pLastPos;
-    }
-
-    public Vec2 getLastPos() {
-        return mLastPos;
-    }
 }

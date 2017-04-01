@@ -15,7 +15,6 @@ public class KeyBindingBank {
     public KeyBindingBank() {
         mKeys = new ArrayList<>();
         mTaken = new HashMap<>();
-
         mKeys.add(new Pair<>(KeyCode.LEFT, KeyCode.RIGHT));
         mKeys.add(new Pair<>(KeyCode.Q, KeyCode.E));
         mKeys.add(new Pair<>(KeyCode.Z, KeyCode.C));

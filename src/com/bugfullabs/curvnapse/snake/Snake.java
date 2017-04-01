@@ -12,8 +12,8 @@ import java.util.logging.Logger;
 
 public class Snake {
     private static final Logger LOG = Logger.getLogger("SNAKE");
-    public static final double DEFAULT_SPEED = 0.05f;
-    public static final double DEFAULT_SIZE = 5.0f;
+    public static final double DEFAULT_SPEED = 0.08f;
+    public static final double DEFAULT_SIZE = 2.5f;
     public static final double DEFAULT_TURN_RADIUS = 20.0f;
 
     private enum State {
@@ -64,7 +64,6 @@ public class Snake {
             case FORWARD:
                 mPosition = Vec2.add(mPosition, Vec2.times(mVelocity, pDelta));
                 mLineFragments.get(mLineFragments.size() - 1).updateHead(mPosition);
-                mLineFragments.get(mLineFragments.size() - 1).updateLastPos(mPosition);
                 break;
 
             case TURNING_LEFT:
@@ -73,7 +72,6 @@ public class Snake {
                 mPosition.x = mTurnCenter.x + mTurnRadius * Math.sin(mAngle);
                 mPosition.y = mTurnCenter.y + mTurnRadius * Math.cos(mAngle);
                 mArcFragments.get(mArcFragments.size() - 1).updateHead(deltaAngle);
-                mArcFragments.get(mArcFragments.size() - 1).updateLastPos(mPosition);
                 break;
 
             case TURNING_RIGHT:
@@ -82,7 +80,6 @@ public class Snake {
                 mPosition.x = mTurnCenter.x - mTurnRadius * Math.sin(mAngle);
                 mPosition.y = mTurnCenter.y - mTurnRadius * Math.cos(mAngle);
                 mArcFragments.get(mArcFragments.size() - 1).updateHead(-deltaAngle);
-                mArcFragments.get(mArcFragments.size() - 1).updateLastPos(mPosition);
                 break;
         }
     }
@@ -104,7 +101,6 @@ public class Snake {
     public void turnEnd() {
         if (!isAlive())
             return;
-        LOG.info(Double.toString(MathUtils.radToDeg(mAngle)));
         doLine();
         mState = State.FORWARD;
     }

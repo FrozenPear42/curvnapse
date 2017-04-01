@@ -45,6 +45,7 @@ public class GameThread implements ClientThread.ClientListener {
                     if (snake.getPosition().y < 0 || snake.getPosition().y > mGame.getBoardHeight())
                         snake.kill();
                 });
+
                 mClients.forEach(client -> client.sendMessage(new SnakeFragmentsMessage(fragments)));
 
             }

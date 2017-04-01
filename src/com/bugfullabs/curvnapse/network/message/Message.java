@@ -12,6 +12,7 @@ public abstract class Message implements Serializable {
         UPDATE_REQUEST,
         GAME_CREATE,
         GAME_UPDATE,
+        NAME_UPDATE_REQUEST,
         GAME_JOIN_REQUEST,
         GAME_JOIN,
         PLAYER_ADD_REQUEST,

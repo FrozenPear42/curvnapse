@@ -40,10 +40,12 @@ public class GameLobby implements ClientThread.ClientListener {
 
     private void addPlayer(String pName, int pID) {
         Player p = mGame.addPlayer(pName, pID);
-        if (p != null) {
-            mClientThreads.forEach(client -> client.sendMessage(new GameUpdateMessage(mGame)));
-        }
+        if (p != null)
+            propagateUpdate();
+    }
 
+    private void propagateUpdate() {
+        mClientThreads.forEach(client -> client.sendMessage(new GameUpdateMessage(mGame)));
         if (mListener != null) {
             mListener.onGameUpdate(mGame);
         }
@@ -58,6 +60,11 @@ public class GameLobby implements ClientThread.ClientListener {
             case UPDATE_REQUEST:
                 pClientThread.sendMessage(new GameUpdateMessage(mGame));
                 break;
+            case NAME_UPDATE_REQUEST:
+                mGame.setName(((GameUpdateNameRequest) pMessage).getName());
+                propagateUpdate();
+                break;
+
             case PLAYER_ADD_REQUEST:
                 addPlayer(((NewPlayerRequest) pMessage).getName(), pClientThread.getID());
                 break;
