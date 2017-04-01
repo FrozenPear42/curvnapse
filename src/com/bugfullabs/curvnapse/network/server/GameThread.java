@@ -1,14 +1,13 @@
 package com.bugfullabs.curvnapse.network.server;
 
 
-import com.bugfullabs.curvnapse.FlowManager;
 import com.bugfullabs.curvnapse.game.Game;
-import com.bugfullabs.curvnapse.network.client.ServerConnector;
 import com.bugfullabs.curvnapse.network.message.ControlUpdateMessage;
 import com.bugfullabs.curvnapse.network.message.Message;
-import com.bugfullabs.curvnapse.network.message.ServerTextMessage;
 import com.bugfullabs.curvnapse.network.message.SnakeFragmentsMessage;
+import com.bugfullabs.curvnapse.network.message.SpawnPowerUpMessage;
 import com.bugfullabs.curvnapse.player.Player;
+import com.bugfullabs.curvnapse.powerup.PowerUp;
 import com.bugfullabs.curvnapse.snake.Snake;
 import com.bugfullabs.curvnapse.snake.SnakeFragment;
 import com.bugfullabs.curvnapse.utils.Vec2;
@@ -22,6 +21,9 @@ public class GameThread implements ClientThread.ClientListener {
     private long mLastTime;
     private List<ClientThread> mClients;
 
+    private int mNextPowerupTime;
+    private Random mRandom;
+
     public GameThread(Game pGame, List<ClientThread> pClients) {
         mClients = pClients;
         mGame = pGame;
@@ -29,11 +31,23 @@ public class GameThread implements ClientThread.ClientListener {
         mSnakes = new HashMap<>();
         mGame.getPlayers().forEach(player -> mSnakes.put(player, createNewSnake(player)));
 
+
+        mRandom = new Random();
+        mNextPowerupTime = mRandom.nextInt(4000) + 500;
+
         mTimer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
                 double delta = 1000 / 60; //FIXME: WCALE NIE
                 LinkedList<SnakeFragment> fragments = new LinkedList<>();
+
+                mNextPowerupTime -= delta;
+                if (mNextPowerupTime < 0) {
+                    mNextPowerupTime = mRandom.nextInt(4000) + 3000;
+                    PowerUp.PowerType type = PowerUp.PowerType.values()[mRandom.nextInt(4)];
+                    Vec2 pos = new Vec2(mRandom.nextInt(mGame.getBoardWidth()), mRandom.nextInt(mGame.getBoardHeight()));
+                    mClients.forEach(client -> client.sendMessage(new SpawnPowerUpMessage(type, pos)));
+                }
 
                 mSnakes.forEach((player, snake) -> {
                     snake.step(delta);

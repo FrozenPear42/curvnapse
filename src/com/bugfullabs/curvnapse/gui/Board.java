@@ -2,10 +2,12 @@ package com.bugfullabs.curvnapse.gui;
 
 
 import com.bugfullabs.curvnapse.FlowManager;
+import com.bugfullabs.curvnapse.powerup.PowerUp;
 import com.bugfullabs.curvnapse.snake.ArcSnakeFragment;
 import com.bugfullabs.curvnapse.snake.LineSnakeFragment;
 import com.bugfullabs.curvnapse.snake.SnakeFragment;
 import com.bugfullabs.curvnapse.utils.MathUtils;
+import com.bugfullabs.curvnapse.utils.Vec2;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.canvas.Canvas;
@@ -50,16 +52,17 @@ public class Board extends VBox {
         GraphicsContext gridCtx = mGridCanvas.getGraphicsContext2D();
         gridCtx.setLineWidth(5);
         gridCtx.setStroke(Color.WHITE);
+        gridCtx.setLineDashes(5, 15);
         gridCtx.strokeRect(0, 0, mWidth, mHeight);
     }
 
-    public synchronized void updatePowerUps() {
+    public synchronized void updatePowerUps(PowerUp.PowerType pPowerType, Vec2 pPosition) {
         GraphicsContext ctx = mBonusCanvas.getGraphicsContext2D();
         Image powerUps = FlowManager.getInstance().getPowerUps();
-        int x = 1;
-        int y = 1;
+        int x = pPowerType.ordinal() % 4;
+        int y = pPowerType.ordinal() / 4;
 
-        ctx.drawImage(powerUps, 48*x, 48*y, 48, 48, 100, 100, 24, 24);
+        ctx.drawImage(powerUps, 48 * x, 48 * y, 48, 48, pPosition.x - 12, pPosition.y - 12, 24, 24);
 
     }
 

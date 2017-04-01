@@ -3,7 +3,6 @@ package com.bugfullabs.curvnapse.network.server;
 import com.bugfullabs.curvnapse.game.Game;
 import com.bugfullabs.curvnapse.network.message.*;
 import com.bugfullabs.curvnapse.player.Player;
-import com.bugfullabs.curvnapse.player.PlayerColor;
 
 import java.util.*;
 import java.util.logging.Logger;

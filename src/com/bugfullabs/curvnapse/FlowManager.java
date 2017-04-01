@@ -3,6 +3,7 @@ package com.bugfullabs.curvnapse;
 import com.bugfullabs.curvnapse.game.Game;
 import com.bugfullabs.curvnapse.network.client.ServerConnector;
 import com.bugfullabs.curvnapse.network.message.*;
+import com.bugfullabs.curvnapse.network.message.Message.Type;
 import com.bugfullabs.curvnapse.network.server.Server;
 import com.bugfullabs.curvnapse.scene.GameLobbyScene;
 import com.bugfullabs.curvnapse.scene.GameScene;
@@ -11,8 +12,6 @@ import com.bugfullabs.curvnapse.scene.MainLobbyScene;
 import javafx.application.Platform;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
-
-import java.util.ArrayList;
 
 public class FlowManager {
     private static FlowManager mInstance = new FlowManager();
@@ -43,7 +42,6 @@ public class FlowManager {
             mServer.start();
             mMainStage.setOnCloseRequest(event -> mServer.close());
         } catch (Exception e) {
-            e.printStackTrace();
             return false;
         }
         return true;
@@ -54,7 +52,6 @@ public class FlowManager {
             mServerConnector = new ServerConnector(pIP, pPort);
             mServerConnector.start();
         } catch (Exception e) {
-            e.printStackTrace();
             return false;
         }
         return true;
@@ -88,11 +85,11 @@ public class FlowManager {
         createServer(port, 10);
         connectToServer(ip, port);
         mServerConnector.registerListener(message -> {
-            if (message.getType() == Message.Type.GAME_UPDATE) {
+            if (message.getType() == Type.GAME_UPDATE) {
                 mServerConnector.sendMessage(new GameStartRequest());
                 Platform.runLater(() -> gameScene(((GameUpdateMessage) message).getGame()));
             }
-            if (message.getType() == Message.Type.GAME_JOIN) {
+            if (message.getType() == Type.GAME_JOIN) {
                 mServerConnector.sendMessage(new NewPlayerRequest("asd"));
             }
         });

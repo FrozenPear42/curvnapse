@@ -6,10 +6,7 @@ import com.bugfullabs.curvnapse.gui.Board;
 import com.bugfullabs.curvnapse.gui.Leaderboard;
 import com.bugfullabs.curvnapse.gui.MessageBox;
 import com.bugfullabs.curvnapse.network.client.ServerConnector;
-import com.bugfullabs.curvnapse.network.message.ControlUpdateMessage;
-import com.bugfullabs.curvnapse.network.message.Message;
-import com.bugfullabs.curvnapse.network.message.SnakeFragmentsMessage;
-import com.bugfullabs.curvnapse.network.message.TextMessage;
+import com.bugfullabs.curvnapse.network.message.*;
 import com.bugfullabs.curvnapse.player.Player;
 import com.bugfullabs.curvnapse.snake.SnakeFragment;
 import javafx.application.Platform;
@@ -17,7 +14,6 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 
 import java.util.*;
@@ -109,9 +105,6 @@ public class GameScene implements ServerConnector.MessageListener {
                     mConnector.sendMessage(new ControlUpdateMessage(p.getID(), ControlUpdateMessage.Direction.RIGHT, ControlUpdateMessage.Action.UP));
             }
         });
-
-        mBoard.updatePowerUps();
-
     }
 
     public Scene getScene() {
@@ -134,6 +127,10 @@ public class GameScene implements ServerConnector.MessageListener {
 //                    mBoard.update(mSnakeFragments);
 //                });
 //
+                break;
+            case SPAWN_POWERUP:
+                SpawnPowerUpMessage spawnPowerUpMessage = (SpawnPowerUpMessage) pMessage;
+                mBoard.updatePowerUps(spawnPowerUpMessage.getPowerType(), spawnPowerUpMessage.getPosition());
                 break;
         }
     }
