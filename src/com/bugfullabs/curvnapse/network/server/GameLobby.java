@@ -56,6 +56,10 @@ public class GameLobby implements ClientThread.ClientListener {
         }
     }
 
+    private void broadcast(String pMessage) {
+        mClientThreads.forEach(client -> client.sendMessage(new ServerTextMessage(pMessage)));
+    }
+
     @Override
     public void onClientMessage(ClientThread pClientThread, Message pMessage) {
         switch (pMessage.getType()) {
@@ -67,6 +71,7 @@ public class GameLobby implements ClientThread.ClientListener {
                 break;
             case NAME_UPDATE_REQUEST:
                 mGame.setName(((GameUpdateNameRequest) pMessage).getName());
+                broadcast("Game name changed to: " + mGame.getName());
                 propagateUpdate();
                 break;
 

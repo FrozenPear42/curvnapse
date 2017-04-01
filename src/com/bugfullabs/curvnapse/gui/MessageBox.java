@@ -78,6 +78,8 @@ public class MessageBox extends VBox {
             if (pMessage != null) {
                 Label name = new Label(pMessage.getAuthor() + ": ");
                 Label text = new Label(pMessage.getMessage());
+                text.setMaxWidth(250);
+                text.setWrapText(true);
                 box.getChildren().add(name);
                 box.getChildren().add(text);
                 setGraphic(box);
