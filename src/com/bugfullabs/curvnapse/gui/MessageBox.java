@@ -3,6 +3,7 @@ package com.bugfullabs.curvnapse.gui;
 
 import com.bugfullabs.curvnapse.network.message.Message;
 import com.bugfullabs.curvnapse.network.message.TextMessage;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -63,9 +64,12 @@ public class MessageBox extends VBox {
 
     public void setMessages(ObservableList<TextMessage> pMessages) {
         mList.setItems(pMessages);
-        //TODO: ADD LISTENER
+        pMessages.addListener((ListChangeListener<TextMessage>) pChange -> {
+            pChange.next();
+            mList.scrollTo(pChange.getTo() - 1);
+        });
     }
-    
+
     public interface MessageSendListener {
         void onMessageSend(String pMessage);
     }
@@ -82,8 +86,8 @@ public class MessageBox extends VBox {
                 text.setWrapText(true);
                 box.getChildren().add(name);
                 box.getChildren().add(text);
-                setGraphic(box);
             }
+            setGraphic(box);
         }
     }
 

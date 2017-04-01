@@ -21,9 +21,7 @@ public class Lobby implements ClientThread.ClientListener {
     }
 
     public void addClient(ClientThread pClientThread) {
-        for (ClientThread client : mClients)
-            client.sendMessage(new TextMessage("Server", client.getUsername() + " has joined"));
-
+        mClients.forEach(client -> client.sendMessage(new ServerTextMessage(client.getUsername() + " has joined")));
         mClients.add(pClientThread);
         pClientThread.registerListener(this);
     }

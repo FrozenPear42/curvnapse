@@ -9,6 +9,7 @@ import com.bugfullabs.curvnapse.network.message.*;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 
@@ -29,6 +30,8 @@ public class MainLobbyScene implements ServerConnector.MessageListener {
 
     public MainLobbyScene() {
         mRoot = new BorderPane();
+        mRoot.setPadding(new Insets(10.0f));
+
         mMessageBox = new MessageBox();
         mGameListBox = new GameListBox();
         mRoot.setLeft(mMessageBox);
@@ -66,8 +69,6 @@ public class MainLobbyScene implements ServerConnector.MessageListener {
     public void onClientMessage(Message pMessage) {
         if (pMessage.getType() == Message.Type.TEXT)
             Platform.runLater(() -> mMessages.add((TextMessage) pMessage));
-        else if (pMessage.getType() == Message.Type.HANDSHAKE)
-            Platform.runLater(() -> mMessages.add(new TextMessage("Server", ((HandshakeMessage) (pMessage)).getName() + " joined!")));
         else if (pMessage.getType() == Message.Type.GAME_UPDATE) {
             GameUpdateMessage msg = (GameUpdateMessage) pMessage;
             Platform.runLater(() -> {
