@@ -2,6 +2,7 @@ package com.bugfullabs.curvnapse.gui;
 
 import com.bugfullabs.curvnapse.FlowManager;
 import com.bugfullabs.curvnapse.powerup.PowerUp;
+import com.bugfullabs.curvnapse.utils.ResourceManager;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
@@ -59,16 +60,15 @@ public class GameOptionsBox extends VBox {
             setAlignment(Pos.CENTER);
             mButtons = new ToggleImageButton[PowerUp.PowerType.values().length];
 
-            for (int i = 0; i < PowerUp.PowerType.values().length; i++) {
-                WritableImage img = new WritableImage(FlowManager.getInstance().getPowerUps().getPixelReader(),
-                        48 * (i % 4),
-                        48 * (i / 4),
-                        48,
-                        48);
-                mButtons[i] = new ToggleImageButton(img);
-                int finalI = i;
-                mButtons[i].setOnToggleListener(isActive -> mListener.onPowerUpSelectionChange(PowerUp.PowerType.values()[finalI], isActive));
+            for (PowerUp.PowerType type : PowerUp.PowerType.values()) {
+                int i = type.ordinal();
+                mButtons[i] = new ToggleImageButton(ResourceManager.getInstance().getPowerUpImage(type));
+                mButtons[i].setOnToggleListener(isActive -> mListener.onPowerUpSelectionChange(type, isActive));
                 add(mButtons[i], i % 4, i / 4);
+            }
+
+            for (int i = 0; i < PowerUp.PowerType.values().length; i++) {
+
             }
 
         }

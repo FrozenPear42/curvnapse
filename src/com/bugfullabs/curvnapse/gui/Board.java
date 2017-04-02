@@ -7,6 +7,7 @@ import com.bugfullabs.curvnapse.snake.ArcSnakeFragment;
 import com.bugfullabs.curvnapse.snake.LineSnakeFragment;
 import com.bugfullabs.curvnapse.snake.SnakeFragment;
 import com.bugfullabs.curvnapse.utils.MathUtils;
+import com.bugfullabs.curvnapse.utils.ResourceManager;
 import com.bugfullabs.curvnapse.utils.Vec2;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -58,11 +59,7 @@ public class Board extends VBox {
 
     public synchronized void updatePowerUps(PowerUp.PowerType pPowerType, Vec2 pPosition) {
         GraphicsContext ctx = mBonusCanvas.getGraphicsContext2D();
-        Image powerUps = FlowManager.getInstance().getPowerUps();
-        int x = pPowerType.ordinal() % 4;
-        int y = pPowerType.ordinal() / 4;
-
-        ctx.drawImage(powerUps, 48 * x, 48 * y, 48, 48, pPosition.x - 12, pPosition.y - 12, 36, 36);
+        ctx.drawImage(ResourceManager.getInstance().getPowerUpImage(pPowerType), pPosition.x - 12, pPosition.y - 12, 36, 36);
 
     }
 

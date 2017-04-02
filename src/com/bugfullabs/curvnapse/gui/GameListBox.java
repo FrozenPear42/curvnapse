@@ -3,6 +3,7 @@ package com.bugfullabs.curvnapse.gui;
 import com.bugfullabs.curvnapse.FlowManager;
 import com.bugfullabs.curvnapse.game.Game;
 import com.bugfullabs.curvnapse.powerup.PowerUp;
+import com.bugfullabs.curvnapse.utils.ResourceManager;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -89,14 +90,10 @@ public class GameListBox extends VBox {
                 Label players = new Label(pGame.getPlayers().size() + "/" + pGame.getMaxPlayers());
                 box.getChildren().addAll(name, players);
 
-                for (int i = 0; i < PowerUp.PowerType.values().length; i++) {
-                    if (pGame.getPowerUps()[i]) {
-                        WritableImage img = new WritableImage(FlowManager.getInstance().getPowerUps().getPixelReader(),
-                                48 * (i % 4),
-                                48 * (i / 4),
-                                48,
-                                48);
-                        ImageView v = new ImageView(img);
+
+                for (PowerUp.PowerType type: PowerUp.PowerType.values()) {
+                    if (pGame.getPowerUps()[type.ordinal()]) {
+                        ImageView v = new ImageView(ResourceManager.getInstance().getPowerUpImage(type));
                         v.setPreserveRatio(true);
                         v.setFitWidth(24);
                         v.setFitHeight(24);

@@ -22,12 +22,6 @@ public class FlowManager {
     private String mUsername;
     private int mUserID;
 
-    private Image mPowerUps;
-
-    private FlowManager() {
-        mPowerUps = new Image("/resources/power_ups.png");
-    }
-
     public static FlowManager getInstance() {
         return mInstance;
     }
@@ -109,7 +103,4 @@ public class FlowManager {
         return mUserID;
     }
 
-    public Image getPowerUps() {
-        return mPowerUps;
-    }
 }
