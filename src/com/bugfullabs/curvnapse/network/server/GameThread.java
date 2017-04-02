@@ -15,7 +15,7 @@ import java.util.*;
 public class GameThread implements ClientThread.ClientListener {
     private Timer mTimer;
     private Map<Player, Snake> mSnakes;
-    private List<PowerUpEntity> mPowerUps;
+    private LinkedList<PowerUpEntity> mPowerUps;
     private Game mGame;
     private long mLastTime;
     private List<ClientThread> mClients;
@@ -31,7 +31,7 @@ public class GameThread implements ClientThread.ClientListener {
         mRandom = new Random();
         mTimer = new Timer();
         mSnakes = new HashMap<>();
-        mPowerUps = new ArrayList<>();
+        mPowerUps = new LinkedList<>();
         mWalls = false;
 
         mNextPowerUpTime = mRandom.nextInt(4000) + 500;
@@ -75,7 +75,10 @@ public class GameThread implements ClientThread.ClientListener {
                         }
                     });
 
-                    mPowerUps.removeIf(powerUp -> powerUp.isCollision(orgPosition));
+                    if (mPowerUps.removeIf(powerUp -> powerUp.isCollision(orgPosition))) {
+                        mClients.forEach(client -> client.sendMessage(new UpdatePowerUpMessage(mPowerUps)));
+                    }
+
 
                     if (!mWalls) {
                         if (snake.getPosition().x < 0)
@@ -116,7 +119,7 @@ public class GameThread implements ClientThread.ClientListener {
         Vec2 pos = randomPosition();
         PowerUpEntity entity = new PowerUpEntity(pos, type);
         mPowerUps.add(entity);
-        mClients.forEach(client -> client.sendMessage(new SpawnPowerUpMessage(entity)));
+        mClients.forEach(client -> client.sendMessage(new UpdatePowerUpMessage(mPowerUps)));
     }
 
     private Vec2 randomPosition() {

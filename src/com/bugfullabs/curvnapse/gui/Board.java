@@ -17,6 +17,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.ArcType;
 import javafx.scene.shape.StrokeLineCap;
 
+import java.util.LinkedList;
 import java.util.List;
 
 public class Board extends VBox {
@@ -54,10 +55,15 @@ public class Board extends VBox {
         gridCtx.strokeRect(0, 0, mWidth, mHeight);
     }
 
-    public synchronized void updatePowerUps(PowerUpEntity pPowerUp) {
+    public synchronized void updatePowerUps(LinkedList<PowerUpEntity> pPowerUp) {
         GraphicsContext ctx = mBonusCanvas.getGraphicsContext2D();
-        ctx.drawImage(ResourceManager.getInstance().getPowerUpImage(pPowerUp.getType()), pPowerUp.getPosition().x - PowerUpEntity.WIDTH / 2, pPowerUp.getPosition().y - PowerUpEntity.HEIGHT / 2, PowerUpEntity.HEIGHT, PowerUpEntity.HEIGHT);
-
+        ctx.clearRect(0, 0, mWidth, mHeight);
+        pPowerUp.forEach(powerUp ->
+                ctx.drawImage(ResourceManager.getInstance().getPowerUpImage(powerUp.getType()),
+                        powerUp.getPosition().x - PowerUpEntity.WIDTH / 2,
+                        powerUp.getPosition().y - PowerUpEntity.HEIGHT / 2,
+                        PowerUpEntity.HEIGHT,
+                        PowerUpEntity.HEIGHT));
     }
 
     public synchronized void update(List<SnakeFragment> pSnakeFragments) {
