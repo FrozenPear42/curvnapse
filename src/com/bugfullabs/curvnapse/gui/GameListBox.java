@@ -1,6 +1,8 @@
 package com.bugfullabs.curvnapse.gui;
 
+import com.bugfullabs.curvnapse.FlowManager;
 import com.bugfullabs.curvnapse.game.Game;
+import com.bugfullabs.curvnapse.powerup.PowerUp;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -8,6 +10,9 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.image.WritableImage;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
@@ -70,7 +75,7 @@ public class GameListBox extends VBox {
     }
 
     private class GameListElement extends ListCell<Game> {
-        GameListElement(){
+        GameListElement() {
             getStyleClass().add("game");
         }
 
@@ -79,9 +84,25 @@ public class GameListBox extends VBox {
             super.updateItem(pGame, pEmpty);
             if (pGame != null) {
                 HBox box = new HBox(5.0f);
+                box.setAlignment(Pos.CENTER_LEFT);
                 Label name = new Label(pGame.getName());
                 Label players = new Label(pGame.getPlayers().size() + "/" + pGame.getMaxPlayers());
                 box.getChildren().addAll(name, players);
+
+                for (int i = 0; i < PowerUp.PowerType.values().length; i++) {
+                    if (pGame.getPowerUps()[i]) {
+                        WritableImage img = new WritableImage(FlowManager.getInstance().getPowerUps().getPixelReader(),
+                                48 * (i % 4),
+                                48 * (i / 4),
+                                48,
+                                48);
+                        ImageView v = new ImageView(img);
+                        v.setPreserveRatio(true);
+                        v.setFitWidth(24);
+                        v.setFitHeight(24);
+                        box.getChildren().add(v);
+                    }
+                }
                 setGraphic(box);
             }
         }

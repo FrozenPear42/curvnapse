@@ -62,7 +62,7 @@ public class Board extends VBox {
         int x = pPowerType.ordinal() % 4;
         int y = pPowerType.ordinal() / 4;
 
-        ctx.drawImage(powerUps, 48 * x, 48 * y, 48, 48, pPosition.x - 12, pPosition.y - 12, 24, 24);
+        ctx.drawImage(powerUps, 48 * x, 48 * y, 48, 48, pPosition.x - 12, pPosition.y - 12, 36, 36);
 
     }
 
