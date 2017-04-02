@@ -130,6 +130,23 @@ public class Snake {
         }
     }
 
+    public void teleport(Vec2 pDestination) {
+        mPosition = pDestination;
+        switch (mState){
+            case STOP:
+                break;
+            case FORWARD:
+                doLine();
+                break;
+            case TURNING_LEFT:
+                doArc(true);
+                break;
+            case TURNING_RIGHT:
+                doArc(false);
+                break;
+        }
+    }
+
     public Vec2 getPosition() {
         return mPosition;
     }

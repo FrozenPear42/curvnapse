@@ -21,8 +21,10 @@ public class GameThread implements ClientThread.ClientListener {
     private long mLastTime;
     private List<ClientThread> mClients;
 
+    private boolean mWalls;
     private int mNextPowerupTime;
     private Random mRandom;
+
 
     public GameThread(Game pGame, List<ClientThread> pClients) {
         mClients = pClients;
@@ -31,7 +33,7 @@ public class GameThread implements ClientThread.ClientListener {
         mSnakes = new HashMap<>();
         mGame.getPlayers().forEach(player -> mSnakes.put(player, createNewSnake(player)));
 
-
+        mWalls = false;
         mRandom = new Random();
         mNextPowerupTime = mRandom.nextInt(4000) + 500;
 
@@ -54,10 +56,18 @@ public class GameThread implements ClientThread.ClientListener {
                     if (snake.isAlive())
                         fragments.add(snake.getLastFragment());
 
-                    if (snake.getPosition().x < 0 || snake.getPosition().x > mGame.getBoardWidth())
-                        snake.kill();
-                    if (snake.getPosition().y < 0 || snake.getPosition().y > mGame.getBoardHeight())
-                        snake.kill();
+                    if (!mWalls) {
+                        if (snake.getPosition().x < 0)
+                            snake.teleport(new Vec2(mGame.getBoardWidth(), snake.getPosition().y));
+                        else if (snake.getPosition().x > mGame.getBoardWidth())
+                            snake.teleport(new Vec2(0, snake.getPosition().y));
+
+                        if (snake.getPosition().y < 0)
+                            snake.teleport(new Vec2(snake.getPosition().x, mGame.getBoardHeight()));
+                        else if (snake.getPosition().y > mGame.getBoardHeight())
+                            snake.teleport(new Vec2(snake.getPosition().x, 0));
+
+                    }
                 });
 
                 mClients.forEach(client -> client.sendMessage(new SnakeFragmentsMessage(fragments)));
