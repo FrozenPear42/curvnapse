@@ -48,6 +48,10 @@ public class GameOptionsBox extends VBox {
         mName.setText(pName);
     }
 
+    public void updateButtons(boolean[] pPowerUps) {
+        mGrid.updateButtons(pPowerUps);
+    }
+
     class PowerUpGrid extends GridPane {
         private ToggleImageButton[] mButtons;
 
@@ -63,9 +67,15 @@ public class GameOptionsBox extends VBox {
                         48);
                 mButtons[i] = new ToggleImageButton(img);
                 int finalI = i;
-                mButtons[i].setOnToogleListener(isActive -> mListener.onPowerUpSelectionChange(PowerUp.PowerType.values()[finalI], isActive));
+                mButtons[i].setOnToggleListener(isActive -> mListener.onPowerUpSelectionChange(PowerUp.PowerType.values()[finalI], isActive));
                 add(mButtons[i], i % 4, i / 4);
             }
+
+        }
+
+        public void updateButtons(boolean[] pPowerUps) {
+            for (int i = 0; i < pPowerUps.length; i++)
+                mButtons[i].setState(pPowerUps[i]);
         }
     }
 

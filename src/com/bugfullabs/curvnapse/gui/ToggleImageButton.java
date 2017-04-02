@@ -1,19 +1,15 @@
 package com.bugfullabs.curvnapse.gui;
 
-import com.bugfullabs.curvnapse.FlowManager;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.scene.control.Button;
 import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.image.WritableImage;
 
 public class ToggleImageButton extends Button {
     private ImageView mImage;
     private boolean mIsActive;
     private ColorAdjust mColorAdjust;
-    private OnToogleListener mListener;
+    private OnToggleListener mListener;
 
     public ToggleImageButton(Image pImage) {
         mImage = new ImageView(pImage);
@@ -23,24 +19,28 @@ public class ToggleImageButton extends Button {
         setGraphic(mImage);
         setStyle("-fx-border-style: none");
         setOnAction(pActionEvent -> {
-            if (mIsActive) {
-                mIsActive = false;
-                mColorAdjust.setBrightness(-0.9f);
-            } else {
-                mIsActive = true;
-                mColorAdjust.setBrightness(0.0f);
-            }
+            setState(!mIsActive);
             if (mListener != null)
-                mListener.onToogle(mIsActive);
+                mListener.onToggle(mIsActive);
         });
     }
 
-    public void setOnToogleListener(OnToogleListener pListener) {
+
+    public void setOnToggleListener(OnToggleListener pListener) {
         mListener = pListener;
     }
 
-    public interface OnToogleListener {
-        void onToogle(boolean pIsActive);
+    public void setState(boolean pIsOn) {
+        mIsActive = pIsOn;
+        if (!mIsActive) {
+            mColorAdjust.setBrightness(-0.9f);
+        } else {
+            mColorAdjust.setBrightness(0.0f);
+        }
+    }
+
+    public interface OnToggleListener {
+        void onToggle(boolean pIsActive);
     }
 
 }

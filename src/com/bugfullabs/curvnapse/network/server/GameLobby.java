@@ -74,6 +74,12 @@ public class GameLobby implements ClientThread.ClientListener {
                 propagateUpdate();
                 break;
 
+            case POWERUP_UPDATE:
+                GamePowerUpUpdateRequest req = (GamePowerUpUpdateRequest) pMessage;
+                mGame.setPowerUpEnabled(req.getPowerType(), req.getState());
+                propagateUpdate();
+                break;
+
             case PLAYER_ADD_REQUEST:
                 addPlayer(((NewPlayerRequest) pMessage).getName(), pClientThread.getID());
                 break;

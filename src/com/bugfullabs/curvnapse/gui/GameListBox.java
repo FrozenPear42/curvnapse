@@ -70,7 +70,7 @@ public class GameListBox extends VBox {
     }
 
     private class GameListElement extends ListCell<Game> {
-        public GameListElement(){
+        GameListElement(){
             getStyleClass().add("game");
         }
 

@@ -2,6 +2,7 @@ package com.bugfullabs.curvnapse.game;
 
 import com.bugfullabs.curvnapse.player.Player;
 import com.bugfullabs.curvnapse.player.PlayerColor;
+import com.bugfullabs.curvnapse.powerup.PowerUp;
 import com.bugfullabs.curvnapse.utils.ColorBank;
 
 import java.io.Serializable;
@@ -17,6 +18,8 @@ public class Game implements Serializable, Cloneable {
     private int mHostID;
     private ArrayList<Player> mPlayers;
     private transient ColorBank mColorBank;
+
+    private boolean[] mPowerUps;
     private int mBoardWidth;
     private int mBoardHeight;
 
@@ -28,8 +31,12 @@ public class Game implements Serializable, Cloneable {
         mMaxPlayers = pMaxPlayers;
         mPlayers = new ArrayList<>(mMaxPlayers);
         mColorBank = new ColorBank();
+
         mBoardWidth = 500;
         mBoardHeight = 500;
+        mPowerUps = new boolean[PowerUp.PowerType.values().length];
+        for (int i = 0; i < mPowerUps.length; i++)
+            mPowerUps[i] = true;
     }
 
     public int getID() {
@@ -64,6 +71,10 @@ public class Game implements Serializable, Cloneable {
         return mMaxPlayers;
     }
 
+    public boolean[] getPowerUps() {
+        return mPowerUps;
+    }
+
     public Player addPlayer(String pName, int pOwner) {
         if (mPlayers.size() < mMaxPlayers) {
             PlayerColor color = mColorBank.nextColor();
@@ -72,5 +83,9 @@ public class Game implements Serializable, Cloneable {
             return player;
         }
         return null;
+    }
+
+    public void setPowerUpEnabled(PowerUp.PowerType pType, boolean pEnabled) {
+        mPowerUps[pType.ordinal()] = pEnabled;
     }
 }

@@ -86,6 +86,18 @@ public class GameLobbyScene implements ServerConnector.MessageListener {
             }
         });
 
+        mGameOptionsBox.setListener(new GameOptionsBox.GameOptionsChangeListener() {
+            @Override
+            public void onGameNameChange(String pName) {
+                mConnector.sendMessage(new GameUpdateNameRequest(pName));
+            }
+
+            @Override
+            public void onPowerUpSelectionChange(PowerUp.PowerType pType, boolean pState) {
+                mConnector.sendMessage(new GamePowerUpUpdateRequest(pType, pState));
+            }
+        });
+
         mStartButton.setOnAction(event -> mConnector.sendMessage(new GameStartRequest()));
 
         update(mGame);
@@ -101,17 +113,7 @@ public class GameLobbyScene implements ServerConnector.MessageListener {
         mPlayers.addAll(mGame.getPlayers());
         mGameOptionsBox.setName(mGame.getName());
         mGameOptionsBox.setDisable(mGame.getHostID() != FlowManager.getInstance().getUserID());
-        mGameOptionsBox.setListener(new GameOptionsBox.GameOptionsChangeListener() {
-            @Override
-            public void onGameNameChange(String pName) {
-                mConnector.sendMessage(new GameUpdateNameRequest(pName));
-            }
-
-            @Override
-            public void onPowerUpSelectionChange(PowerUp.PowerType pType, boolean pState) {
-                LOG.info(pType.toString() + Boolean.toString(pState));
-            }
-        });
+        mGameOptionsBox.updateButtons(mGame.getPowerUps());
     }
 
     @Override
