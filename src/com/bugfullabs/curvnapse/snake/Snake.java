@@ -109,7 +109,6 @@ public class Snake {
             mPowerUps.add(new Pair<>(p, p.getDuration()));
         }
 
-
     }
 
     public void turnLeft() {

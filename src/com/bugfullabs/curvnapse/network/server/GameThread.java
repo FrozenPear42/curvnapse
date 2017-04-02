@@ -51,17 +51,33 @@ public class GameThread implements ClientThread.ClientListener {
 
                 mSnakes.forEach((player, snake) -> {
                     snake.step(delta);
+
                     if (snake.isAlive())
                         fragments.add(snake.getLastFragment());
 
+                    Vec2 orgPosition = snake.getPosition();
+
                     mPowerUps.forEach(powerUp -> {
                         if (powerUp.isCollision(snake.getPosition())) {
-                            snake.addPowerUp(powerUp.getType());
-                            mClients.forEach(client -> client.sendMessage(new ServerTextMessage(powerUp.getType().toString())));
+                            PowerUp.Target t = PowerUp.getTarget(powerUp.getType());
+
+                            if (t == PowerUp.Target.SELF)
+                                snake.addPowerUp(powerUp.getType());
+                            else if (t == PowerUp.Target.OTHERS)
+                                mSnakes.forEach((__, s) -> {
+                                    if (s != snake) s.addPowerUp(powerUp.getType());
+                                });
+                            else if (t == PowerUp.Target.ALL)
+                                mSnakes.forEach((__, s) -> s.addPowerUp(powerUp.getType()));
+                            else {
+                                if(powerUp.getType() == PowerUp.PowerType.ERASE) {
+
+                                }
+                            }
                         }
                     });
 
-                    mPowerUps.removeIf(powerUp -> powerUp.isCollision(snake.getPosition()));
+                    mPowerUps.removeIf(powerUp -> powerUp.isCollision(orgPosition));
 
                     if (!mWalls) {
                         if (snake.getPosition().x < 0)
