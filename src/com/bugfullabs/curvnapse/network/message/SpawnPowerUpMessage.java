@@ -1,24 +1,19 @@
 package com.bugfullabs.curvnapse.network.message;
 
 import com.bugfullabs.curvnapse.powerup.PowerUp;
+import com.bugfullabs.curvnapse.powerup.PowerUpEntity;
 import com.bugfullabs.curvnapse.utils.Vec2;
 
 public class SpawnPowerUpMessage extends Message {
 
-    private PowerUp.PowerType mPowerType;
-    private Vec2 mPosition;
+    private PowerUpEntity mPowerUp;
 
-    public SpawnPowerUpMessage(PowerUp.PowerType pPowerType, Vec2 pPosition) {
+    public SpawnPowerUpMessage(PowerUpEntity pPowerUp) {
         super(Type.SPAWN_POWERUP);
-        mPowerType = pPowerType;
-        mPosition = pPosition;
+        mPowerUp = pPowerUp;
     }
 
-    public PowerUp.PowerType getPowerType() {
-        return mPowerType;
-    }
-
-    public Vec2 getPosition() {
-        return mPosition;
+    public PowerUpEntity getPowerUp() {
+        return mPowerUp;
     }
 }

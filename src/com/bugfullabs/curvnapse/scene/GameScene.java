@@ -129,8 +129,7 @@ public class GameScene implements ServerConnector.MessageListener {
 //
                 break;
             case SPAWN_POWERUP:
-                SpawnPowerUpMessage spawnPowerUpMessage = (SpawnPowerUpMessage) pMessage;
-                mBoard.updatePowerUps(spawnPowerUpMessage.getPowerType(), spawnPowerUpMessage.getPosition());
+                mBoard.updatePowerUps(((SpawnPowerUpMessage) pMessage).getPowerUp());
                 break;
         }
     }

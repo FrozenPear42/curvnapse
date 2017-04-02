@@ -3,6 +3,7 @@ package com.bugfullabs.curvnapse.snake;
 import com.bugfullabs.curvnapse.player.PlayerColor;
 import com.bugfullabs.curvnapse.powerup.FastPowerUp;
 import com.bugfullabs.curvnapse.powerup.PowerUp;
+import com.bugfullabs.curvnapse.powerup.SlowPowerUp;
 import com.bugfullabs.curvnapse.utils.MathUtils;
 import com.bugfullabs.curvnapse.utils.Vec2;
 import javafx.scene.control.ListCell;
@@ -101,6 +102,14 @@ public class Snake {
             p.onBegin(this);
             mPowerUps.add(new Pair<>(p, p.getDuration()));
         }
+
+        if (pType == PowerUp.PowerType.SLOW_SELF || pType == PowerUp.PowerType.SLOW_ENEMY) {
+            PowerUp p = new SlowPowerUp();
+            p.onBegin(this);
+            mPowerUps.add(new Pair<>(p, p.getDuration()));
+        }
+
+
     }
 
     public void turnLeft() {

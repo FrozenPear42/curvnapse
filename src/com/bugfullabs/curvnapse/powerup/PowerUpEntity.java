@@ -3,7 +3,9 @@ package com.bugfullabs.curvnapse.powerup;
 
 import com.bugfullabs.curvnapse.utils.Vec2;
 
-public class PowerUpEntity {
+import java.io.Serializable;
+
+public class PowerUpEntity implements Serializable {
     private Vec2 mPosition;
     private PowerUp.PowerType mType;
 
@@ -18,8 +20,12 @@ public class PowerUpEntity {
     public PowerUp.PowerType getType() {
         return mType;
     }
-    
+
+    public Vec2 getPosition() {
+        return mPosition;
+    }
+
     public boolean isCollision(Vec2 pPoint) {
-        return Math.abs(pPoint.x - mPosition.x) <= WIDTH / 2 && Math.abs(pPoint.y - mPosition.y) <= WIDTH / 2;
+        return Math.abs(pPoint.x - mPosition.x) <= WIDTH / 2 && Math.abs(pPoint.y - mPosition.y) <= HEIGHT / 2;
     }
 }

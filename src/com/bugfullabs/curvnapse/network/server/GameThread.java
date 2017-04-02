@@ -98,7 +98,7 @@ public class GameThread implements ClientThread.ClientListener {
         Vec2 pos = randomPosition();
         PowerUpEntity entity = new PowerUpEntity(pos, type);
         mPowerUps.add(entity);
-        mClients.forEach(client -> client.sendMessage(new SpawnPowerUpMessage(type, pos)));
+        mClients.forEach(client -> client.sendMessage(new SpawnPowerUpMessage(entity)));
     }
 
     private Vec2 randomPosition() {

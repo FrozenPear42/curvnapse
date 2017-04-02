@@ -2,6 +2,7 @@ package com.bugfullabs.curvnapse.gui;
 
 
 import com.bugfullabs.curvnapse.powerup.PowerUp;
+import com.bugfullabs.curvnapse.powerup.PowerUpEntity;
 import com.bugfullabs.curvnapse.snake.ArcSnakeFragment;
 import com.bugfullabs.curvnapse.snake.LineSnakeFragment;
 import com.bugfullabs.curvnapse.snake.SnakeFragment;
@@ -55,9 +56,9 @@ public class Board extends VBox {
         gridCtx.strokeRect(0, 0, mWidth, mHeight);
     }
 
-    public synchronized void updatePowerUps(PowerUp.PowerType pPowerType, Vec2 pPosition) {
+    public synchronized void updatePowerUps(PowerUpEntity pPowerUp) {
         GraphicsContext ctx = mBonusCanvas.getGraphicsContext2D();
-        ctx.drawImage(ResourceManager.getInstance().getPowerUpImage(pPowerType), pPosition.x - 12, pPosition.y - 12, 36, 36);
+        ctx.drawImage(ResourceManager.getInstance().getPowerUpImage(pPowerUp.getType()), pPowerUp.getPosition().x - PowerUpEntity.WIDTH / 2, pPowerUp.getPosition().y - PowerUpEntity.HEIGHT / 2, PowerUpEntity.HEIGHT, PowerUpEntity.HEIGHT);
 
     }
 
