@@ -52,9 +52,6 @@ public class GameThread implements ClientThread.ClientListener {
                 mSnakes.forEach((player, snake) -> {
                     snake.step(delta);
 
-                    if (snake.isAlive())
-                        fragments.add(snake.getLastFragment());
-
                     Vec2 orgPosition = snake.getPosition();
 
                     mPowerUps.forEach(powerUp -> {
@@ -70,8 +67,9 @@ public class GameThread implements ClientThread.ClientListener {
                             else if (t == PowerUp.Target.ALL)
                                 mSnakes.forEach((__, s) -> s.addPowerUp(powerUp.getType()));
                             else {
-                                if(powerUp.getType() == PowerUp.PowerType.ERASE) {
-
+                                if (powerUp.getType() == PowerUp.PowerType.ERASE) {
+                                    mSnakes.forEach((__, s) -> s.erase());
+                                    mClients.forEach(client -> client.sendMessage(new EraseMessage()));
                                 }
                             }
                         }
@@ -91,7 +89,11 @@ public class GameThread implements ClientThread.ClientListener {
                             snake.teleport(new Vec2(snake.getPosition().x, 0));
 
                     }
+
+                    if (snake.isAlive())
+                        fragments.add(snake.getLastFragment());
                 });
+
 
                 mClients.forEach(client -> client.sendMessage(new SnakeFragmentsMessage(fragments)));
 

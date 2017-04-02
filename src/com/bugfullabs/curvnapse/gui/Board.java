@@ -81,4 +81,10 @@ public class Board extends VBox {
             }
         });
     }
+
+    public void erase() {
+        GraphicsContext mainCtx = mMainCanvas.getGraphicsContext2D();
+        mainCtx.setFill(Color.BLACK);
+        mainCtx.fillRect(0, 0, mWidth, mHeight);
+    }
 }

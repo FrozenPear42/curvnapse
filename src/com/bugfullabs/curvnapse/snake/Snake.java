@@ -179,6 +179,12 @@ public class Snake {
         applyChange();
     }
 
+    public void erase() {
+        mArcFragments.clear();
+        mLineFragments.clear();
+        applyChange();
+    }
+
     public Vec2 getPosition() {
         return mPosition;
     }

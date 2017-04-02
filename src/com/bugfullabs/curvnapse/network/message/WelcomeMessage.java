@@ -1,8 +1,5 @@
 package com.bugfullabs.curvnapse.network.message;
 
-/**
- * Created by wojciech on 28.03.17.
- */
 public class WelcomeMessage extends Message {
 
     private int mUserID;
