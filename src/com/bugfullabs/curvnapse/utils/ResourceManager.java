@@ -27,8 +27,8 @@ public class ResourceManager {
 
         int cols = (int) (mPowerUpSheet.getWidth() / POWERUP_WIDTH);
         int rows = (int) (mPowerUpSheet.getHeight() / POWERUP_HEIGHT);
-        for (int x = 0; x < cols; x++) {
-            for (int y = 0; y < rows; y++) {
+        for (int y = 0; y < rows; y++) {
+            for (int x = 0; x < cols; x++) {
                 WritableImage img = new WritableImage(mPowerUpSheet.getPixelReader(),
                         POWERUP_WIDTH * x, POWERUP_HEIGHT * y, POWERUP_WIDTH, POWERUP_HEIGHT);
                 mPowerUpImages.add(img);

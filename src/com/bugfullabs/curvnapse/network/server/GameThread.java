@@ -102,7 +102,6 @@ public class GameThread implements ClientThread.ClientListener {
         Random rnd = new Random();
         //TODO: avoid conflict
         double angle = rnd.nextDouble() * Math.PI;
-
         return new Snake(pPlayer.getID(), randomPosition(), angle, pPlayer.getColor());
     }
 

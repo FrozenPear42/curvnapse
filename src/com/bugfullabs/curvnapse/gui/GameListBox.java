@@ -88,10 +88,12 @@ public class GameListBox extends VBox {
                 box.setAlignment(Pos.CENTER_LEFT);
                 Label name = new Label(pGame.getName());
                 Label players = new Label(pGame.getPlayers().size() + "/" + pGame.getMaxPlayers());
-                box.getChildren().addAll(name, players);
+                players.setMinWidth(40);
+                players.setAlignment(Pos.CENTER_LEFT);
+                box.getChildren().addAll(players, name);
 
 
-                for (PowerUp.PowerType type: PowerUp.PowerType.values()) {
+                for (PowerUp.PowerType type : PowerUp.PowerType.values()) {
                     if (pGame.getPowerUps()[type.ordinal()]) {
                         ImageView v = new ImageView(ResourceManager.getInstance().getPowerUpImage(type));
                         v.setPreserveRatio(true);
