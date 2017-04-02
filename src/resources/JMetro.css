@@ -59,6 +59,12 @@
     -fx-background-color: #1e1e1e;
 }
 
+.list-cell.game:focused {
+    -fx-background-color: #353535;
+}
+
+
+
 /*******************************************************************************
  *                                                                             *
  * Push Button                                                                 *

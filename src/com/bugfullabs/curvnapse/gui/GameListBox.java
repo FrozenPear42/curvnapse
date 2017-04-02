@@ -70,6 +70,10 @@ public class GameListBox extends VBox {
     }
 
     private class GameListElement extends ListCell<Game> {
+        public GameListElement(){
+            getStyleClass().add("game");
+        }
+
         @Override
         public void updateItem(Game pGame, boolean pEmpty) {
             super.updateItem(pGame, pEmpty);
