@@ -1,7 +1,6 @@
 package com.bugfullabs.curvnapse.snake;
 
 import com.bugfullabs.curvnapse.player.PlayerColor;
-import com.bugfullabs.curvnapse.utils.MathUtils;
 import com.bugfullabs.curvnapse.utils.Vec2;
 
 import java.io.Serializable;

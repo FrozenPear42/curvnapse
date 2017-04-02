@@ -6,7 +6,6 @@ import com.bugfullabs.curvnapse.powerup.PowerUp;
 import com.bugfullabs.curvnapse.powerup.SlowPowerUp;
 import com.bugfullabs.curvnapse.utils.MathUtils;
 import com.bugfullabs.curvnapse.utils.Vec2;
-import javafx.scene.control.ListCell;
 import javafx.util.Pair;
 
 import java.util.ArrayList;

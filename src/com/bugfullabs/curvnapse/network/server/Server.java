@@ -10,8 +10,6 @@ import java.net.Socket;
 import java.util.LinkedList;
 import java.util.logging.Logger;
 
-import static com.bugfullabs.curvnapse.network.message.Message.Type.HANDSHAKE;
-
 public class Server extends Thread implements ClientThread.ClientListener {
     private static final Logger LOG = Logger.getLogger(Server.class.getName());
 

@@ -1,8 +1,6 @@
 package com.bugfullabs.curvnapse.network.message;
 
-import com.bugfullabs.curvnapse.powerup.PowerUp;
 import com.bugfullabs.curvnapse.powerup.PowerUpEntity;
-import com.bugfullabs.curvnapse.utils.Vec2;
 
 public class SpawnPowerUpMessage extends Message {
 

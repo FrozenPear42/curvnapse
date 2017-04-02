@@ -1,7 +1,6 @@
 package com.bugfullabs.curvnapse.gui;
 
 
-import com.bugfullabs.curvnapse.network.message.Message;
 import com.bugfullabs.curvnapse.network.message.TextMessage;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -11,8 +10,6 @@ import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-
-import java.util.Observable;
 
 public class MessageBox extends VBox {
     private ListView<TextMessage> mList;

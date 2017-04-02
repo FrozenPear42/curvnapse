@@ -2,18 +2,12 @@ package com.bugfullabs.curvnapse.scene;
 
 import com.bugfullabs.curvnapse.FlowManager;
 import com.bugfullabs.curvnapse.gui.LoginBox;
-import com.bugfullabs.curvnapse.network.client.ServerConnector;
-import com.bugfullabs.curvnapse.network.server.Server;
 import javafx.application.Platform;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
-import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
-import javafx.stage.Stage;
-import sun.rmi.runtime.Log;
 
-import java.lang.management.PlatformLoggingMXBean;
 import java.util.logging.Logger;
 
 public class LoginScene implements LoginBox.LoginListener {

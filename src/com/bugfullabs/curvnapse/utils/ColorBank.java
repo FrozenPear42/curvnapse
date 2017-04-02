@@ -1,6 +1,5 @@
 package com.bugfullabs.curvnapse.utils;
 
-import com.bugfullabs.curvnapse.player.Player;
 import com.bugfullabs.curvnapse.player.PlayerColor;
 import javafx.scene.paint.Color;
 

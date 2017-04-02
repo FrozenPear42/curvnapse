@@ -4,7 +4,9 @@ import com.bugfullabs.curvnapse.game.Game;
 import com.bugfullabs.curvnapse.network.message.*;
 import com.bugfullabs.curvnapse.player.Player;
 
-import java.util.*;
+import java.util.LinkedList;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.logging.Logger;
 
 public class GameLobby implements ClientThread.ClientListener {

@@ -1,10 +1,10 @@
 package com.bugfullabs.curvnapse.scene;
 
 import com.bugfullabs.curvnapse.FlowManager;
+import com.bugfullabs.curvnapse.game.Game;
 import com.bugfullabs.curvnapse.gui.GameOptionsBox;
 import com.bugfullabs.curvnapse.gui.MessageBox;
 import com.bugfullabs.curvnapse.gui.PlayersBox;
-import com.bugfullabs.curvnapse.game.Game;
 import com.bugfullabs.curvnapse.network.client.ServerConnector;
 import com.bugfullabs.curvnapse.network.message.*;
 import com.bugfullabs.curvnapse.player.Player;

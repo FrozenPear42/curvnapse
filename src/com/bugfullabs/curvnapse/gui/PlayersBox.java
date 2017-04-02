@@ -3,7 +3,6 @@ package com.bugfullabs.curvnapse.gui;
 import com.bugfullabs.curvnapse.FlowManager;
 import com.bugfullabs.curvnapse.player.Player;
 import javafx.collections.ObservableList;
-import javafx.event.EventType;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -12,7 +11,6 @@ import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.scene.shape.Rectangle;
 
 public class PlayersBox extends VBox {
     private Button mAddPlayerButton;

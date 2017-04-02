@@ -2,8 +2,6 @@ package com.bugfullabs.curvnapse.powerup;
 
 import com.bugfullabs.curvnapse.snake.Snake;
 
-import java.util.HashMap;
-
 public abstract class PowerUp {
     public enum PowerType {
         FAST_SELF,

@@ -2,15 +2,17 @@ package com.bugfullabs.curvnapse;
 
 import com.bugfullabs.curvnapse.game.Game;
 import com.bugfullabs.curvnapse.network.client.ServerConnector;
-import com.bugfullabs.curvnapse.network.message.*;
+import com.bugfullabs.curvnapse.network.message.GameCreateRequest;
+import com.bugfullabs.curvnapse.network.message.GameStartRequest;
+import com.bugfullabs.curvnapse.network.message.GameUpdateMessage;
 import com.bugfullabs.curvnapse.network.message.Message.Type;
+import com.bugfullabs.curvnapse.network.message.NewPlayerRequest;
 import com.bugfullabs.curvnapse.network.server.Server;
 import com.bugfullabs.curvnapse.scene.GameLobbyScene;
 import com.bugfullabs.curvnapse.scene.GameScene;
 import com.bugfullabs.curvnapse.scene.LoginScene;
 import com.bugfullabs.curvnapse.scene.MainLobbyScene;
 import javafx.application.Platform;
-import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
 public class FlowManager {

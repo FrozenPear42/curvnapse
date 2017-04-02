@@ -1,14 +1,12 @@
 package com.bugfullabs.curvnapse.gui;
 
 
-import com.bugfullabs.curvnapse.powerup.PowerUp;
 import com.bugfullabs.curvnapse.powerup.PowerUpEntity;
 import com.bugfullabs.curvnapse.snake.ArcSnakeFragment;
 import com.bugfullabs.curvnapse.snake.LineSnakeFragment;
 import com.bugfullabs.curvnapse.snake.SnakeFragment;
 import com.bugfullabs.curvnapse.utils.MathUtils;
 import com.bugfullabs.curvnapse.utils.ResourceManager;
-import com.bugfullabs.curvnapse.utils.Vec2;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.canvas.Canvas;

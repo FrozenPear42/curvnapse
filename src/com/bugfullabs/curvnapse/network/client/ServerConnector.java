@@ -4,7 +4,9 @@ import com.bugfullabs.curvnapse.network.message.HandshakeMessage;
 import com.bugfullabs.curvnapse.network.message.Message;
 import com.bugfullabs.curvnapse.network.message.WelcomeMessage;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.logging.Logger;

@@ -1,7 +1,6 @@
 package com.bugfullabs.curvnapse.gui;
 
 
-import com.bugfullabs.curvnapse.FlowManager;
 import com.bugfullabs.curvnapse.player.Player;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
@@ -9,13 +8,8 @@ import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
-import javafx.scene.text.Font;
 
 public class Leaderboard extends VBox {
     private ListView<Player> mPlayersList;
