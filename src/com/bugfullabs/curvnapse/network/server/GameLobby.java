@@ -9,18 +9,18 @@ import java.util.logging.Logger;
 
 public class GameLobby implements ClientThread.ClientListener {
     private static Logger LOG = Logger.getLogger(GameLobby.class.getName());
-    private LinkedList<ClientThread> mClientThreads;
+    private LinkedList<ClientThread> mClients;
     private final Game mGame;
     private GameThread mThread;
     private GameUpdateListener mListener;
 
     public GameLobby(String pName, int pHost, int pMaxPlayers) {
-        mClientThreads = new LinkedList<>();
+        mClients = new LinkedList<>();
         mGame = new Game(pName, pHost, pMaxPlayers);
     }
 
     public void addClient(ClientThread pClient) {
-        mClientThreads.add(pClient);
+        mClients.add(pClient);
         pClient.registerListener(this);
         mGame.getPlayers().forEach(player -> pClient.sendMessage(new GameUpdateMessage(mGame)));
     }
@@ -48,22 +48,36 @@ public class GameLobby implements ClientThread.ClientListener {
         propagateUpdate();
     }
 
+    private void leaveGame(ClientThread pClient) {
+        mGame.getPlayers().removeIf(player -> player.getOwner() == pClient.getID());
+        mClients.remove(pClient);
+
+        if (mGame.getHostID() == pClient.getID()) {
+            if (mClients.size() == 1) {
+                //TODO: Remove whole game
+            } else {
+                mGame.setHostID(mClients.getFirst().getID());
+            }
+        }
+        propagateUpdate();
+    }
+
     private void propagateUpdate() {
-        mClientThreads.forEach(client -> client.sendMessage(new GameUpdateMessage(mGame)));
+        mClients.forEach(client -> client.sendMessage(new GameUpdateMessage(mGame)));
         if (mListener != null) {
             mListener.onGameUpdate(mGame);
         }
     }
 
     private void broadcast(String pMessage) {
-        mClientThreads.forEach(client -> client.sendMessage(new ServerTextMessage(pMessage)));
+        mClients.forEach(client -> client.sendMessage(new ServerTextMessage(pMessage)));
     }
 
     @Override
     public void onClientMessage(ClientThread pClientThread, Message pMessage) {
         switch (pMessage.getType()) {
             case TEXT:
-                mClientThreads.forEach(clientThread -> clientThread.sendMessage(pMessage));
+                mClients.forEach(clientThread -> clientThread.sendMessage(pMessage));
                 break;
             case UPDATE_REQUEST:
                 pClientThread.sendMessage(new GameUpdateMessage(mGame));
@@ -87,6 +101,10 @@ public class GameLobby implements ClientThread.ClientListener {
                 updatePlayer(((PlayerUpdateRequest) pMessage).getPlayer());
                 break;
 
+            case LEAVE_GAME:
+                leaveGame(pClientThread);
+                break;
+
             case GAME_START_REQUEST:
                 //FIXME: Move timer as member, allow cancel
                 new Timer("asd").schedule(new TimerTask() {
@@ -94,12 +112,12 @@ public class GameLobby implements ClientThread.ClientListener {
 
                     @Override
                     public void run() {
-                        mClientThreads.forEach(clientThread -> clientThread.sendMessage(new TextMessage("Server", String.format("Game will start in %d...", times))));
+                        mClients.forEach(clientThread -> clientThread.sendMessage(new TextMessage("Server", String.format("Game will start in %d...", times))));
                         if (times == 0) {
                             this.cancel();
-                            mClientThreads.forEach(clientThread -> clientThread.sendMessage(new GameStartMessage(mGame)));
-                            mThread = new GameThread(mGame, mClientThreads);
-                            mClientThreads.forEach(client -> client.registerListener(mThread));
+                            mClients.forEach(clientThread -> clientThread.sendMessage(new GameStartMessage(mGame)));
+                            mThread = new GameThread(mGame, mClients);
+                            mClients.forEach(client -> client.registerListener(mThread));
                         }
                         times--;
                     }

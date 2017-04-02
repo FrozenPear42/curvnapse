@@ -99,6 +99,7 @@ public class GameLobbyScene implements ServerConnector.MessageListener {
         });
 
         mStartButton.setOnAction(event -> mConnector.sendMessage(new GameStartRequest()));
+        mBackButton.setOnAction(event -> mConnector.sendMessage(new LeaveGameRequest()));
 
         update(mGame);
     }

@@ -88,4 +88,8 @@ public class Game implements Serializable, Cloneable {
     public void setPowerUpEnabled(PowerUp.PowerType pType, boolean pEnabled) {
         mPowerUps[pType.ordinal()] = pEnabled;
     }
+
+    public void setHostID(int pID) {
+        mHostID = pID;
+    }
 }
