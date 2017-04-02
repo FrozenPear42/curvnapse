@@ -8,6 +8,7 @@ import com.bugfullabs.curvnapse.game.Game;
 import com.bugfullabs.curvnapse.network.client.ServerConnector;
 import com.bugfullabs.curvnapse.network.message.*;
 import com.bugfullabs.curvnapse.player.Player;
+import com.bugfullabs.curvnapse.powerup.PowerUp;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -76,7 +77,7 @@ public class GameLobbyScene implements ServerConnector.MessageListener {
         mPlayersBox.setListener(new PlayersBox.PlayerBoxListener() {
             @Override
             public void onCreateLocal() {
-                mConnector.sendMessage(new NewPlayerRequest("Player"));
+                mConnector.sendMessage(new NewPlayerRequest(FlowManager.getInstance().getUsername() + " X"));
             }
 
             @Override
@@ -100,7 +101,6 @@ public class GameLobbyScene implements ServerConnector.MessageListener {
         mPlayers.addAll(mGame.getPlayers());
         mGameOptionsBox.setName(mGame.getName());
         mGameOptionsBox.setDisable(mGame.getHostID() != FlowManager.getInstance().getUserID());
-        LOG.info("Me: " + FlowManager.getInstance().getUserID() + " HOST: " + mGame.getHostID());
         mGameOptionsBox.setListener(new GameOptionsBox.GameOptionsChangeListener() {
             @Override
             public void onGameNameChange(String pName) {
@@ -108,8 +108,8 @@ public class GameLobbyScene implements ServerConnector.MessageListener {
             }
 
             @Override
-            public void onPowerUpSelectionChange(boolean[] pPowerUps) {
-
+            public void onPowerUpSelectionChange(PowerUp.PowerType pType, boolean pState) {
+                LOG.info(pType.toString() + Boolean.toString(pState));
             }
         });
     }

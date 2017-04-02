@@ -1,8 +1,11 @@
 package com.bugfullabs.curvnapse.gui;
 
+import com.bugfullabs.curvnapse.FlowManager;
+import com.bugfullabs.curvnapse.powerup.PowerUp;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
+import javafx.scene.image.WritableImage;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -25,14 +28,16 @@ public class GameOptionsBox extends VBox {
         mName = new TextField("Test");
         mName.setPrefColumnCount(40);
         mName.setMaxWidth(200.0f);
-
         mSave = new Button("Save");
         mSave.setOnAction(event -> {
             if (mListener != null)
                 mListener.onGameNameChange(mName.getText());
         });
         mHeader.getChildren().addAll(mName, mSave);
-        getChildren().addAll(mHeader);
+
+        mGrid = new PowerUpGrid();
+
+        getChildren().addAll(mHeader, mGrid);
     }
 
     public void setListener(GameOptionsChangeListener pListener) {
@@ -44,16 +49,30 @@ public class GameOptionsBox extends VBox {
     }
 
     class PowerUpGrid extends GridPane {
-        private ToggleImageButton mPowerups[];
+        private ToggleImageButton[] mButtons;
 
         public PowerUpGrid() {
+            setAlignment(Pos.CENTER);
+            mButtons = new ToggleImageButton[PowerUp.PowerType.values().length];
+
+            for (int i = 0; i < PowerUp.PowerType.values().length; i++) {
+                WritableImage img = new WritableImage(FlowManager.getInstance().getPowerUps().getPixelReader(),
+                        48 * (i % 4),
+                        48 * (i / 4),
+                        48,
+                        48);
+                mButtons[i] = new ToggleImageButton(img);
+                int finalI = i;
+                mButtons[i].setOnToogleListener(isActive -> mListener.onPowerUpSelectionChange(PowerUp.PowerType.values()[finalI], isActive));
+                add(mButtons[i], i % 4, i / 4);
+            }
         }
     }
 
     public interface GameOptionsChangeListener {
         void onGameNameChange(String pName);
 
-        void onPowerUpSelectionChange(boolean[] pPowerUps);
+        void onPowerUpSelectionChange(PowerUp.PowerType pType, boolean pState);
     }
 
 }

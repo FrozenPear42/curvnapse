@@ -46,7 +46,7 @@ public class GameThread implements ClientThread.ClientListener {
                 mNextPowerupTime -= delta;
                 if (mNextPowerupTime < 0) {
                     mNextPowerupTime = mRandom.nextInt(4000) + 3000;
-                    PowerUp.PowerType type = PowerUp.PowerType.values()[mRandom.nextInt(4)];
+                    PowerUp.PowerType type = PowerUp.PowerType.values()[mRandom.nextInt(16)];
                     Vec2 pos = new Vec2(mRandom.nextInt(mGame.getBoardWidth()), mRandom.nextInt(mGame.getBoardHeight()));
                     mClients.forEach(client -> client.sendMessage(new SpawnPowerUpMessage(type, pos)));
                 }
