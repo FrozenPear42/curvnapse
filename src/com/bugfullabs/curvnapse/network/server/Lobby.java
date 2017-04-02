@@ -8,13 +8,16 @@ import java.util.logging.Logger;
 
 public class Lobby implements ClientThread.ClientListener {
     private static final Logger LOG = Logger.getLogger(Lobby.class.getName());
+
     private LinkedList<ClientThread> mClients;
     private ArrayList<GameLobby> mGameLobbies;
 
     private int mMaxGames;
 
+    private Server mServer;
 
-    public Lobby(int pMaxGames) {
+    public Lobby(Server pServer, int pMaxGames) {
+        mServer = pServer;
         mMaxGames = pMaxGames;
         mClients = new LinkedList<>();
         mGameLobbies = new ArrayList<>(mMaxGames);
@@ -47,7 +50,7 @@ public class Lobby implements ClientThread.ClientListener {
                 GameCreateRequest gameCreateRequest = (GameCreateRequest) pMessage;
                 if (mGameLobbies.size() < mMaxGames) {
                     LOG.info("Game created"); //TODO: more detailed log
-                    GameLobby lobby = new GameLobby(gameCreateRequest.getName(), pClientThread.getID(), gameCreateRequest.getMaxPlayers());
+                    GameLobby lobby = new GameLobby(this, gameCreateRequest.getName(), pClientThread.getID(), gameCreateRequest.getMaxPlayers());
                     mGameLobbies.add(lobby);
                     lobby.addClient(pClientThread);
                     mClients.remove(pClientThread);

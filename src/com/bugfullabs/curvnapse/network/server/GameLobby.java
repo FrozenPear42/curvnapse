@@ -14,7 +14,10 @@ public class GameLobby implements ClientThread.ClientListener {
     private GameThread mThread;
     private GameUpdateListener mListener;
 
-    public GameLobby(String pName, int pHost, int pMaxPlayers) {
+    private Lobby mRootLobby;
+
+    public GameLobby(Lobby pLobby, String pName, int pHost, int pMaxPlayers) {
+        mRootLobby = pLobby;
         mClients = new LinkedList<>();
         mGame = new Game(pName, pHost, pMaxPlayers);
     }
@@ -51,14 +54,15 @@ public class GameLobby implements ClientThread.ClientListener {
     private void leaveGame(ClientThread pClient) {
         mGame.getPlayers().removeIf(player -> player.getOwner() == pClient.getID());
         mClients.remove(pClient);
-
+        pClient.removeListener(this);
         if (mGame.getHostID() == pClient.getID()) {
-            if (mClients.size() == 1) {
+            if (mClients.isEmpty()) {
                 //TODO: Remove whole game
             } else {
                 mGame.setHostID(mClients.getFirst().getID());
             }
         }
+        mRootLobby.addClient(pClient);
         propagateUpdate();
     }
 

@@ -17,12 +17,15 @@ public class Server extends Thread implements ClientThread.ClientListener {
 
     private ServerSocket mServerSocket;
     private LinkedList<ClientThread> mClients;
+
     private Lobby mLobby;
+    private LinkedList<GameLobby> mGameLobbies;
 
     public Server(int pPort, int pMaxGames) throws IOException {
         mServerSocket = new ServerSocket(pPort);
         mClients = new LinkedList<>();
-        mLobby = new Lobby(pMaxGames);
+        mLobby = new Lobby(this, pMaxGames);
+        mGameLobbies = new LinkedList<>();
     }
 
     public void close() {
