@@ -1,10 +1,12 @@
 package com.bugfullabs.curvnapse.snake;
 
 import com.bugfullabs.curvnapse.player.PlayerColor;
+import com.bugfullabs.curvnapse.powerup.FastPowerUp;
+import com.bugfullabs.curvnapse.powerup.PowerUp;
 import com.bugfullabs.curvnapse.utils.MathUtils;
 import com.bugfullabs.curvnapse.utils.Vec2;
-import com.sun.javafx.geom.Vec2d;
-import com.sun.javafx.geom.Vec3d;
+import javafx.scene.control.ListCell;
+import javafx.util.Pair;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,6 +32,7 @@ public class Snake {
     private Vec2 mPosition;
     private Vec2 mTurnCenter;
     private double mTurnRadius;
+    private double mSpeed;
 
     private PlayerColor mColor;
 
@@ -37,6 +40,8 @@ public class Snake {
     private List<LineSnakeFragment> mLineFragments;
 
     private State mState;
+
+    private List<Pair<PowerUp, Double>> mPowerUps;
 
     public Snake(int pUID, Vec2 pPosition, double pAngle, PlayerColor pColor) {
         mColor = pColor;
@@ -46,7 +51,9 @@ public class Snake {
 
         mArcFragments = new ArrayList<>();
         mLineFragments = new ArrayList<>();
+        mPowerUps = new ArrayList<>();
 
+        mSpeed = DEFAULT_SPEED;
         mVelocity = Vec2.directed(DEFAULT_SPEED, pAngle);
 
         mTurnCenter = new Vec2();
@@ -59,6 +66,10 @@ public class Snake {
     }
 
     public void step(double pDelta) {
+        mPowerUps.replaceAll(pair -> new Pair<>(pair.getKey(), pair.getValue() - pDelta));
+        mPowerUps.stream().filter(pair -> pair.getValue() <= 0).forEach(pair -> pair.getKey().onEnd(this));
+        mPowerUps.removeIf(pair -> pair.getValue() <= 0);
+
         double deltaAngle = (mVelocity.length() / mTurnRadius) * pDelta;
         switch (mState) {
             case FORWARD:
@@ -84,6 +95,14 @@ public class Snake {
         }
     }
 
+    public void addPowerUp(PowerUp.PowerType pType) {
+        if (pType == PowerUp.PowerType.FAST_SELF || pType == PowerUp.PowerType.FAST_ENEMY) {
+            PowerUp p = new FastPowerUp();
+            p.onBegin(this);
+            mPowerUps.add(new Pair<>(p, p.getDuration()));
+        }
+    }
+
     public void turnLeft() {
         if (!isAlive())
             return;
@@ -106,7 +125,8 @@ public class Snake {
     }
 
     private void doLine() {
-        mVelocity = Vec2.directed(mVelocity.length(), mAngle);
+
+        mVelocity = Vec2.directed(mSpeed, mAngle);
         mVelocity.y = -mVelocity.y;
 
         LineSnakeFragment line = new LineSnakeFragment(mPosition, mPosition, mSize, mColor, mSize);
@@ -130,9 +150,8 @@ public class Snake {
         }
     }
 
-    public void teleport(Vec2 pDestination) {
-        mPosition = pDestination;
-        switch (mState){
+    private void applyChange() {
+        switch (mState) {
             case STOP:
                 break;
             case FORWARD:
@@ -147,8 +166,40 @@ public class Snake {
         }
     }
 
+    public void teleport(Vec2 pDestination) {
+        mPosition = pDestination;
+        applyChange();
+    }
+
     public Vec2 getPosition() {
         return mPosition;
+    }
+
+    public double getSize() {
+        return mSize;
+    }
+
+    public double getTurnRadius() {
+        return mTurnRadius;
+    }
+
+    public double getSpeed() {
+        return mSpeed;
+    }
+
+    public void setSize(double pSize) {
+        mSize = pSize;
+        applyChange();
+    }
+
+    public void setTurnRadius(double pTurnRadius) {
+        mTurnRadius = pTurnRadius;
+        applyChange();
+    }
+
+    public void setSpeed(double pSpeed) {
+        mSpeed = pSpeed;
+        applyChange();
     }
 
     public void kill() {

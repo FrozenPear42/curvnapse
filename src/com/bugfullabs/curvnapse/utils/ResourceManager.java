@@ -1,6 +1,5 @@
 package com.bugfullabs.curvnapse.utils;
 
-import com.bugfullabs.curvnapse.FlowManager;
 import com.bugfullabs.curvnapse.powerup.PowerUp;
 import javafx.scene.image.Image;
 import javafx.scene.image.WritableImage;

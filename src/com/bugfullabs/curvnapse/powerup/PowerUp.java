@@ -1,6 +1,8 @@
 package com.bugfullabs.curvnapse.powerup;
 
-public class PowerUp {
+import com.bugfullabs.curvnapse.snake.Snake;
+
+public abstract class PowerUp {
     public enum PowerType {
         FAST_SELF,
         SHRINK_SELF,
@@ -19,4 +21,7 @@ public class PowerUp {
         RAIN,
         XD
     }
+    public abstract void onBegin(Snake pSnake);
+    public abstract void onEnd(Snake pSnake);
+    public abstract double getDuration();
 }

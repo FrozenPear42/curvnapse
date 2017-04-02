@@ -1,12 +1,10 @@
 package com.bugfullabs.curvnapse.gui;
 
-import com.bugfullabs.curvnapse.FlowManager;
 import com.bugfullabs.curvnapse.powerup.PowerUp;
 import com.bugfullabs.curvnapse.utils.ResourceManager;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
-import javafx.scene.image.WritableImage;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;

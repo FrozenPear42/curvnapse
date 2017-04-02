@@ -1,6 +1,5 @@
 package com.bugfullabs.curvnapse.gui;
 
-import com.bugfullabs.curvnapse.FlowManager;
 import com.bugfullabs.curvnapse.game.Game;
 import com.bugfullabs.curvnapse.powerup.PowerUp;
 import com.bugfullabs.curvnapse.utils.ResourceManager;
@@ -11,9 +10,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.image.WritableImage;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 

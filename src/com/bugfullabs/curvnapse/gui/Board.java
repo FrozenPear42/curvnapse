@@ -1,7 +1,6 @@
 package com.bugfullabs.curvnapse.gui;
 
 
-import com.bugfullabs.curvnapse.FlowManager;
 import com.bugfullabs.curvnapse.powerup.PowerUp;
 import com.bugfullabs.curvnapse.snake.ArcSnakeFragment;
 import com.bugfullabs.curvnapse.snake.LineSnakeFragment;
@@ -13,7 +12,6 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.image.Image;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;

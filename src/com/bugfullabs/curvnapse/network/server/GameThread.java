@@ -2,12 +2,10 @@ package com.bugfullabs.curvnapse.network.server;
 
 
 import com.bugfullabs.curvnapse.game.Game;
-import com.bugfullabs.curvnapse.network.message.ControlUpdateMessage;
-import com.bugfullabs.curvnapse.network.message.Message;
-import com.bugfullabs.curvnapse.network.message.SnakeFragmentsMessage;
-import com.bugfullabs.curvnapse.network.message.SpawnPowerUpMessage;
+import com.bugfullabs.curvnapse.network.message.*;
 import com.bugfullabs.curvnapse.player.Player;
 import com.bugfullabs.curvnapse.powerup.PowerUp;
+import com.bugfullabs.curvnapse.powerup.PowerUpEntity;
 import com.bugfullabs.curvnapse.snake.Snake;
 import com.bugfullabs.curvnapse.snake.SnakeFragment;
 import com.bugfullabs.curvnapse.utils.Vec2;
@@ -17,6 +15,7 @@ import java.util.*;
 public class GameThread implements ClientThread.ClientListener {
     private Timer mTimer;
     private Map<Player, Snake> mSnakes;
+    private List<PowerUpEntity> mPowerUps;
     private Game mGame;
     private long mLastTime;
     private List<ClientThread> mClients;
@@ -32,7 +31,7 @@ public class GameThread implements ClientThread.ClientListener {
         mRandom = new Random();
         mTimer = new Timer();
         mSnakes = new HashMap<>();
-
+        mPowerUps = new ArrayList<>();
         mWalls = false;
 
         mNextPowerUpTime = mRandom.nextInt(4000) + 500;
@@ -54,6 +53,15 @@ public class GameThread implements ClientThread.ClientListener {
                     snake.step(delta);
                     if (snake.isAlive())
                         fragments.add(snake.getLastFragment());
+
+                    mPowerUps.forEach(powerUp -> {
+                        if (powerUp.isCollision(snake.getPosition())) {
+                            snake.addPowerUp(powerUp.getType());
+                            mClients.forEach(client -> client.sendMessage(new ServerTextMessage(powerUp.getType().toString())));
+                        }
+                    });
+
+                    mPowerUps.removeIf(powerUp -> powerUp.isCollision(snake.getPosition()));
 
                     if (!mWalls) {
                         if (snake.getPosition().x < 0)
@@ -88,6 +96,8 @@ public class GameThread implements ClientThread.ClientListener {
 
         PowerUp.PowerType type = PowerUp.PowerType.values()[id];
         Vec2 pos = randomPosition();
+        PowerUpEntity entity = new PowerUpEntity(pos, type);
+        mPowerUps.add(entity);
         mClients.forEach(client -> client.sendMessage(new SpawnPowerUpMessage(type, pos)));
     }
 
