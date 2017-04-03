@@ -1,10 +1,11 @@
 package com.bugfullabs.curvnapse.snake;
 
 import com.bugfullabs.curvnapse.player.PlayerColor;
+import com.bugfullabs.curvnapse.utils.Vec2;
 
 import java.io.Serializable;
 
-public class SnakeFragment implements Serializable {
+public abstract class SnakeFragment implements Serializable {
     public enum Type {LINE, ARC}
 
     private static long UID = 0;
@@ -33,6 +34,8 @@ public class SnakeFragment implements Serializable {
     public double getWidth() {
         return mWidth;
     }
+
+    public abstract boolean isCollision(Vec2 pPoint);
 
     public long getUID() {
         return mUID;

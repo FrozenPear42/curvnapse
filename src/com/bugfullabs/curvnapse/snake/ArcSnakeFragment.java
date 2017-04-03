@@ -40,4 +40,9 @@ public class ArcSnakeFragment extends SnakeFragment implements Serializable {
     public Vec2 getCenter() {
         return mCenter;
     }
+
+    @Override
+    public boolean isCollision(Vec2 pPoint) {
+        return false;
+    }
 }

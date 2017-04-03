@@ -11,6 +11,11 @@ public class Vec2 implements Serializable {
         y = 0;
     }
 
+    public Vec2(Vec2 pV1, Vec2 pV2) {
+        x = pV2.x - pV1.x;
+        y = pV2.y - pV1.y;
+    }
+
     public Vec2(Vec2 pVec) {
         x = pVec.x;
         y = pVec.y;
@@ -41,4 +46,7 @@ public class Vec2 implements Serializable {
         return new Vec2(pLength * Math.cos(pAngle), pLength * Math.sin(pAngle));
     }
 
+    public static double dot(Vec2 pV1, Vec2 pV2) {
+        return pV1.x * pV2.x + pV1.y * pV2.y;
+    }
 }

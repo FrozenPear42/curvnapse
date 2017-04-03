@@ -79,7 +79,6 @@ public class GameThread implements ClientThread.ClientListener {
                         mClients.forEach(client -> client.sendMessage(new UpdatePowerUpMessage(mPowerUps)));
                     }
 
-
                     if (!mWalls) {
                         if (snake.getPosition().x < 0)
                             snake.teleport(new Vec2(mGame.getBoardWidth(), snake.getPosition().y));

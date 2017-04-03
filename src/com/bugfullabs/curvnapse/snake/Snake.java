@@ -126,7 +126,7 @@ public class Snake {
         mVelocity = Vec2.directed(mSpeed, mAngle);
         mVelocity.y = -mVelocity.y;
 
-        LineSnakeFragment line = new LineSnakeFragment(mPosition, mPosition, mSize, mColor, mSize);
+        LineSnakeFragment line = new LineSnakeFragment(mPosition, mPosition, mAngle, mColor, mSize);
         mLineFragments.add(line);
     }
 
