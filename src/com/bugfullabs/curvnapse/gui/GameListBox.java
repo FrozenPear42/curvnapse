@@ -80,15 +80,16 @@ public class GameListBox extends VBox {
         @Override
         public void updateItem(Game pGame, boolean pEmpty) {
             super.updateItem(pGame, pEmpty);
+            HBox box = new HBox(5.0f);
             if (pGame != null) {
-                HBox box = new HBox(5.0f);
                 box.setAlignment(Pos.CENTER_LEFT);
                 Label name = new Label(pGame.getName());
+                name.setMinWidth(200);
+                name.setMaxWidth(200);
                 Label players = new Label(pGame.getPlayers().size() + "/" + pGame.getMaxPlayers());
                 players.setMinWidth(40);
                 players.setAlignment(Pos.CENTER_LEFT);
                 box.getChildren().addAll(players, name);
-
 
                 for (PowerUp.PowerType type : PowerUp.PowerType.values()) {
                     if (pGame.getPowerUps()[type.ordinal()]) {
@@ -99,8 +100,8 @@ public class GameListBox extends VBox {
                         box.getChildren().add(v);
                     }
                 }
-                setGraphic(box);
             }
+            setGraphic(box);
         }
     }
 

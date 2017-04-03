@@ -112,6 +112,9 @@ public class GameLobby implements ClientThread.ClientListener {
                 break;
 
             case GAME_START_REQUEST:
+                if (mGame.getPlayers().isEmpty())
+                    break;
+
                 //FIXME: Move timer as member, allow cancel
                 new Timer("asd").schedule(new TimerTask() {
                     private int times = 1;
