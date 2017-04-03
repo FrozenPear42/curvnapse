@@ -65,10 +65,6 @@ public class GameOptionsBox extends VBox {
                 add(mButtons[i], i % 4, i / 4);
             }
 
-            for (int i = 0; i < PowerUp.PowerType.values().length; i++) {
-
-            }
-
         }
 
         public void updateButtons(boolean[] pPowerUps) {

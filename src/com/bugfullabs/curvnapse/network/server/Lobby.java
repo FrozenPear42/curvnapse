@@ -24,6 +24,7 @@ public class Lobby implements ClientThread.ClientListener {
     }
 
     public void addClient(ClientThread pClientThread) {
+        LOG.info(String.format("Client %d %s has joined", pClientThread.getID(), pClientThread.getUsername()));
         mClients.forEach(client -> client.sendMessage(new ServerTextMessage(pClientThread.getUsername() + " has joined")));
         mClients.add(pClientThread);
         pClientThread.registerListener(this);
@@ -38,7 +39,7 @@ public class Lobby implements ClientThread.ClientListener {
         switch (pMessage.getType()) {
             case TEXT:
                 TextMessage textMessage = (TextMessage) pMessage;
-                LOG.info(textMessage.getAuthor() + "  " + textMessage.getMessage());
+                LOG.info(String.format("New message: %s  %s", textMessage.getAuthor(), textMessage.getMessage()));
                 for (ClientThread client : mClients)
                     client.sendMessage(textMessage);
                 break;

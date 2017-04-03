@@ -59,15 +59,15 @@ public class GameThread implements ClientThread.ClientListener {
                             PowerUp.Target t = PowerUp.getTarget(powerUp.getType());
 
                             if (t == PowerUp.Target.SELF)
-                                snake.addPowerUp(powerUp.getType());
+                                snake.addPowerUp(PowerUp.fromType(powerUp.getType()));
                             else if (t == PowerUp.Target.OTHERS)
                                 mSnakes.forEach((__, s) -> {
-                                    if (s != snake) s.addPowerUp(powerUp.getType());
+                                    if (s != snake) s.addPowerUp(PowerUp.fromType(powerUp.getType()));
                                 });
                             else if (t == PowerUp.Target.ALL)
-                                mSnakes.forEach((__, s) -> s.addPowerUp(powerUp.getType()));
+                                mSnakes.forEach((__, s) -> s.addPowerUp(PowerUp.fromType(powerUp.getType())));
                             else {
-                                if (powerUp.getType() == PowerUp.PowerType.ERASE) {
+                                if (powerUp.getType() == PowerUp.PowerType.GLOBAL_ERASE) {
                                     mSnakes.forEach((__, s) -> s.erase());
                                     mClients.forEach(client -> client.sendMessage(new EraseMessage()));
                                 }

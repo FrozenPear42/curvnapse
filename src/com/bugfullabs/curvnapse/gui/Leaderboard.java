@@ -34,9 +34,13 @@ public class Leaderboard extends VBox {
         public void updateItem(Player pPlayer, boolean pEmpty) {
             super.updateItem(pPlayer, pEmpty);
             HBox box = new HBox(10.0f);
+            box.setAlignment(Pos.CENTER_LEFT);
             if (pPlayer != null) {
                 Label points = new Label("100");
-                points.setStyle("-fx-background-color: "+ pPlayer.getColor().toHex() +"; -fx-font-weight: bolder");
+                points.setStyle("-fx-background-color: " + pPlayer.getColor().toHex() + "; -fx-font-weight: bold");
+                points.setMinHeight(40);
+                points.setMinWidth(40);
+                points.setAlignment(Pos.CENTER);
                 Label label = new Label(pPlayer.getName());
                 label.setTextFill(pPlayer.getColor().toFXColor());
                 box.getChildren().addAll(points, label);

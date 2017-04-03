@@ -95,19 +95,9 @@ public class Snake {
         }
     }
 
-    public void addPowerUp(PowerUp.PowerType pType) {
-        if (pType == PowerUp.PowerType.FAST_SELF || pType == PowerUp.PowerType.FAST_ENEMY) {
-            PowerUp p = new FastPowerUp();
-            p.onBegin(this);
-            mPowerUps.add(new Pair<>(p, p.getDuration()));
-        }
-
-        if (pType == PowerUp.PowerType.SLOW_SELF || pType == PowerUp.PowerType.SLOW_ENEMY) {
-            PowerUp p = new SlowPowerUp();
-            p.onBegin(this);
-            mPowerUps.add(new Pair<>(p, p.getDuration()));
-        }
-
+    public void addPowerUp(PowerUp pPowerUp) {
+        mPowerUps.add(0, new Pair<>(pPowerUp, pPowerUp.getDuration()));
+        pPowerUp.onBegin(this);
     }
 
     public void turnLeft() {

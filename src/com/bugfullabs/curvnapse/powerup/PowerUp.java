@@ -4,22 +4,22 @@ import com.bugfullabs.curvnapse.snake.Snake;
 
 public abstract class PowerUp {
     public enum PowerType {
-        FAST_SELF,
-        SHRINK_SELF,
-        SLOW_SELF,
-        INVISIBLE,
-        NO_BORDER,
-        SMALL_TURNS,
-        ERASE,
-        FAST_ENEMY,
-        GROW_ENEMY,
-        SLOW_ENEMY,
-        CONFUSION_ENEMY,
-        LARGE_TURNS_ENEMY,
-        BORDERS_ALL,
-        RANDOM_DEATH,
-        RAIN,
-        XD
+        SELF_FAST,
+        SELF_SHRINK,
+        SELF_SLOW,
+        SELF_INVISIBLE,
+        SELF_TRAVERSE,
+        SELF_SMALL_RADIUS,
+        GLOBAL_ERASE,
+        ENEMY_FAST,
+        ENEMY_GROW,
+        ENEMY_SLOW,
+        ENEMY_CONFUSION,
+        ENEMY_LARGE_RADIUS,
+        ALL_TRAVERSE,
+        GLOBAL_RANDOM_DEATH,
+        GLOBAL_RAIN,
+        GLOBAL_XD
     }
 
     public enum Target {
@@ -37,25 +37,25 @@ public abstract class PowerUp {
 
     public static Target getTarget(PowerType pType) {
         switch (pType) {
-            case FAST_SELF:
-            case SHRINK_SELF:
-            case SLOW_SELF:
-            case INVISIBLE:
-            case NO_BORDER:
-            case SMALL_TURNS:
+            case SELF_FAST:
+            case SELF_SHRINK:
+            case SELF_SLOW:
+            case SELF_INVISIBLE:
+            case SELF_TRAVERSE:
+            case SELF_SMALL_RADIUS:
                 return Target.SELF;
-            case FAST_ENEMY:
-            case GROW_ENEMY:
-            case SLOW_ENEMY:
-            case CONFUSION_ENEMY:
-            case LARGE_TURNS_ENEMY:
+            case ENEMY_FAST:
+            case ENEMY_GROW:
+            case ENEMY_SLOW:
+            case ENEMY_CONFUSION:
+            case ENEMY_LARGE_RADIUS:
                 return Target.OTHERS;
-            case BORDERS_ALL:
+            case ALL_TRAVERSE:
                 return Target.ALL;
-            case RAIN:
-            case ERASE:
-            case RANDOM_DEATH:
-            case XD:
+            case GLOBAL_RAIN:
+            case GLOBAL_ERASE:
+            case GLOBAL_RANDOM_DEATH:
+            case GLOBAL_XD:
             default:
                 return Target.GLOBAL;
         }
@@ -63,26 +63,65 @@ public abstract class PowerUp {
 
     public static Action getAction(PowerType pType) {
         switch (pType) {
-            case FAST_SELF:
-            case FAST_ENEMY:
+            case SELF_FAST:
+            case ENEMY_FAST:
                 return Action.SPEED;
-            case SLOW_SELF:
-            case SLOW_ENEMY:
+            case SELF_SLOW:
+            case ENEMY_SLOW:
                 return Action.SLOW;
-            case SHRINK_SELF:
-            case INVISIBLE:
-            case NO_BORDER:
-            case SMALL_TURNS:
-            case GROW_ENEMY:
-            case CONFUSION_ENEMY:
-            case LARGE_TURNS_ENEMY:
-            case BORDERS_ALL:
-            case RAIN:
-            case ERASE:
-            case RANDOM_DEATH:
-            case XD:
+            case SELF_SHRINK:
+            case SELF_INVISIBLE:
+            case SELF_TRAVERSE:
+            case SELF_SMALL_RADIUS:
+            case ENEMY_GROW:
+            case ENEMY_CONFUSION:
+            case ENEMY_LARGE_RADIUS:
+            case ALL_TRAVERSE:
+            case GLOBAL_RAIN:
+            case GLOBAL_ERASE:
+            case GLOBAL_RANDOM_DEATH:
+            case GLOBAL_XD:
             default:
                 return Action.NO_ACTION;
+        }
+    }
+
+    public static PowerUp fromType(PowerType pType) {
+        switch (pType) {
+            case SELF_FAST:
+            case ENEMY_FAST:
+                return new FastPowerUp();
+            case SELF_SLOW:
+            case ENEMY_SLOW:
+                return new SlowPowerUp();
+            case ENEMY_GROW:
+                return new GrowPowerUp();
+            case SELF_SHRINK:
+            case SELF_INVISIBLE:
+            case SELF_TRAVERSE:
+            case SELF_SMALL_RADIUS:
+            case ENEMY_CONFUSION:
+            case ENEMY_LARGE_RADIUS:
+            case ALL_TRAVERSE:
+            case GLOBAL_RAIN:
+            case GLOBAL_ERASE:
+            case GLOBAL_RANDOM_DEATH:
+            case GLOBAL_XD:
+            default:
+                return new PowerUp() {
+                    @Override
+                    public void onBegin(Snake pSnake) {
+                    }
+
+                    @Override
+                    public void onEnd(Snake pSnake) {
+                    }
+
+                    @Override
+                    public double getDuration() {
+                        return 0;
+                    }
+                };
         }
     }
 
