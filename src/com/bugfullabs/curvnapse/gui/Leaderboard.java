@@ -37,7 +37,7 @@ public class Leaderboard extends VBox {
             box.setAlignment(Pos.CENTER_LEFT);
             if (pPlayer != null) {
                 Label points = new Label("100");
-                points.setStyle("-fx-background-color: " + pPlayer.getColor().toHex() + "; -fx-font-weight: bold");
+                points.setStyle("-fx-background-color: " + pPlayer.getColor().toHex() + "; -fx-font-weight: bold; -fx-font-family: \"Segoe UI Bold\"");
                 points.setMinHeight(40);
                 points.setMinWidth(40);
                 points.setAlignment(Pos.CENTER);

@@ -26,6 +26,8 @@ public class PowerUpEntity implements Serializable {
     }
 
     public boolean isCollision(Vec2 pPoint) {
-        return Math.abs(pPoint.x - mPosition.x) <= WIDTH / 2 && Math.abs(pPoint.y - mPosition.y) <= HEIGHT / 2;
+        double dx = pPoint.x - mPosition.x;
+        double dy = pPoint.y - mPosition.y;
+        return (((dx * dx) + (dy * dy)) <= ((WIDTH * WIDTH) / 4));
     }
 }
