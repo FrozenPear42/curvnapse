@@ -3,17 +3,16 @@ package com.bugfullabs.curvnapse.powerup;
 import com.bugfullabs.curvnapse.snake.Snake;
 
 public class GrowPowerUp extends PowerUp {
-    double mOldSize;
+    private static final double MULTIPLIER = 1.6;
 
     @Override
     public void onBegin(Snake pSnake) {
-        mOldSize = pSnake.getSize();
-        pSnake.setSize(mOldSize + 3.0f);
+        pSnake.setSize(pSnake.getSize() * MULTIPLIER);
     }
 
     @Override
     public void onEnd(Snake pSnake) {
-        pSnake.setSize(mOldSize);
+        pSnake.setSize(pSnake.getSize() / MULTIPLIER);
     }
 
     @Override

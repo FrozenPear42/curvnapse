@@ -3,18 +3,16 @@ package com.bugfullabs.curvnapse.powerup;
 import com.bugfullabs.curvnapse.snake.Snake;
 
 public class FastPowerUp extends PowerUp {
-
-    double previousSpeed;
+    private static final double MULTIPLIER = 2.0;
 
     @Override
     public void onBegin(Snake pSnake) {
-        previousSpeed = pSnake.getSpeed();
-        pSnake.setSpeed(previousSpeed * 2.0f);
+        pSnake.setSpeed(pSnake.getSpeed() * MULTIPLIER);
     }
 
     @Override
     public void onEnd(Snake pSnake) {
-        pSnake.setSpeed(previousSpeed);
+        pSnake.setSpeed(pSnake.getSpeed() / MULTIPLIER);
     }
 
     @Override

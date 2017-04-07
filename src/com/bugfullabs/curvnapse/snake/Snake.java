@@ -174,6 +174,13 @@ public class Snake {
         applyChange();
     }
 
+
+    List<SnakeFragment> getFragments() {
+        List<SnakeFragment> fragments = new ArrayList<>(mArcFragments);
+        fragments.addAll(mLineFragments);
+        return fragments;
+    }
+
     public Vec2 getPosition() {
         return mPosition;
     }

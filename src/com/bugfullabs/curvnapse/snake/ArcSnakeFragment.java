@@ -10,6 +10,10 @@ public class ArcSnakeFragment extends SnakeFragment implements Serializable {
     private double mStartAngle;
     private double mAngle;
     private double mRadius;
+
+    private double mMinRadius;
+    private double mMaxRadius;
+
     private Vec2 mCenter;
 
     public ArcSnakeFragment(double pStartAngle, double pRadius, Vec2 pCenter, PlayerColor pColor, double pWidth) {
@@ -18,6 +22,9 @@ public class ArcSnakeFragment extends SnakeFragment implements Serializable {
         mAngle = 0;
         mRadius = pRadius;
         mCenter = pCenter;
+
+        mMinRadius = mRadius - 0.5 * pWidth;
+        mMaxRadius = mRadius + 0.5 * pWidth;
     }
 
     public void updateHead(double pAngle) {
@@ -43,6 +50,11 @@ public class ArcSnakeFragment extends SnakeFragment implements Serializable {
 
     @Override
     public boolean isCollision(Vec2 pPoint) {
-        return false;
+        double angle;
+        double x = pPoint.x - mCenter.x;
+        double y = pPoint.y - mCenter.y;
+
+        double radius = Math.sqrt(x * x + y * y);
+        return (radius <= mMaxRadius && radius >= mMinRadius);
     }
 }
