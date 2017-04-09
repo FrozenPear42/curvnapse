@@ -92,7 +92,7 @@ public class GameThread implements ClientThread.ClientListener {
 
                     }
 
-                    if (snake.isAlive())
+                    if (!snake.isDead())
                         fragments.add(snake.getLastFragment());
                 });
 

@@ -1,29 +1,27 @@
 package com.bugfullabs.curvnapse.snake;
 
 import com.bugfullabs.curvnapse.player.PlayerColor;
-import com.bugfullabs.curvnapse.powerup.FastPowerUp;
 import com.bugfullabs.curvnapse.powerup.PowerUp;
-import com.bugfullabs.curvnapse.powerup.SlowPowerUp;
 import com.bugfullabs.curvnapse.utils.MathUtils;
 import com.bugfullabs.curvnapse.utils.Vec2;
 import javafx.util.Pair;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Logger;
+import java.util.Random;
 
 public class Snake {
-    private static final Logger LOG = Logger.getLogger("SNAKE");
-    public static final double DEFAULT_SPEED = 0.08f;
-    public static final double DEFAULT_SIZE = 2.5f;
-    public static final double DEFAULT_TURN_RADIUS = 20.0f;
-
     private enum State {
         TURNING_LEFT,
         TURNING_RIGHT,
         FORWARD,
         STOP
     }
+
+    private static final double DEFAULT_SPEED = 0.08f;
+    private static final double DEFAULT_SIZE = 2.5f;
+    private static final double DEFAULT_TURN_RADIUS = 20.0f;
+    private static final int HOLE_TIME = 3000;
 
     private int mUID;
     private double mSize;
@@ -34,14 +32,22 @@ public class Snake {
     private double mTurnRadius;
     private double mSpeed;
 
+    private boolean mDead;
+    private boolean mInvisible;
+
     private PlayerColor mColor;
+
+    private State mState;
 
     private List<ArcSnakeFragment> mArcFragments;
     private List<LineSnakeFragment> mLineFragments;
 
-    private State mState;
-
     private List<Pair<PowerUp, Double>> mPowerUps;
+
+    private Random mRandom;
+    private boolean mHoleNow;
+    private int mHoleTime;
+
 
     public Snake(int pUID, Vec2 pPosition, double pAngle, PlayerColor pColor) {
         mColor = pColor;
@@ -52,17 +58,19 @@ public class Snake {
         mArcFragments = new ArrayList<>();
         mLineFragments = new ArrayList<>();
         mPowerUps = new ArrayList<>();
+        mRandom = new Random();
+        mHoleTime = mRandom.nextInt(5000) + 5000;
 
         mSpeed = DEFAULT_SPEED;
         mVelocity = Vec2.directed(DEFAULT_SPEED, pAngle);
-
         mTurnCenter = new Vec2();
         mTurnRadius = DEFAULT_TURN_RADIUS;
-
         mSize = DEFAULT_SIZE;
-
         mState = State.FORWARD;
-        doLine();
+        mDead = false;
+        mInvisible = false;
+        mHoleNow = false;
+        applyChange();
     }
 
     public void step(double pDelta) {
@@ -70,11 +78,25 @@ public class Snake {
         mPowerUps.stream().filter(pair -> pair.getValue() <= 0).forEach(pair -> pair.getKey().onEnd(this));
         mPowerUps.removeIf(pair -> pair.getValue() <= 0);
 
+        mHoleTime -= pDelta;
+        if (mHoleTime <= 0) {
+            if (!mHoleNow) {
+                setInvisible(true);
+                mHoleNow = true;
+                mHoleTime = HOLE_TIME;
+            } else {
+                setInvisible(false);
+                mHoleNow = false;
+                mHoleTime = mRandom.nextInt(3000) + 3000;
+            }
+        }
+
         double deltaAngle = (mVelocity.length() / mTurnRadius) * pDelta;
         switch (mState) {
             case FORWARD:
                 mPosition = Vec2.add(mPosition, Vec2.times(mVelocity, pDelta));
-                mLineFragments.get(mLineFragments.size() - 1).updateHead(mPosition);
+                if (!mInvisible)
+                    mLineFragments.get(mLineFragments.size() - 1).updateHead(mPosition);
                 break;
 
             case TURNING_LEFT:
@@ -82,7 +104,8 @@ public class Snake {
                 mAngle = MathUtils.normalizeAngle(mAngle);
                 mPosition.x = mTurnCenter.x + mTurnRadius * Math.sin(mAngle);
                 mPosition.y = mTurnCenter.y + mTurnRadius * Math.cos(mAngle);
-                mArcFragments.get(mArcFragments.size() - 1).updateHead(deltaAngle);
+                if (!mInvisible)
+                    mArcFragments.get(mArcFragments.size() - 1).updateHead(deltaAngle);
                 break;
 
             case TURNING_RIGHT:
@@ -90,10 +113,12 @@ public class Snake {
                 mAngle = MathUtils.normalizeAngle(mAngle);
                 mPosition.x = mTurnCenter.x - mTurnRadius * Math.sin(mAngle);
                 mPosition.y = mTurnCenter.y - mTurnRadius * Math.cos(mAngle);
-                mArcFragments.get(mArcFragments.size() - 1).updateHead(-deltaAngle);
+                if (!mInvisible)
+                    mArcFragments.get(mArcFragments.size() - 1).updateHead(-deltaAngle);
                 break;
         }
     }
+
 
     public void addPowerUp(PowerUp pPowerUp) {
         mPowerUps.add(0, new Pair<>(pPowerUp, pPowerUp.getDuration()));
@@ -101,28 +126,24 @@ public class Snake {
     }
 
     public void turnLeft() {
-        if (!isAlive())
-            return;
+        if (mDead) return;
         doArc(true);
         mState = State.TURNING_LEFT;
     }
 
     public void turnRight() {
-        if (!isAlive())
-            return;
+        if (mDead) return;
         doArc(false);
         mState = State.TURNING_RIGHT;
     }
 
     public void turnEnd() {
-        if (!isAlive())
-            return;
+        if (mDead) return;
         doLine();
         mState = State.FORWARD;
     }
 
     private void doLine() {
-
         mVelocity = Vec2.directed(mSpeed, mAngle);
         mVelocity.y = -mVelocity.y;
 
@@ -168,17 +189,11 @@ public class Snake {
         applyChange();
     }
 
+
     public void erase() {
         mArcFragments.clear();
         mLineFragments.clear();
         applyChange();
-    }
-
-
-    List<SnakeFragment> getFragments() {
-        List<SnakeFragment> fragments = new ArrayList<>(mArcFragments);
-        fragments.addAll(mLineFragments);
-        return fragments;
     }
 
     public Vec2 getPosition() {
@@ -197,6 +212,18 @@ public class Snake {
         return mSpeed;
     }
 
+    public boolean isDead() {
+        return mDead;
+    }
+
+    public SnakeFragment getLastFragment() {
+        if (mState == State.FORWARD)
+            return mLineFragments.get(mLineFragments.size() - 1);
+        else if (mState == State.TURNING_RIGHT || mState == State.TURNING_LEFT)
+            return mArcFragments.get(mArcFragments.size() - 1);
+        return null;
+    }
+
     public void setSize(double pSize) {
         mSize = pSize;
         applyChange();
@@ -212,21 +239,11 @@ public class Snake {
         applyChange();
     }
 
-    public void kill() {
-        mState = State.STOP;
-    }
 
-    public boolean isAlive() {
-        return mState != State.STOP;
-    }
-
-    public SnakeFragment getLastFragment() {
-        if (mState == State.FORWARD)
-            return mLineFragments.get(mLineFragments.size() - 1);
-        else if (mState == State.TURNING_RIGHT || mState == State.TURNING_LEFT)
-            return mArcFragments.get(mArcFragments.size() - 1);
-
-        return null;
+    private void setInvisible(boolean pInvisible) {
+        mInvisible = pInvisible;
+        if (!pInvisible)
+            applyChange();
     }
 
 }

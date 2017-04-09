@@ -98,8 +98,9 @@ public abstract class PowerUp {
                 return new GrowPowerUp();
             case SELF_SMALL_RADIUS:
                 return new ShrinkRadiusPowerUp();
+            case ENEMY_LARGE_RADIUS:
+                return new GrowRadiusPowerUp();
             case SELF_SHRINK:
-
             case SELF_INVISIBLE:
             case SELF_TRAVERSE:
             case ENEMY_CONFUSION:
@@ -123,8 +124,6 @@ public abstract class PowerUp {
                         return 0;
                     }
                 };
-            case ENEMY_LARGE_RADIUS:
-                return new GrowRadiusPowerUp();
         }
     }
 
