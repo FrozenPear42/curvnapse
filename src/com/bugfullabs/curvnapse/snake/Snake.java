@@ -48,6 +48,7 @@ public class Snake {
     private boolean mHoleNow;
     private int mHoleTime;
 
+    private boolean mConfused;
 
     public Snake(int pUID, Vec2 pPosition, double pAngle, PlayerColor pColor) {
         mColor = pColor;
@@ -70,6 +71,8 @@ public class Snake {
         mDead = false;
         mInvisible = false;
         mHoleNow = false;
+        mConfused = false;
+
         applyChange();
     }
 
@@ -83,7 +86,7 @@ public class Snake {
             if (!mHoleNow) {
                 setInvisible(true);
                 mHoleNow = true;
-                mHoleTime = HOLE_TIME;
+                mHoleTime = mRandom.nextInt(1000) + 100;
             } else {
                 setInvisible(false);
                 mHoleNow = false;
@@ -127,14 +130,24 @@ public class Snake {
 
     public void turnLeft() {
         if (mDead) return;
-        doArc(true);
-        mState = State.TURNING_LEFT;
+        if (!mConfused) {
+            doArc(true);
+            mState = State.TURNING_LEFT;
+        } else {
+            doArc(false);
+            mState = State.TURNING_RIGHT;
+        }
     }
 
     public void turnRight() {
         if (mDead) return;
-        doArc(false);
-        mState = State.TURNING_RIGHT;
+        if (mConfused) {
+            doArc(true);
+            mState = State.TURNING_LEFT;
+        } else {
+            doArc(false);
+            mState = State.TURNING_RIGHT;
+        }
     }
 
     public void turnEnd() {
@@ -212,6 +225,11 @@ public class Snake {
         return mSpeed;
     }
 
+    public boolean isConfused() {
+        return mConfused;
+    }
+
+
     public boolean isDead() {
         return mDead;
     }
@@ -244,6 +262,10 @@ public class Snake {
         mInvisible = pInvisible;
         if (!pInvisible)
             applyChange();
+    }
+
+    public void setConfused(boolean pConfused) {
+        mConfused = pConfused;
     }
 
 }

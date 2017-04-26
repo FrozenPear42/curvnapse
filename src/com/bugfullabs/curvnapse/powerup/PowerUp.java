@@ -101,10 +101,14 @@ public abstract class PowerUp {
             case ENEMY_LARGE_RADIUS:
                 return new GrowRadiusPowerUp();
             case SELF_SHRINK:
-            case SELF_INVISIBLE:
-            case SELF_TRAVERSE:
+                return new ShrinkPowerUp();
             case ENEMY_CONFUSION:
+                return new ConfusionPowerUp();
+            case SELF_INVISIBLE:
+
+            case SELF_TRAVERSE:
             case ALL_TRAVERSE:
+
             case GLOBAL_RAIN:
             case GLOBAL_ERASE:
             case GLOBAL_RANDOM_DEATH:
