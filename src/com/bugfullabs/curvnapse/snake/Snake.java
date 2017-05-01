@@ -235,6 +235,9 @@ public class Snake {
     }
 
     public SnakeFragment getLastFragment() {
+        if(mInvisible)
+            return new HeadSnakeFragment(mColor, mSize, mPosition);
+
         if (mState == State.FORWARD)
             return mLineFragments.get(mLineFragments.size() - 1);
         else if (mState == State.TURNING_RIGHT || mState == State.TURNING_LEFT)

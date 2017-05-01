@@ -12,7 +12,6 @@ public class Main extends Application {
         primaryStage.setWidth(1100);
         primaryStage.setHeight(700);
         primaryStage.show();
-        System.out.print("asdasdas");
         FlowManager.getInstance().initialize(primaryStage);
         FlowManager.getInstance().loginScene();
         //FlowManager.getInstance().testMode();

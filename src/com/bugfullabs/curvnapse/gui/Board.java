@@ -3,6 +3,7 @@ package com.bugfullabs.curvnapse.gui;
 
 import com.bugfullabs.curvnapse.powerup.PowerUpEntity;
 import com.bugfullabs.curvnapse.snake.ArcSnakeFragment;
+import com.bugfullabs.curvnapse.snake.HeadSnakeFragment;
 import com.bugfullabs.curvnapse.snake.LineSnakeFragment;
 import com.bugfullabs.curvnapse.snake.SnakeFragment;
 import com.bugfullabs.curvnapse.utils.MathUtils;
@@ -25,6 +26,7 @@ public class Board extends VBox {
     private int mWidth;
     private int mHeight;
     private Canvas mMainCanvas;
+    private Canvas mHeadCanvas;
     private Canvas mBonusCanvas;
     private Canvas mGridCanvas;
 
@@ -36,10 +38,12 @@ public class Board extends VBox {
         mWidth = pWidth;
         mHeight = pHeight;
         mMainCanvas = new Canvas(mWidth, mHeight);
+        mHeadCanvas = new Canvas(mWidth, mHeight);
         mBonusCanvas = new Canvas(mWidth, mHeight);
         mGridCanvas = new Canvas(mWidth, mHeight);
 
         mRoot.getChildren().add(mMainCanvas);
+        mRoot.getChildren().add(mHeadCanvas);
         mRoot.getChildren().add(mBonusCanvas);
         mRoot.getChildren().add(mGridCanvas);
         getChildren().add(mRoot);
@@ -68,20 +72,30 @@ public class Board extends VBox {
 
     public synchronized void update(List<SnakeFragment> pSnakeFragments) {
         GraphicsContext mainCtx = mMainCanvas.getGraphicsContext2D();
+        GraphicsContext headCtx = mHeadCanvas.getGraphicsContext2D();
+
         mainCtx.setLineCap(StrokeLineCap.ROUND);
+        headCtx.clearRect(0, 0, mWidth, mHeight);
 
         pSnakeFragments.forEach(fragment -> {
             mainCtx.setStroke(fragment.getColor().toFXColor());
             mainCtx.setLineWidth(fragment.getWidth());
 
+            headCtx.setFill(fragment.getColor().toFXColor());
+            headCtx.setLineWidth(fragment.getWidth());
+
+
             if (fragment.getType() == SnakeFragment.Type.LINE) {
                 LineSnakeFragment line = (LineSnakeFragment) fragment;
                 mainCtx.strokeLine(line.getBegin().x, line.getBegin().y, line.getEnd().x, line.getEnd().y);
-            } else {
+            } else if (fragment.getType() == SnakeFragment.Type.ARC) {
                 ArcSnakeFragment arc = (ArcSnakeFragment) fragment;
                 mainCtx.strokeArc(arc.getCenter().x - arc.getRadius(), arc.getCenter().y - arc.getRadius(),
                         2 * arc.getRadius(), 2 * arc.getRadius(),
                         MathUtils.radToDeg(arc.getStartAngle()), MathUtils.radToDeg(arc.getAngle()), ArcType.OPEN);
+            } else if (fragment.getType() == SnakeFragment.Type.HEAD) {
+                HeadSnakeFragment head = (HeadSnakeFragment) fragment;
+                headCtx.fillArc(head.getPosition().x - head.getWidth() / 2, head.getPosition().y - head.getWidth() / 2, head.getWidth(), head.getWidth(), 0, 360, ArcType.ROUND);
             }
         });
     }

@@ -6,7 +6,7 @@ import com.bugfullabs.curvnapse.utils.Vec2;
 import java.io.Serializable;
 
 public abstract class SnakeFragment implements Serializable {
-    public enum Type {LINE, ARC}
+    public enum Type {LINE, HEAD, ARC}
 
     private static long UID = 0;
 
