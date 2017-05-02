@@ -135,6 +135,10 @@ public class GameScene implements ServerConnector.MessageListener {
                 mBoard.erase();
                 break;
 
+            case SNAKE_KILLED:
+                mBoard.drawCollision(((SnakeKilledMessage) pMessage).getPoint());
+                break;
+
             case SPAWN_POWERUP:
                 mBoard.updatePowerUps(((UpdatePowerUpMessage) pMessage).getPowerUp());
                 break;

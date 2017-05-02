@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Random;
 
 public class Snake {
+
     private enum State {
         TURNING_LEFT,
         TURNING_RIGHT,
@@ -281,6 +282,11 @@ public class Snake {
             if (fragment.isCollision(pPoint))
                 return true;
         }
+        return false;
+    }
+
+    public boolean checkSelfCollision() {
+        System.out.println("self collision at " + mPosition.x + " " + mPosition.y);
         return false;
     }
 

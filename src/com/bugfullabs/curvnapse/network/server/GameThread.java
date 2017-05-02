@@ -103,11 +103,15 @@ public class GameThread implements ClientThread.ClientListener {
                 mSnakes.forEach(((player, snake) -> {
                     for (Snake otherSnake : mSnakes.values()) {
                         if (otherSnake == snake) {
-
+                            if (snake.checkSelfCollision()) {
+                                LOG.info("Self killed snake " + player.getName());
+                                mClients.forEach(client -> client.sendMessage(new SnakeKilledMessage(snake.getPosition())));
+                            }
                         } else {
-
-                            if (otherSnake.isCollisionAtPoint(snake.getPosition()))
+                            if (otherSnake.isCollisionAtPoint(snake.getPosition())) {
                                 LOG.info("Killed snake " + player.getName());
+                                mClients.forEach(client -> client.sendMessage(new SnakeKilledMessage(snake.getPosition())));
+                            }
                         }
                     }
                 }));

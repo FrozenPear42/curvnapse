@@ -8,6 +8,7 @@ import com.bugfullabs.curvnapse.snake.LineSnakeFragment;
 import com.bugfullabs.curvnapse.snake.SnakeFragment;
 import com.bugfullabs.curvnapse.utils.MathUtils;
 import com.bugfullabs.curvnapse.utils.ResourceManager;
+import com.bugfullabs.curvnapse.utils.Vec2;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.canvas.Canvas;
@@ -100,9 +101,15 @@ public class Board extends VBox {
         });
     }
 
-    public void erase() {
+    public synchronized void erase() {
         GraphicsContext mainCtx = mMainCanvas.getGraphicsContext2D();
         mainCtx.setFill(Color.BLACK);
         mainCtx.fillRect(0, 0, mWidth, mHeight);
+    }
+
+    public synchronized void drawCollision(Vec2 pCollisionPoint) {
+        GraphicsContext mainCtx = mMainCanvas.getGraphicsContext2D();
+        mainCtx.setFill(Color.WHITE);
+        mainCtx.fillArc(pCollisionPoint.x - 5, pCollisionPoint.y - 5, 10, 10, 0, 360, ArcType.ROUND);
     }
 }

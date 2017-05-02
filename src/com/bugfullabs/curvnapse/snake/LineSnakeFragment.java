@@ -33,7 +33,7 @@ public class LineSnakeFragment extends SnakeFragment implements Serializable {
         double dotA = Vec2.dot(mConstEdge, point);
         double dotB = Vec2.dot(mEdge, point);
 
-        return 0 <= dotA && dotA <= Vec2.dot(mConstEdge, mConstEdge) &&
+        return  0 <= dotA && dotA <= Vec2.dot(mConstEdge, mConstEdge) &&
                 0 <= dotB && dotB <= Vec2.dot(mEdge, mEdge);
     }
 
