@@ -87,6 +87,7 @@ public class FlowManager {
             }
             if (message.getType() == Type.GAME_JOIN) {
                 mServerConnector.sendMessage(new NewPlayerRequest("asd"));
+                //mServerConnector.sendMessage(new NewPlayerRequest("asd2"));
             }
         });
         mServerConnector.handshake("test", pID -> mUserID = pID);

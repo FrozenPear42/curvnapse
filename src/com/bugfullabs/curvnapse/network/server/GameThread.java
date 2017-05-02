@@ -9,10 +9,14 @@ import com.bugfullabs.curvnapse.powerup.PowerUpEntity;
 import com.bugfullabs.curvnapse.snake.Snake;
 import com.bugfullabs.curvnapse.snake.SnakeFragment;
 import com.bugfullabs.curvnapse.utils.Vec2;
+import sun.rmi.runtime.Log;
 
 import java.util.*;
+import java.util.logging.Logger;
 
 public class GameThread implements ClientThread.ClientListener {
+    private static final Logger LOG = Logger.getLogger(GameThread.class.getName());
+
     private Timer mTimer;
     private Map<Player, Snake> mSnakes;
     private LinkedList<PowerUpEntity> mPowerUps;
@@ -96,12 +100,25 @@ public class GameThread implements ClientThread.ClientListener {
                         fragments.add(snake.getLastFragment());
                 });
 
+                mSnakes.forEach(((player, snake) -> {
+                    for (Snake otherSnake : mSnakes.values()) {
+                        if (otherSnake == snake) {
+
+                        } else {
+
+                            if (otherSnake.isCollisionAtPoint(snake.getPosition()))
+                                LOG.info("Killed snake " + player.getName());
+                        }
+                    }
+                }));
+
 
                 mClients.forEach(client -> client.sendMessage(new SnakeFragmentsMessage(fragments)));
 
             }
         }, 0, 1000 / 60);
     }
+
 
     public void stop() {
         mTimer.cancel();

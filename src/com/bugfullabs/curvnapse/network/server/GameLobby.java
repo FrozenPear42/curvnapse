@@ -101,7 +101,7 @@ public class GameLobby implements ClientThread.ClientListener {
                 break;
 
             case PLAYER_ADD_REQUEST:
-                addPlayer(((NewPlayerRequest) pMessage).getName(), pClientThread.getID());
+                addPlayer(((NewPlayerRequest) pMessage).getName() + mGame.getPlayers().size(), pClientThread.getID());
                 break;
             case PLAYER_UPDATE_REQUEST:
                 updatePlayer(((PlayerUpdateRequest) pMessage).getPlayer());

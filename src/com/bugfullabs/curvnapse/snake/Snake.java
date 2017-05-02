@@ -235,7 +235,7 @@ public class Snake {
     }
 
     public SnakeFragment getLastFragment() {
-        if(mInvisible)
+        if (mInvisible)
             return new HeadSnakeFragment(mColor, mSize, mPosition);
 
         if (mState == State.FORWARD)
@@ -269,6 +269,19 @@ public class Snake {
 
     public void setConfused(boolean pConfused) {
         mConfused = pConfused;
+    }
+
+    public boolean isCollisionAtPoint(Vec2 pPoint) {
+
+        for (SnakeFragment fragment : mLineFragments) {
+            if (fragment.isCollision(pPoint))
+                return true;
+        }
+        for (SnakeFragment fragment : mArcFragments) {
+            if (fragment.isCollision(pPoint))
+                return true;
+        }
+        return false;
     }
 
 }
