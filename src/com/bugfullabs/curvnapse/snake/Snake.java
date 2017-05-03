@@ -12,6 +12,7 @@ import java.util.Random;
 
 public class Snake {
 
+
     private enum State {
         TURNING_LEFT,
         TURNING_RIGHT,
@@ -272,8 +273,12 @@ public class Snake {
         mConfused = pConfused;
     }
 
-    public boolean isCollisionAtPoint(Vec2 pPoint) {
 
+    public boolean isInvisible() {
+        return mInvisible;
+    }
+
+    public boolean isCollisionAtPoint(Vec2 pPoint) {
         for (SnakeFragment fragment : mLineFragments) {
             if (fragment.isCollision(pPoint))
                 return true;
@@ -286,7 +291,7 @@ public class Snake {
     }
 
     public boolean checkSelfCollision() {
-        System.out.println("self collision at " + mPosition.x + " " + mPosition.y);
+//        System.out.println("self collision at " + mPosition.x + " " + mPosition.y);
         return false;
     }
 

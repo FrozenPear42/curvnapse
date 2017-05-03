@@ -47,17 +47,20 @@ public class GameThread implements ClientThread.ClientListener {
                 double delta = 1000 / 60; //FIXME: WCALE NIE
                 LinkedList<SnakeFragment> fragments = new LinkedList<>();
 
+                //Spawn Powerups
                 mNextPowerUpTime -= delta;
                 if (mNextPowerUpTime < 0) {
                     mNextPowerUpTime = mRandom.nextInt(4000) + 3000;
                     nextPowerUp();
                 }
 
+
                 mSnakes.forEach((player, snake) -> {
+                    //move snake
                     snake.step(delta);
 
                     Vec2 orgPosition = snake.getPosition();
-
+                    //collect powerup
                     mPowerUps.forEach(powerUp -> {
                         if (powerUp.isCollision(snake.getPosition())) {
                             PowerUp.Target t = PowerUp.getTarget(powerUp.getType());
@@ -101,6 +104,9 @@ public class GameThread implements ClientThread.ClientListener {
                 });
 
                 mSnakes.forEach(((player, snake) -> {
+                    if (snake.isInvisible())
+                        return;
+
                     for (Snake otherSnake : mSnakes.values()) {
                         if (otherSnake == snake) {
                             if (snake.checkSelfCollision()) {

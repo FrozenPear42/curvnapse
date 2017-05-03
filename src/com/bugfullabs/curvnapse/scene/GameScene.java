@@ -122,7 +122,7 @@ public class GameScene implements ServerConnector.MessageListener {
                 break;
             case SNAKE_UPDATE:
                 SnakeFragmentsMessage msg = (SnakeFragmentsMessage) pMessage;
-                mBoard.update(((SnakeFragmentsMessage) pMessage).getSnakeFragments());
+                Platform.runLater(() -> mBoard.update(((SnakeFragmentsMessage) pMessage).getSnakeFragments()));
                 //TODO: convert to be more MVC
 //                msg.getSnakeFragments().forEach(fragment -> {
 //                    mSnakeFragments.removeIf(frag -> frag.getUID() == fragment.getUID());
@@ -136,11 +136,11 @@ public class GameScene implements ServerConnector.MessageListener {
                 break;
 
             case SNAKE_KILLED:
-                mBoard.drawCollision(((SnakeKilledMessage) pMessage).getPoint());
+                Platform.runLater(() -> mBoard.drawCollision(((SnakeKilledMessage) pMessage).getPoint()));
                 break;
 
             case SPAWN_POWERUP:
-                mBoard.updatePowerUps(((UpdatePowerUpMessage) pMessage).getPowerUp());
+                Platform.runLater(() -> mBoard.updatePowerUps(((UpdatePowerUpMessage) pMessage).getPowerUp()));
                 break;
         }
     }

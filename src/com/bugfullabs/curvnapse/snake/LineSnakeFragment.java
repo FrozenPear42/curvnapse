@@ -29,7 +29,8 @@ public class LineSnakeFragment extends SnakeFragment implements Serializable {
     @Override
     public boolean isCollision(Vec2 pPoint) {
         //FIXME: Change beginning point to rect origin
-        Vec2 point = new Vec2(mBegin, pPoint);
+        Vec2 origin = Vec2.sub(mBegin, Vec2.times(mConstEdge, 0.5));
+        Vec2 point = new Vec2(origin, pPoint);
         double dotA = Vec2.dot(mConstEdge, point);
         double dotB = Vec2.dot(mEdge, point);
 
