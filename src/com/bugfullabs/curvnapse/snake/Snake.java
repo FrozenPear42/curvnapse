@@ -171,14 +171,15 @@ public class Snake {
             double startAngle = MathUtils.normalizeAngle(mAngle - Math.PI / 2);
             mTurnCenter.x = mPosition.x - mTurnRadius * Math.sin(mAngle);
             mTurnCenter.y = mPosition.y - mTurnRadius * Math.cos(mAngle);
-            ArcSnakeFragment arc = new ArcSnakeFragment(startAngle, mTurnRadius, mTurnCenter, mColor, mSize);
+            Vec2 turnCenter = new Vec2(mTurnCenter.x, mTurnCenter.y);
+            ArcSnakeFragment arc = new ArcSnakeFragment(startAngle, mTurnRadius, turnCenter, mColor, mSize);
             mArcFragments.add(arc);
         } else {
             double startAngle = MathUtils.normalizeAngle(mAngle + Math.PI / 2);
             mTurnCenter.x = mPosition.x + mTurnRadius * Math.sin(mAngle);
             mTurnCenter.y = mPosition.y + mTurnRadius * Math.cos(mAngle);
-
-            ArcSnakeFragment arc = new ArcSnakeFragment(startAngle, mTurnRadius, mTurnCenter, mColor, mSize);
+            Vec2 turnCenter = new Vec2(mTurnCenter.x, mTurnCenter.y);
+            ArcSnakeFragment arc = new ArcSnakeFragment(startAngle, mTurnRadius, turnCenter, mColor, mSize);
             mArcFragments.add(arc);
         }
     }
@@ -279,19 +280,19 @@ public class Snake {
     }
 
     public boolean isCollisionAtPoint(Vec2 pPoint) {
-        for (SnakeFragment fragment : mLineFragments) {
-            if (fragment.isCollision(pPoint)){
-                System.out.println("Line fucked here: " + fragment.getUID());
-                return true;
-            }
-        }
+        System.out.println("\t\tSnake: " + mUID);
 
-//        for (SnakeFragment fragment : mArcFragments) {
-//            if (fragment.isCollision(pPoint)) {
-//                System.out.println("Arc fucked here: " + fragment.getUID());
+//        for (SnakeFragment fragment : mLineFragments) {
+//            if (fragment.isCollision(pPoint)){
+//                System.out.println("Line fucked here: " + fragment.getUID());
 //                return true;
 //            }
 //        }
+
+        for (SnakeFragment fragment : mArcFragments) {
+            if (fragment.isCollision(pPoint))
+                return true;
+        }
 
         return false;
     }

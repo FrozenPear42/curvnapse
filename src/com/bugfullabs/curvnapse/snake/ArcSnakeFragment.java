@@ -55,6 +55,6 @@ public class ArcSnakeFragment extends SnakeFragment implements Serializable {
         double y = pPoint.y - mCenter.y;
 
         double radius = Math.sqrt(x * x + y * y);
-        return (radius <= mMaxRadius && radius >= mMinRadius);
+        return (mMinRadius <= radius && radius <= mMaxRadius);
     }
 }
