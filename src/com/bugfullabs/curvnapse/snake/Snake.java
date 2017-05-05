@@ -84,17 +84,17 @@ public class Snake {
         mPowerUps.removeIf(pair -> pair.getValue() <= 0);
 
         mHoleTime -= pDelta;
-        if (mHoleTime <= 0) {
-            if (!mHoleNow) {
-                setInvisible(true);
-                mHoleNow = true;
-                mHoleTime = mRandom.nextInt(1000) + 100;
-            } else {
-                setInvisible(false);
-                mHoleNow = false;
-                mHoleTime = mRandom.nextInt(3000) + 3000;
-            }
-        }
+//        if (mHoleTime <= 0) {
+//            if (!mHoleNow) {
+//                setInvisible(true);
+//                mHoleNow = true;
+//                mHoleTime = mRandom.nextInt(1000) + 100;
+//            } else {
+//                setInvisible(false);
+//                mHoleNow = false;
+//                mHoleTime = mRandom.nextInt(3000) + 3000;
+//            }
+//        }
 
         double deltaAngle = (mVelocity.length() / mTurnRadius) * pDelta;
         switch (mState) {
@@ -162,7 +162,7 @@ public class Snake {
         mVelocity = Vec2.directed(mSpeed, mAngle);
         mVelocity.y = -mVelocity.y;
 
-        LineSnakeFragment line = new LineSnakeFragment(mPosition, mPosition, mAngle, mColor, mSize);
+        LineSnakeFragment line = new LineSnakeFragment(mPosition, mPosition, mVelocity.angle(), mColor, mSize);
         mLineFragments.add(line);
     }
 
@@ -280,13 +280,19 @@ public class Snake {
 
     public boolean isCollisionAtPoint(Vec2 pPoint) {
         for (SnakeFragment fragment : mLineFragments) {
-            if (fragment.isCollision(pPoint))
+            if (fragment.isCollision(pPoint)){
+                System.out.println("Line fucked here: " + fragment.getUID());
                 return true;
+            }
         }
-        for (SnakeFragment fragment : mArcFragments) {
-            if (fragment.isCollision(pPoint))
-                return true;
-        }
+
+//        for (SnakeFragment fragment : mArcFragments) {
+//            if (fragment.isCollision(pPoint)) {
+//                System.out.println("Arc fucked here: " + fragment.getUID());
+//                return true;
+//            }
+//        }
+
         return false;
     }
 

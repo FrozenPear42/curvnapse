@@ -11,26 +11,27 @@ public class LineSnakeFragment extends SnakeFragment implements Serializable {
 
     private Vec2 mConstEdge;
     private Vec2 mEdge;
-
+    private double mAngle;
 
     public LineSnakeFragment(Vec2 pBegin, Vec2 pEnd, double pAngle, PlayerColor pColor, double pWidth) {
         super(Type.LINE, pColor, pWidth);
         mBegin = pBegin;
         mEnd = pEnd;
         mConstEdge = Vec2.directed(pWidth, pAngle + Math.PI / 2);
-        mEdge = Vec2.sub(mEnd, mBegin);
+        mEdge = new Vec2(mBegin, mEnd);
+        mAngle = pAngle;
     }
 
     public void updateHead(Vec2 pEnd) {
         mEnd = pEnd;
-        mEdge = Vec2.sub(mEnd, mBegin);
+        mEdge = new Vec2(mBegin, mEnd);
     }
 
     @Override
     public boolean isCollision(Vec2 pPoint) {
-        //FIXME: Change beginning point to rect origin
         Vec2 origin = Vec2.sub(mBegin, Vec2.times(mConstEdge, 0.5));
         Vec2 point = new Vec2(origin, pPoint);
+
         double dotA = Vec2.dot(mConstEdge, point);
         double dotB = Vec2.dot(mEdge, point);
 
@@ -46,4 +47,7 @@ public class LineSnakeFragment extends SnakeFragment implements Serializable {
         return mEnd;
     }
 
+    public double getAngle() {
+        return mAngle;
+    }
 }

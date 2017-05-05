@@ -112,11 +112,13 @@ public class GameThread implements ClientThread.ClientListener {
                             if (snake.checkSelfCollision()) {
                                 LOG.info("Self killed snake " + player.getName());
                                 mClients.forEach(client -> client.sendMessage(new SnakeKilledMessage(snake.getPosition())));
+                                break;
                             }
                         } else {
                             if (otherSnake.isCollisionAtPoint(snake.getPosition())) {
                                 LOG.info("Killed snake " + player.getName());
                                 mClients.forEach(client -> client.sendMessage(new SnakeKilledMessage(snake.getPosition())));
+                                break;
                             }
                         }
                     }
@@ -158,7 +160,7 @@ public class GameThread implements ClientThread.ClientListener {
     private Snake createNewSnake(Player pPlayer) {
         Random rnd = new Random();
         //TODO: avoid conflict
-        double angle = rnd.nextDouble() * Math.PI;
+        double angle = Math.PI/2;//rnd.nextDouble() * Math.PI;
         return new Snake(pPlayer.getID(), randomPosition(), angle, pPlayer.getColor());
     }
 

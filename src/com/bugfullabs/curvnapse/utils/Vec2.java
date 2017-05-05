@@ -30,6 +30,16 @@ public class Vec2 implements Serializable {
         return Math.sqrt(x * x + y * y);
     }
 
+    public double angle() {
+        double res = Math.atan(y/x);
+        if(x < 0 && res > 0)
+            return res - Math.PI;
+        if(x < 0 && res < 0)
+            return res + Math.PI;
+        return res;
+
+    }
+
     public static Vec2 times(Vec2 pV, double pS) {
         return new Vec2(pV.x * pS, pV.y * pS);
     }
@@ -49,4 +59,6 @@ public class Vec2 implements Serializable {
     public static double dot(Vec2 pV1, Vec2 pV2) {
         return pV1.x * pV2.x + pV1.y * pV2.y;
     }
+
+
 }
