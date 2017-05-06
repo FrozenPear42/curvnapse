@@ -71,4 +71,8 @@ public class ArcSnakeFragment extends SnakeFragment implements Serializable {
         }
         return false;
     }
+
+    public boolean isFull() {
+        return mAngle >= 2 * Math.PI || mAngle <= -2 * Math.PI;
+    }
 }

@@ -280,12 +280,11 @@ public class Snake {
     }
 
     public boolean isCollisionAtPoint(Vec2 pPoint) {
-//        for (SnakeFragment fragment : mLineFragments) {
-//            if (fragment.isCollision(pPoint)){
-//                System.out.println("Line fucked here: " + fragment.getUID());
-//                return true;
-//            }
-//        }
+
+        for (SnakeFragment fragment : mLineFragments) {
+            if (fragment.isCollision(pPoint))
+                return true;
+        }
 
         for (SnakeFragment fragment : mArcFragments) {
             if (fragment.isCollision(pPoint))
@@ -296,7 +295,36 @@ public class Snake {
     }
 
     public boolean checkSelfCollision() {
-//        System.out.println("self collision at " + mPosition.x + " " + mPosition.y);
+        if (mState == State.FORWARD) {
+            if (mLineFragments.size() == 1)
+                return false;
+
+            for (SnakeFragment fragment : mLineFragments.subList(0, mLineFragments.size() - 1)) {
+                if (fragment.isCollision(mPosition))
+                    return true;
+            }
+
+            for (SnakeFragment fragment : mArcFragments) {
+                if (fragment.isCollision(mPosition))
+                    return true;
+            }
+        } else if (mState != State.STOP) {
+
+            for (SnakeFragment fragment : mLineFragments) {
+                if (fragment.isCollision(mPosition))
+                    return true;
+            }
+
+            if (mArcFragments.size() == 1) {
+                return mArcFragments.get(0).isFull();
+            }
+
+            for (SnakeFragment fragment : mArcFragments.subList(0, mArcFragments.size() - 1)) {
+                if (fragment.isCollision(mPosition))
+                    return true;
+            }
+        }
+
         return false;
     }
 
