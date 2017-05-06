@@ -27,7 +27,7 @@ public class GameThread implements ClientThread.ClientListener {
     private boolean mWalls;
     private int mNextPowerUpTime;
     private Random mRandom;
-
+    private int mSnakesAlive;
 
     public GameThread(Game pGame, List<ClientThread> pClients) {
         mClients = pClients;
@@ -40,10 +40,17 @@ public class GameThread implements ClientThread.ClientListener {
 
         mNextPowerUpTime = mRandom.nextInt(4000) + 500;
         mGame.getPlayers().forEach(player -> mSnakes.put(player, createNewSnake(player)));
+        mSnakesAlive = mSnakes.size();
 
         mTimer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
+
+                if (mSnakesAlive <= 1) {
+                    endRound();
+                    return;
+                }
+
                 double delta = 1000 / 60; //FIXME: WCALE NIE
                 LinkedList<SnakeFragment> fragments = new LinkedList<>();
 
@@ -110,14 +117,12 @@ public class GameThread implements ClientThread.ClientListener {
                     for (Snake otherSnake : mSnakes.values()) {
                         if (otherSnake == snake) {
                             if (snake.checkSelfCollision()) {
-                                LOG.info("Self killed snake " + player.getName());
-                                mClients.forEach(client -> client.sendMessage(new SnakeKilledMessage(snake.getPosition())));
+                                killSnake(snake);
                                 break;
                             }
                         } else {
                             if (otherSnake.isCollisionAtPoint(snake.getPosition())) {
-                                LOG.info("Killed snake " + player.getName());
-                                mClients.forEach(client -> client.sendMessage(new SnakeKilledMessage(snake.getPosition())));
+                                killSnake(snake);
                                 break;
                             }
                         }
@@ -129,6 +134,25 @@ public class GameThread implements ClientThread.ClientListener {
 
             }
         }, 0, 1000 / 60);
+    }
+
+    private void endRound() {
+        mTimer.cancel();
+    }
+
+    private void killSnake(Snake pSnake) {
+        if (pSnake.isDead())
+            return;
+
+        pSnake.kill();
+        mClients.forEach(client -> client.sendMessage(new SnakeKilledMessage(pSnake.getPosition())));
+        mSnakesAlive -= 1;
+        mSnakes.forEach((player, snake) -> {
+            if (snake != pSnake && !snake.isDead())
+                player.setPoints(player.getPoints() + 1);
+        });
+        mGame.getPlayers().sort(Comparator.comparingInt(Player::getPoints).reversed());
+        mClients.forEach((client) -> client.sendMessage(new GameUpdateMessage(mGame)));
     }
 
 

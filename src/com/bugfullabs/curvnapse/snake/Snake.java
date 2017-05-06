@@ -83,7 +83,10 @@ public class Snake {
         mPowerUps.stream().filter(pair -> pair.getValue() <= 0).forEach(pair -> pair.getKey().onEnd(this));
         mPowerUps.removeIf(pair -> pair.getValue() <= 0);
 
-        mHoleTime -= pDelta;
+        if(mDead)
+            return;
+
+            mHoleTime -= pDelta;
 //        if (mHoleTime <= 0) {
 //            if (!mHoleNow) {
 //                setInvisible(true);
@@ -95,6 +98,7 @@ public class Snake {
 //                mHoleTime = mRandom.nextInt(3000) + 3000;
 //            }
 //        }
+
 
         double deltaAngle = (mVelocity.length() / mTurnRadius) * pDelta;
         switch (mState) {
@@ -212,6 +216,10 @@ public class Snake {
         applyChange();
     }
 
+    public void kill() {
+        mDead = true;
+    };
+
     public Vec2 getPosition() {
         return mPosition;
     }
@@ -231,7 +239,6 @@ public class Snake {
     public boolean isConfused() {
         return mConfused;
     }
-
 
     public boolean isDead() {
         return mDead;

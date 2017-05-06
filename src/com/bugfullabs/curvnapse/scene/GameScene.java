@@ -139,6 +139,14 @@ public class GameScene implements ServerConnector.MessageListener {
                 Platform.runLater(() -> mBoard.drawCollision(((SnakeKilledMessage) pMessage).getPoint()));
                 break;
 
+            case GAME_UPDATE:
+                Platform.runLater(() -> {
+                    mGame = ((GameUpdateMessage) pMessage).getGame();
+                    mPlayers.clear();
+                    mPlayers.addAll(mGame.getPlayers());
+                });
+                break;
+
             case SPAWN_POWERUP:
                 Platform.runLater(() -> mBoard.updatePowerUps(((UpdatePowerUpMessage) pMessage).getPowerUp()));
                 break;

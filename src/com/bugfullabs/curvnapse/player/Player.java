@@ -13,6 +13,7 @@ public class Player implements Serializable {
     private KeyCode mLeftKey;
     private KeyCode mRightKey;
     private PlayerColor mColor;
+    private int mPoints;
 
 
     public Player(String pName, PlayerColor pColor, int pOwner) {
@@ -23,6 +24,7 @@ public class Player implements Serializable {
         mLeftKey = KeyCode.LEFT;
         mRightKey = KeyCode.RIGHT;
         mColor = pColor;
+        mPoints = 0;
     }
 
     public int getID() {
@@ -57,4 +59,11 @@ public class Player implements Serializable {
         return mColor;
     }
 
+    public int getPoints() {
+        return mPoints;
+    }
+
+    public void setPoints(int pPoints) {
+        mPoints = pPoints;
+    }
 }
