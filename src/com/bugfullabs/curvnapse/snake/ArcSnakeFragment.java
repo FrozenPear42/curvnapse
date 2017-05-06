@@ -1,6 +1,7 @@
 package com.bugfullabs.curvnapse.snake;
 
 import com.bugfullabs.curvnapse.player.PlayerColor;
+import com.bugfullabs.curvnapse.utils.MathUtils;
 import com.bugfullabs.curvnapse.utils.Vec2;
 
 import java.io.Serializable;
@@ -28,8 +29,9 @@ public class ArcSnakeFragment extends SnakeFragment implements Serializable {
     }
 
     public void updateHead(double pAngle) {
+        if (mAngle >= 2 * Math.PI || mAngle <= -2 * Math.PI)
+            return;
         mAngle += pAngle;
-        //mAngle = MathUtils.normalizeAngle(mAngle);
     }
 
     public double getStartAngle() {
@@ -50,11 +52,23 @@ public class ArcSnakeFragment extends SnakeFragment implements Serializable {
 
     @Override
     public boolean isCollision(Vec2 pPoint) {
-        double angle;
         double x = pPoint.x - mCenter.x;
         double y = pPoint.y - mCenter.y;
 
         double radius = Math.sqrt(x * x + y * y);
-        return (mMinRadius <= radius && radius <= mMaxRadius);
+        if (mMinRadius <= radius && radius <= mMaxRadius) {
+
+            Vec2 point = new Vec2(x, -y);
+            double pointAngle = MathUtils.normalizeAngle(point.angle());
+
+            if (mAngle < 0) { //Turning clockwise
+                double angle = pointAngle - mStartAngle;
+                return mAngle <= angle && angle <= 0;
+            } else if (mAngle > 0) { //Turning counterclockwise
+                double angle = pointAngle - mStartAngle;
+                return 0 <= angle && angle <= mAngle;
+            }
+        }
+        return false;
     }
 }

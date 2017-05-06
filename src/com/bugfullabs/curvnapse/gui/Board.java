@@ -92,11 +92,10 @@ public class Board extends VBox {
                 mainCtx.strokeLine(line.getBegin().x, line.getBegin().y, line.getEnd().x, line.getEnd().y);
 
 //                DEBUG - Vector direction
-                double x1 = line.getBegin().x + 10 * Math.cos(line.getAngle());
-                double y1 = line.getBegin().y + 10 * Math.sin(line.getAngle());
-                mainCtx.strokeLine(line.getBegin().x, line.getBegin().y, x1, y1);
-                mainCtx.fillArc(x1 - 3, y1 - 3, 6, 6, 0, 360, ArcType.ROUND);
-
+//                double x1 = line.getBegin().x + 10 * Math.cos(line.getAngle());
+//                double y1 = line.getBegin().y + 10 * Math.sin(line.getAngle());
+//                mainCtx.strokeLine(line.getBegin().x, line.getBegin().y, x1, y1);
+//                mainCtx.fillArc(x1 - 3, y1 - 3, 6, 6, 0, 360, ArcType.ROUND);
 
             } else if (fragment.getType() == SnakeFragment.Type.ARC) {
                 ArcSnakeFragment arc = (ArcSnakeFragment) fragment;

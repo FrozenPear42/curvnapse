@@ -30,11 +30,15 @@ public class Vec2 implements Serializable {
         return Math.sqrt(x * x + y * y);
     }
 
+    public Vec2 normalize() {
+        return new Vec2(x / length(), y / length());
+    }
+
     public double angle() {
-        double res = Math.atan(y/x);
-        if(x < 0 && res > 0)
+        double res = Math.atan(y / x);
+        if (x < 0 && res > 0)
             return res - Math.PI;
-        if(x < 0 && res < 0)
+        if (x < 0 && res < 0)
             return res + Math.PI;
         return res;
 

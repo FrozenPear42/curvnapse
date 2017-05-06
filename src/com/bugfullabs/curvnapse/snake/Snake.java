@@ -280,8 +280,6 @@ public class Snake {
     }
 
     public boolean isCollisionAtPoint(Vec2 pPoint) {
-        System.out.println("\t\tSnake: " + mUID);
-
 //        for (SnakeFragment fragment : mLineFragments) {
 //            if (fragment.isCollision(pPoint)){
 //                System.out.println("Line fucked here: " + fragment.getUID());
