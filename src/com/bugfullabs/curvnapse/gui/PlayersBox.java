@@ -13,6 +13,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
 public class PlayersBox extends VBox {
+    private Label mTitle;
     private Button mAddPlayerButton;
     private ListView<Player> mPlayersList;
     private PlayerBoxListener mListener;
@@ -20,11 +21,15 @@ public class PlayersBox extends VBox {
     public PlayersBox() {
         super(10.0f);
         setPadding(new Insets(10.0f));
-        setAlignment(Pos.CENTER);
+        setAlignment(Pos.TOP_CENTER);
+
+        mTitle = new Label("Players");
+        mTitle.setStyle("-fx-font-size: 2em; -fx-font-weight: bold");
+
         mAddPlayerButton = new Button("Add Local");
         mPlayersList = new ListView<>();
         mPlayersList.setCellFactory(param -> new PlayersListElement());
-        getChildren().addAll(mPlayersList, mAddPlayerButton);
+        getChildren().addAll(mTitle, mPlayersList, mAddPlayerButton);
 
         mAddPlayerButton.setOnAction(event -> {
             if (mListener != null)
@@ -58,7 +63,7 @@ public class PlayersBox extends VBox {
 
                 Label label = new Label(pPlayer.getName());
                 label.setTextFill(pPlayer.getColor().toFXColor());
-                label.setStyle("-fx-text-fill: "+ pPlayer.getColor().toHex());
+                label.setStyle("-fx-text-fill: " + pPlayer.getColor().toHex());
 
                 HBox buttons = new HBox(10.0f);
                 buttons.setAlignment(Pos.CENTER);

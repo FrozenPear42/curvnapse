@@ -13,6 +13,7 @@ import java.util.Random;
 public class Snake {
 
 
+
     private enum State {
         TURNING_LEFT,
         TURNING_RIGHT,
@@ -253,6 +254,11 @@ public class Snake {
         else if (mState == State.TURNING_RIGHT || mState == State.TURNING_LEFT)
             return mArcFragments.get(mArcFragments.size() - 1);
         return null;
+    }
+
+
+    public SnakeFragment getHead() {
+        return new HeadSnakeFragment(mColor, mSize, mPosition);
     }
 
     public void setSize(double pSize) {

@@ -17,10 +17,11 @@ public class LoginBox extends VBox {
     private LoginListener mListener;
 
     public LoginBox() {
-        super();
+        super(10.0);
         setPadding(new Insets(10.0f));
         setAlignment(Pos.CENTER);
         setSpacing(10.0f);
+        setMaxWidth(220.0f);
 
         mHost = new CheckBox("Host?");
         mNameBox = new LabeledTextBox("Name:");

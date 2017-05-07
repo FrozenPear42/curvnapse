@@ -13,15 +13,19 @@ import javafx.scene.layout.VBox;
 
 public class Leaderboard extends VBox {
     private ListView<Player> mPlayersList;
+    private Label mTitle;
 
     public Leaderboard() {
         super(10.0f);
         setPadding(new Insets(10.f));
-        setAlignment(Pos.CENTER);
+        setAlignment(Pos.TOP_CENTER);
+
+        mTitle = new Label("Leaderboard");
+        mTitle.setStyle("-fx-font-weight: bold; -fx-font-size: 2em");
 
         mPlayersList = new ListView<>();
         mPlayersList.setCellFactory(param -> new PlayersLeaderboardListElement());
-        getChildren().addAll(mPlayersList);
+        getChildren().addAll(mTitle, mPlayersList);
         setMaxWidth(200);
     }
 

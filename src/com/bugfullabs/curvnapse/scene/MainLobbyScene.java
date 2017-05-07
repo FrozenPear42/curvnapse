@@ -10,8 +10,11 @@ import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
 
 import java.util.logging.Logger;
 
@@ -19,6 +22,9 @@ public class MainLobbyScene implements ServerConnector.MessageListener {
     private static final Logger LOG = Logger.getLogger(MainLobbyScene.class.getName());
     private BorderPane mRoot;
     private Scene mScene;
+
+    private HBox mTopBox;
+    private Label mTitle;
 
     private MessageBox mMessageBox;
     private GameListBox mGameListBox;
@@ -32,10 +38,20 @@ public class MainLobbyScene implements ServerConnector.MessageListener {
         mRoot = new BorderPane();
         mRoot.setPadding(new Insets(10.0f));
 
+        mTopBox = new HBox(10.0f);
+        mTopBox.setPadding(new Insets(10.0f));
+        mTopBox.setAlignment(Pos.CENTER);
+        mTitle = new Label("Lobby");
+        mTitle.setStyle("-fx-font-size: 3em; -fx-font-weight: bold");
+        mTopBox.getChildren().add(mTitle);
+
         mMessageBox = new MessageBox();
         mGameListBox = new GameListBox();
+
+        mRoot.setTop(mTopBox);
         mRoot.setLeft(mMessageBox);
         mRoot.setCenter(mGameListBox);
+
         mScene = new Scene(mRoot);
         mScene.getStylesheets().add("resources/JMetro.css");
         

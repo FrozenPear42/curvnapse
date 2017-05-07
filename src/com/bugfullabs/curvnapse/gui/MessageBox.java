@@ -18,11 +18,16 @@ public class MessageBox extends VBox {
     private TextField mTextBox;
     private Button mSendButton;
     private MessageSendListener mListener;
+    private Label mTitle;
+
 
     public MessageBox() {
         super(10.0f);
         setPadding(new Insets(10.0f));
-        setAlignment(Pos.CENTER);
+        setAlignment(Pos.TOP_CENTER);
+
+        mTitle = new Label("Chat");
+        mTitle.setStyle("-fx-font-size: 2em; -fx-font-weight: bold");
 
         mList = new ListView<>();
         mList.setCellFactory(pTextMessageListView -> new MessageListElement());
@@ -52,7 +57,8 @@ public class MessageBox extends VBox {
             mTextBox.setText("");
         });
 
-        getChildren().addAll(mList, mInputBox);
+
+        getChildren().addAll(mTitle, mList, mInputBox);
         setMaxWidth(320);
     }
 

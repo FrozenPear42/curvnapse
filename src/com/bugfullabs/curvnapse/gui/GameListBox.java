@@ -15,6 +15,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
 public class GameListBox extends VBox {
+    private Label mTitle;
     private ListView<Game> mGameList;
     private HBox mButtons;
     private Button mJoinButton;
@@ -23,9 +24,12 @@ public class GameListBox extends VBox {
     private GameListBoxListener mListener;
 
     public GameListBox() {
-        super(5.0f);
+        super(10.0f);
         setPadding(new Insets(10.0f));
-        setAlignment(Pos.CENTER);
+        setAlignment(Pos.TOP_CENTER);
+
+        mTitle = new Label("Games");
+        mTitle.setStyle("-fx-font-size: 2em; -fx-font-weight: bold");
 
         mGameList = new ListView<>();
         mGameList.setCellFactory(pGameListView -> new GameListElement());
@@ -36,7 +40,8 @@ public class GameListBox extends VBox {
 
         mButtons.setAlignment(Pos.CENTER);
         mButtons.getChildren().addAll(mJoinButton, mCreateButton);
-        getChildren().addAll(mGameList, mButtons);
+
+        getChildren().addAll(mTitle, mGameList, mButtons);
 
         mJoinButton.setOnAction(event -> {
             if (mListener != null)

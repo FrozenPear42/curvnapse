@@ -6,6 +6,7 @@ import com.bugfullabs.curvnapse.network.message.*;
 import com.bugfullabs.curvnapse.player.Player;
 import com.bugfullabs.curvnapse.powerup.PowerUp;
 import com.bugfullabs.curvnapse.powerup.PowerUpEntity;
+import com.bugfullabs.curvnapse.snake.HeadSnakeFragment;
 import com.bugfullabs.curvnapse.snake.Snake;
 import com.bugfullabs.curvnapse.snake.SnakeFragment;
 import com.bugfullabs.curvnapse.utils.Vec2;
@@ -29,23 +30,58 @@ public class GameThread implements ClientThread.ClientListener {
     private Random mRandom;
     private int mSnakesAlive;
 
+    private int mRoundNumber;
+
+
     public GameThread(Game pGame, List<ClientThread> pClients) {
         mClients = pClients;
         mGame = pGame;
         mRandom = new Random();
-        mTimer = new Timer();
         mSnakes = new HashMap<>();
         mPowerUps = new LinkedList<>();
+
+        mRoundNumber = 1;
+
+        prepareRound();
+        startRoundCounter();
+    }
+
+    private void prepareRound() {
+        mTimer = new Timer();
+        mSnakes.clear();
+        mPowerUps.clear();
         mWalls = false;
 
         mNextPowerUpTime = mRandom.nextInt(4000) + 500;
         mGame.getPlayers().forEach(player -> mSnakes.put(player, createNewSnake(player)));
         mSnakesAlive = mSnakes.size();
+        mClients.forEach(client -> client.sendMessage(new NextRoundMessage(mRoundNumber)));
 
+        LinkedList<SnakeFragment> fragments = new LinkedList<>();
+        mSnakes.forEach((player, snake) -> fragments.add(snake.getHead()));
+        mClients.forEach(client -> client.sendMessage(new SnakeFragmentsMessage(fragments)));
+    }
+
+    private void startRoundCounter() {
+        new Timer().scheduleAtFixedRate(new TimerTask() {
+            int times = 3;
+            @Override
+            public void run() {
+                if (times == 0) {
+                    mClients.forEach(client -> client.sendMessage(new ServerTextMessage(String.format("Game starts now...", times))));
+                    this.cancel();
+                    runRound();
+                } else
+                    mClients.forEach(client -> client.sendMessage(new ServerTextMessage(String.format("Game wil start in %d seconds...", times))));
+                times--;
+            }
+        }, 0, 1000);
+    }
+
+    private void runRound() {
         mTimer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
-
                 if (mSnakesAlive <= 1) {
                     endRound();
                     return;
@@ -128,17 +164,27 @@ public class GameThread implements ClientThread.ClientListener {
                         }
                     }
                 }));
-
-
                 mClients.forEach(client -> client.sendMessage(new SnakeFragmentsMessage(fragments)));
 
             }
         }, 0, 1000 / 60);
+
     }
+
 
     private void endRound() {
         mTimer.cancel();
+        mRoundNumber += 1;
+        if(mRoundNumber <= mGame.getRounds()) {
+            prepareRound();
+            startRoundCounter();
+        }
     }
+
+    public void stop() {
+        mTimer.cancel();
+    }
+
 
     private void killSnake(Snake pSnake) {
         if (pSnake.isDead())
@@ -155,10 +201,6 @@ public class GameThread implements ClientThread.ClientListener {
         mClients.forEach((client) -> client.sendMessage(new GameUpdateMessage(mGame)));
     }
 
-
-    public void stop() {
-        mTimer.cancel();
-    }
 
     private void nextPowerUp() {
         int id;

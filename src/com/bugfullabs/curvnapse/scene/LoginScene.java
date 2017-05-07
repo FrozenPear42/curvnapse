@@ -3,25 +3,39 @@ package com.bugfullabs.curvnapse.scene;
 import com.bugfullabs.curvnapse.FlowManager;
 import com.bugfullabs.curvnapse.gui.LoginBox;
 import javafx.application.Platform;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Label;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 
 import java.util.logging.Logger;
 
 public class LoginScene implements LoginBox.LoginListener {
     private static final Logger LOG = Logger.getLogger(MainLobbyScene.class.getName());
-    private HBox mRoot;
     private Scene mScene;
+    private BorderPane mRoot;
+    private HBox mTopBox;
+    private Label mTitle;
     private LoginBox mLoginBox;
 
     public LoginScene() {
-        mRoot = new HBox();
-        mRoot.setAlignment(Pos.CENTER);
+        mRoot = new BorderPane();
+
         mLoginBox = new LoginBox();
         mLoginBox.setLoginListener(this);
-        mRoot.getChildren().add(mLoginBox);
+
+        mTopBox = new HBox(10.0f);
+        mTopBox.setPadding(new Insets(50.0f, 10.0f, 10.0f, 10.0f));
+        mTopBox.setAlignment(Pos.CENTER);
+        mTitle = new Label("Curvenapse");
+        mTitle.setStyle("-fx-font-size: 5em; -fx-font-weight: bold");
+        mTopBox.getChildren().add(mTitle);
+
+        mRoot.setTop(mTopBox);
+        mRoot.setCenter(mLoginBox);
         mScene = new Scene(mRoot);
         mScene.getStylesheets().add("resources/JMetro.css");
     }

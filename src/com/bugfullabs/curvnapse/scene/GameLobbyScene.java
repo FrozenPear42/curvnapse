@@ -16,9 +16,11 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 
+import javax.xml.ws.soap.MTOM;
 import java.util.logging.Logger;
 
 
@@ -26,6 +28,9 @@ public class GameLobbyScene implements ServerConnector.MessageListener {
     private static final Logger LOG = Logger.getLogger(GameLobbyScene.class.getName());
     private BorderPane mRoot;
     private Scene mScene;
+
+    private HBox mTopBox;
+    private Label mTitle;
 
     private MessageBox mMessageBox;
     private GameOptionsBox mGameOptionsBox;
@@ -48,6 +53,13 @@ public class GameLobbyScene implements ServerConnector.MessageListener {
         mScene = new Scene(mRoot);
         mScene.getStylesheets().add("resources/JMetro.css");
 
+        mTopBox = new HBox(10.0f);
+        mTopBox.setPadding(new Insets(10.0f));
+        mTopBox.setAlignment(Pos.CENTER);
+        mTitle = new Label("Game Lobby");
+        mTitle.setStyle("-fx-font-size: 3em; -fx-font-weight: bold");
+        mTopBox.getChildren().add(mTitle);
+
         mMessageBox = new MessageBox();
         mGameOptionsBox = new GameOptionsBox();
         mPlayersBox = new PlayersBox();
@@ -59,6 +71,7 @@ public class GameLobbyScene implements ServerConnector.MessageListener {
         mButtons.setAlignment(Pos.CENTER);
         mButtons.getChildren().addAll(mBackButton, mStartButton);
 
+        mRoot.setTop(mTopBox);
         mRoot.setLeft(mMessageBox);
         mRoot.setCenter(mGameOptionsBox);
         mRoot.setRight(mPlayersBox);

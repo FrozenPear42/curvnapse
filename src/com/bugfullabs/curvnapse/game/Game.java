@@ -23,12 +23,15 @@ public class Game implements Serializable, Cloneable {
     private int mBoardWidth;
     private int mBoardHeight;
 
-    public Game(String pName, int pHostID, int pMaxPlayers) {
+    private int mRounds;
+
+    public Game(String pName, int pHostID, int pRounds, int pMaxPlayers) {
         mID = UID;
         UID += 1;
         mName = pName;
         mHostID = pHostID;
         mMaxPlayers = pMaxPlayers;
+        mRounds = pRounds;
         mPlayers = new ArrayList<>(mMaxPlayers);
         mColorBank = new ColorBank();
 
@@ -75,6 +78,14 @@ public class Game implements Serializable, Cloneable {
         return mPowerUps;
     }
 
+    public int getRounds() {
+        return mRounds;
+    }
+
+    public void setRounds(int pRounds) {
+        mRounds = pRounds;
+    }
+
     public Player addPlayer(String pName, int pOwner) {
         if (mPlayers.size() < mMaxPlayers) {
             PlayerColor color = mColorBank.nextColor();
@@ -92,4 +103,5 @@ public class Game implements Serializable, Cloneable {
     public void setHostID(int pID) {
         mHostID = pID;
     }
+
 }

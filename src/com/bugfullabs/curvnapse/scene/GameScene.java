@@ -12,9 +12,14 @@ import com.bugfullabs.curvnapse.snake.SnakeFragment;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.Label;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -30,11 +35,16 @@ public class GameScene implements ServerConnector.MessageListener {
     private MessageBox mMessageBox;
     private Leaderboard mLeaderboard;
 
+    private VBox mGameInfoBox;
+    private Label mGameNameLabel;
+    private Label mRoundLabel;
+
+
+
     private Game mGame;
 
     private ObservableList<Player> mPlayers;
     private ObservableList<TextMessage> mMessages;
-    private ArrayList<SnakeFragment> mSnakeFragments;
 
     private Map<KeyCode, Player> mKeys;
     private List<KeyCode> mActiveKeys;
@@ -68,13 +78,24 @@ public class GameScene implements ServerConnector.MessageListener {
         mScene = new Scene(mRoot);
         mScene.getStylesheets().add("resources/JMetro.css");
 
-        mSnakeFragments = new ArrayList<>();
-
         mConnector.registerListener(this);
         mMessageBox.setSendListener(pMessage -> mConnector.sendMessage(new TextMessage(FlowManager.getInstance().getUsername(), pMessage)));
         mMessageBox.setMessages(mMessages);
 
         mLeaderboard.setPlayers(mPlayers);
+
+        mGameInfoBox = new VBox();
+        mGameInfoBox.setAlignment(Pos.CENTER);
+        mGameInfoBox.setPadding(new Insets(10.0f));
+
+        mGameNameLabel = new Label(mGame.getName());
+        mGameNameLabel.setStyle("-fx-font-size: 3em; -fx-font-weight: bold");
+        mRoundLabel = new Label(String.format("Round %d/%d", 1, mGame.getRounds()));
+        mRoundLabel.setStyle("-fx-font-size: 2em");
+
+        mGameInfoBox.getChildren().add(mGameNameLabel);
+        mGameInfoBox.getChildren().add(mRoundLabel);
+        mRoot.setTop(mGameInfoBox);
 
         mScene.setOnKeyPressed(event -> {
             KeyCode code = event.getCode();
@@ -121,15 +142,7 @@ public class GameScene implements ServerConnector.MessageListener {
                 Platform.runLater(() -> mMessages.add((TextMessage) pMessage));
                 break;
             case SNAKE_UPDATE:
-                SnakeFragmentsMessage msg = (SnakeFragmentsMessage) pMessage;
                 Platform.runLater(() -> mBoard.update(((SnakeFragmentsMessage) pMessage).getSnakeFragments()));
-                //TODO: convert to be more MVC
-//                msg.getSnakeFragments().forEach(fragment -> {
-//                    mSnakeFragments.removeIf(frag -> frag.getUID() == fragment.getUID());
-//                    mSnakeFragments.add(fragment);
-//                    mBoard.update(mSnakeFragments);
-//                });
-//
                 break;
             case BOARD_ERASE:
                 mBoard.erase();
@@ -144,6 +157,13 @@ public class GameScene implements ServerConnector.MessageListener {
                     mGame = ((GameUpdateMessage) pMessage).getGame();
                     mPlayers.clear();
                     mPlayers.addAll(mGame.getPlayers());
+                });
+                break;
+
+            case ROUND_UPDATE:
+                Platform.runLater(() -> {
+                    mBoard.clear();
+                    mRoundLabel.setText((String.format("Round %d/%d", ((NextRoundMessage)pMessage).getRoundNumber(), mGame.getRounds())));
                 });
                 break;
 
