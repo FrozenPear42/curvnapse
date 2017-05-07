@@ -35,7 +35,7 @@ public class Lobby implements ClientThread.ClientListener {
     }
 
     @Override
-    public void onClientMessage(ClientThread pClientThread, Message pMessage) {
+    public synchronized void onClientMessage(ClientThread pClientThread, Message pMessage) {
         switch (pMessage.getType()) {
             case TEXT:
                 TextMessage textMessage = (TextMessage) pMessage;

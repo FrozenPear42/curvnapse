@@ -78,6 +78,8 @@ public class GameScene implements ServerConnector.MessageListener {
         mScene = new Scene(mRoot);
         mScene.getStylesheets().add("resources/JMetro.css");
 
+        mScene.getStylesheets().forEach(System.out::println);
+
         mConnector.registerListener(this);
         mMessageBox.setSendListener(pMessage -> mConnector.sendMessage(new TextMessage(FlowManager.getInstance().getUsername(), pMessage)));
         mMessageBox.setMessages(mMessages);
@@ -164,6 +166,13 @@ public class GameScene implements ServerConnector.MessageListener {
                 Platform.runLater(() -> {
                     mBoard.clear();
                     mRoundLabel.setText((String.format("Round %d/%d", ((NextRoundMessage)pMessage).getRoundNumber(), mGame.getRounds())));
+                });
+                break;
+
+            case GAMEOVER:
+                Platform.runLater(() -> {
+                    mConnector.unregisterListener(this);
+                    FlowManager.getInstance().gameOverScene(mGame);
                 });
                 break;
 

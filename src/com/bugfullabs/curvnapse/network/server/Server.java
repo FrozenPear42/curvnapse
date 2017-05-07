@@ -58,7 +58,7 @@ public class Server extends Thread implements ClientThread.ClientListener {
     }
 
     @Override
-    public void onClientMessage(ClientThread pClientThread, Message pMessage) {
+    public synchronized void onClientMessage(ClientThread pClientThread, Message pMessage) {
         switch (pMessage.getType()) {
             case HANDSHAKE:
                 HandshakeMessage msg = (HandshakeMessage) pMessage;

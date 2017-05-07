@@ -18,9 +18,9 @@ public class ColorBank {
 
         mColors.add(new PlayerColor(Color.RED));
         mColors.add(new PlayerColor(Color.BLUE));
-        mColors.add(new PlayerColor(Color.YELLOW));
+        mColors.add(new PlayerColor(Color.DARKSLATEGRAY));
         mColors.add(new PlayerColor(Color.ORANGE));
-        mColors.add(new PlayerColor(Color.CHOCOLATE));
+        mColors.add(new PlayerColor(Color.DARKMAGENTA));
         mColors.add(new PlayerColor(Color.AQUA));
         mColors.add(new PlayerColor(Color.BLUEVIOLET));
         mColors.add(new PlayerColor(Color.VIOLET));

@@ -21,7 +21,7 @@ public class GameLobby implements ClientThread.ClientListener {
     public GameLobby(Lobby pLobby, String pName, int pHost, int pMaxPlayers) {
         mRootLobby = pLobby;
         mClients = new LinkedList<>();
-        mGame = new Game(pName, pHost, 10, pMaxPlayers);
+        mGame = new Game(pName, pHost, 3, pMaxPlayers);
     }
 
     public void addClient(ClientThread pClient) {
@@ -80,7 +80,7 @@ public class GameLobby implements ClientThread.ClientListener {
     }
 
     @Override
-    public void onClientMessage(ClientThread pClientThread, Message pMessage) {
+    public synchronized void onClientMessage(ClientThread pClientThread, Message pMessage) {
         switch (pMessage.getType()) {
             case TEXT:
                 mClients.forEach(clientThread -> clientThread.sendMessage(pMessage));
@@ -115,8 +115,7 @@ public class GameLobby implements ClientThread.ClientListener {
                 if (mGame.getPlayers().isEmpty())
                     break;
 
-                //FIXME: Move timer as member, allow cancel
-                new Timer("asd").schedule(new TimerTask() {
+                new Timer().schedule(new TimerTask() {
                     private int times = 1;
 
                     @Override
@@ -124,6 +123,7 @@ public class GameLobby implements ClientThread.ClientListener {
                         mClients.forEach(clientThread -> clientThread.sendMessage(new TextMessage("Server", String.format("Game will start in %d...", times))));
                         if (times == 0) {
                             this.cancel();
+                            mGame.getPlayers().forEach(player -> player.setPoints(0));
                             mClients.forEach(clientThread -> clientThread.sendMessage(new GameStartMessage(mGame)));
                             mThread = new GameThread(mGame, mClients);
                             mClients.forEach(client -> client.registerListener(mThread));

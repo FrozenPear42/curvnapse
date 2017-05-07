@@ -6,11 +6,9 @@ import com.bugfullabs.curvnapse.network.message.*;
 import com.bugfullabs.curvnapse.player.Player;
 import com.bugfullabs.curvnapse.powerup.PowerUp;
 import com.bugfullabs.curvnapse.powerup.PowerUpEntity;
-import com.bugfullabs.curvnapse.snake.HeadSnakeFragment;
 import com.bugfullabs.curvnapse.snake.Snake;
 import com.bugfullabs.curvnapse.snake.SnakeFragment;
 import com.bugfullabs.curvnapse.utils.Vec2;
-import sun.rmi.runtime.Log;
 
 import java.util.*;
 import java.util.logging.Logger;
@@ -65,14 +63,15 @@ public class GameThread implements ClientThread.ClientListener {
     private void startRoundCounter() {
         new Timer().scheduleAtFixedRate(new TimerTask() {
             int times = 3;
+
             @Override
             public void run() {
                 if (times == 0) {
-                    mClients.forEach(client -> client.sendMessage(new ServerTextMessage(String.format("Game starts now...", times))));
+                    mClients.forEach(client -> client.sendMessage(new ServerTextMessage(String.format("Round starts now...", times))));
                     this.cancel();
                     runRound();
                 } else
-                    mClients.forEach(client -> client.sendMessage(new ServerTextMessage(String.format("Game wil start in %d seconds...", times))));
+                    mClients.forEach(client -> client.sendMessage(new ServerTextMessage(String.format("Round will start in %d seconds...", times))));
                 times--;
             }
         }, 0, 1000);
@@ -147,18 +146,20 @@ public class GameThread implements ClientThread.ClientListener {
                 });
 
                 mSnakes.forEach(((player, snake) -> {
-                    if (snake.isInvisible())
+                    if (snake.isInvisible() || snake.isDead())
                         return;
 
                     for (Snake otherSnake : mSnakes.values()) {
                         if (otherSnake == snake) {
                             if (snake.checkSelfCollision()) {
                                 killSnake(snake);
+                                LOG.info("SELF KILL " + snake);
                                 break;
                             }
                         } else {
                             if (otherSnake.isCollisionAtPoint(snake.getPosition())) {
                                 killSnake(snake);
+                                LOG.info("KILL " + snake + " by " + otherSnake);
                                 break;
                             }
                         }
@@ -175,10 +176,19 @@ public class GameThread implements ClientThread.ClientListener {
     private void endRound() {
         mTimer.cancel();
         mRoundNumber += 1;
-        if(mRoundNumber <= mGame.getRounds()) {
-            prepareRound();
-            startRoundCounter();
-        }
+
+        new Timer().schedule(new TimerTask() {
+            @Override
+            public void run() {
+                if (mRoundNumber <= mGame.getRounds()) {
+                    prepareRound();
+                    startRoundCounter();
+                } else {
+                    mClients.forEach(client -> client.sendMessage(new GameOverMessage()));
+                    mClients.forEach(client -> client.removeListener(GameThread.this));
+                }
+            }
+        }, 1000);
     }
 
     public void stop() {
@@ -204,7 +214,6 @@ public class GameThread implements ClientThread.ClientListener {
 
     private void nextPowerUp() {
         int id;
-
         do
             id = mRandom.nextInt(mGame.getPowerUps().length);
         while (!mGame.getPowerUps()[id]);
@@ -231,7 +240,7 @@ public class GameThread implements ClientThread.ClientListener {
     }
 
     @Override
-    public void onClientMessage(ClientThread pClientThread, Message pMessage) {
+    public synchronized void onClientMessage(ClientThread pClientThread, Message pMessage) {
         if (pMessage.getType() == Message.Type.CONTROL_UPDATE) {
             ControlUpdateMessage msg = (ControlUpdateMessage) pMessage;
 

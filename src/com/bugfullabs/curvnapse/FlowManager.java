@@ -8,10 +8,7 @@ import com.bugfullabs.curvnapse.network.message.GameUpdateMessage;
 import com.bugfullabs.curvnapse.network.message.Message.Type;
 import com.bugfullabs.curvnapse.network.message.NewPlayerRequest;
 import com.bugfullabs.curvnapse.network.server.Server;
-import com.bugfullabs.curvnapse.scene.GameLobbyScene;
-import com.bugfullabs.curvnapse.scene.GameScene;
-import com.bugfullabs.curvnapse.scene.LoginScene;
-import com.bugfullabs.curvnapse.scene.MainLobbyScene;
+import com.bugfullabs.curvnapse.scene.*;
 import javafx.application.Platform;
 import javafx.stage.Stage;
 
@@ -72,6 +69,10 @@ public class FlowManager {
 
     public void gameScene(Game pGame) {
         mMainStage.setScene(new GameScene(pGame).getScene());
+    }
+
+    public void gameOverScene(Game pGame) {
+        mMainStage.setScene(new GameOverScene(pGame).getScene());
     }
 
     public void testMode() {

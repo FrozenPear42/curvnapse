@@ -90,7 +90,7 @@ public class GameLobbyScene implements ServerConnector.MessageListener {
         mPlayersBox.setListener(new PlayersBox.PlayerBoxListener() {
             @Override
             public void onCreateLocal() {
-                mConnector.sendMessage(new NewPlayerRequest(FlowManager.getInstance().getUsername() + " X"));
+                mConnector.sendMessage(new NewPlayerRequest(FlowManager.getInstance().getUsername() + " - "));
             }
 
             @Override
