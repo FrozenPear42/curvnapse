@@ -17,6 +17,7 @@ public class LineSnakeFragment extends SnakeFragment implements Serializable {
         super(Type.LINE, pColor, pWidth);
         mBegin = pBegin;
         mEnd = pEnd;
+
         mConstEdge = Vec2.directed(pWidth, pAngle + Math.PI / 2);
         mEdge = new Vec2(mBegin, mEnd);
         mAngle = pAngle;

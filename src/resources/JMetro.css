@@ -30,7 +30,7 @@
 
 .label {
     -fx-font-size: 12pt;
-    -fx-font-family: "Segoe UI Light";
+    -fx-font-family: 'Roboto', sans-serif;
     -fx-text-fill: white;
 }
 

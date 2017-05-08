@@ -40,7 +40,6 @@ public class GameScene implements ServerConnector.MessageListener {
     private Label mRoundLabel;
 
 
-
     private Game mGame;
 
     private ObservableList<Player> mPlayers;
@@ -77,8 +76,6 @@ public class GameScene implements ServerConnector.MessageListener {
         mRoot.setRight(mLeaderboard);
         mScene = new Scene(mRoot);
         mScene.getStylesheets().add("resources/JMetro.css");
-
-        mScene.getStylesheets().forEach(System.out::println);
 
         mConnector.registerListener(this);
         mMessageBox.setSendListener(pMessage -> mConnector.sendMessage(new TextMessage(FlowManager.getInstance().getUsername(), pMessage)));
@@ -165,7 +162,7 @@ public class GameScene implements ServerConnector.MessageListener {
             case ROUND_UPDATE:
                 Platform.runLater(() -> {
                     mBoard.clear();
-                    mRoundLabel.setText((String.format("Round %d/%d", ((NextRoundMessage)pMessage).getRoundNumber(), mGame.getRounds())));
+                    mRoundLabel.setText((String.format("Round %d/%d", ((NextRoundMessage) pMessage).getRoundNumber(), mGame.getRounds())));
                 });
                 break;
 
