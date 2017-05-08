@@ -90,7 +90,7 @@ public class GameLobbyScene implements ServerConnector.MessageListener {
         mPlayersBox.setListener(new PlayersBox.PlayerBoxListener() {
             @Override
             public void onCreateLocal() {
-                mConnector.sendMessage(new NewPlayerRequest(FlowManager.getInstance().getUsername() + " - "));
+                mConnector.sendMessage(new NewPlayerRequest(FlowManager.getInstance().getUsername() + " "));
             }
 
             @Override
@@ -137,6 +137,7 @@ public class GameLobbyScene implements ServerConnector.MessageListener {
         mGameOptionsBox.setName(mGame.getName());
         mGameOptionsBox.setDisable(mGame.getHostID() != FlowManager.getInstance().getUserID());
         mGameOptionsBox.updateButtons(mGame.getPowerUps());
+        mStartButton.setDisable((mGame.getHostID() != FlowManager.getInstance().getUserID()));
     }
 
     @Override

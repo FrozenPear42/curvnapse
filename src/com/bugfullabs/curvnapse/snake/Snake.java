@@ -309,7 +309,7 @@ public class Snake {
 
     public boolean checkSelfCollision() {
         if (mState == State.FORWARD) {
-            if (mLineFragments.size() == 1)
+            if (mLineFragments.size() <= 1)
                 return false;
 
             for (SnakeFragment fragment : mLineFragments.subList(0, mLineFragments.size() - 1)) {
