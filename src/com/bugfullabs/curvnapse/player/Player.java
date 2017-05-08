@@ -66,4 +66,8 @@ public class Player implements Serializable {
     public void setPoints(int pPoints) {
         mPoints = pPoints;
     }
+
+    public void setName(String pName) {
+        mName = pName;
+    }
 }

@@ -41,6 +41,6 @@ public class ColorBank {
     }
 
     public void returnColor(PlayerColor pColor) {
-        mTaken.replace(pColor, false);
+        mTaken.replaceAll((color, used) -> pColor.equals(color) ? false : used);
     }
 }

@@ -97,6 +97,11 @@ public class GameLobbyScene implements ServerConnector.MessageListener {
             public void onPlayerEdit(Player pPlayer) {
                 mConnector.sendMessage(new PlayerUpdateRequest(pPlayer));
             }
+
+            @Override
+            public void onPlayerDelete(Player pPlayer) {
+                mConnector.sendMessage(new PlayerDeleteRequest(pPlayer));
+            }
         });
 
         mGameOptionsBox.setListener(new GameOptionsBox.GameOptionsChangeListener() {

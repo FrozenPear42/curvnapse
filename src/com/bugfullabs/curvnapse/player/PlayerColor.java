@@ -42,4 +42,12 @@ public class PlayerColor implements Serializable {
         hex += res;
         return hex;
     }
+
+    @Override
+    public boolean equals(Object pObject) {
+        if(!(pObject instanceof PlayerColor))
+            return false;
+        return mR == ((PlayerColor)pObject).mR && mG == ((PlayerColor)pObject).mG && mB == ((PlayerColor)pObject).mB;
+
+    }
 }

@@ -80,7 +80,7 @@
 
     -fx-background-color: #1d1d1d;
 
-    -fx-font-family: "Segoe UI", Helvetica, Arial, sans-serif;
+    -fx-font-family: "Roboto", "Segoe UI", Helvetica, Arial, sans-serif;
     -fx-font-size: 11pt;
     -fx-text-fill: #d8d8d8;
 }
@@ -120,6 +120,13 @@
 .button:default:hover{
     -fx-background-color: #219297;
 }
+
+.button.delete {
+    -fx-border-width: 1;
+    -fx-background-color: #af1f48;
+    -fx-padding: 2 5 2 5;
+}
+
 
 /*******************************************************************************
  *                                                                             *

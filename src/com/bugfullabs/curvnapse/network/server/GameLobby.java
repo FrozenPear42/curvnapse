@@ -44,12 +44,20 @@ public class GameLobby implements ClientThread.ClientListener {
 
     private void addPlayer(String pName, int pID) {
         Player p = mGame.addPlayer(pName, pID);
-        if (p != null)
+        if (p != null) {
+            p.setName(pName + p.getID());
             propagateUpdate();
+        }
     }
 
     private void updatePlayer(Player pPlayer) {
         mGame.getPlayers().replaceAll(p -> p.getID() == pPlayer.getID() ? pPlayer : p);
+        propagateUpdate();
+    }
+
+    private void deletePlayer(Player pPlayer) {
+        mGame.getColorBank().returnColor(pPlayer.getColor());
+        mGame.getPlayers().removeIf(p -> p.getID() == pPlayer.getID());
         propagateUpdate();
     }
 
@@ -101,10 +109,14 @@ public class GameLobby implements ClientThread.ClientListener {
                 break;
 
             case PLAYER_ADD_REQUEST:
-                addPlayer(((NewPlayerRequest) pMessage).getName() + mGame.getPlayers().size(), pClientThread.getID());
+                addPlayer(((NewPlayerRequest) pMessage).getName(), pClientThread.getID());
                 break;
             case PLAYER_UPDATE_REQUEST:
                 updatePlayer(((PlayerUpdateRequest) pMessage).getPlayer());
+                break;
+
+            case PLAYER_DELETE:
+                deletePlayer(((PlayerDeleteRequest) pMessage).getPlayer());
                 break;
 
             case LEAVE_GAME:

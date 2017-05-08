@@ -104,4 +104,7 @@ public class Game implements Serializable, Cloneable {
         mHostID = pID;
     }
 
+    public ColorBank getColorBank() {
+        return mColorBank;
+    }
 }

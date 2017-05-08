@@ -2,6 +2,7 @@ package com.bugfullabs.curvnapse.gui;
 
 import com.bugfullabs.curvnapse.FlowManager;
 import com.bugfullabs.curvnapse.player.Player;
+import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -50,6 +51,8 @@ public class PlayersBox extends VBox {
         void onCreateLocal();
 
         void onPlayerEdit(Player pPlayer);
+
+        void onPlayerDelete(Player pPlayer);
     }
 
     private class PlayersListElement extends ListCell<Player> {
@@ -69,9 +72,14 @@ public class PlayersBox extends VBox {
                 buttons.setAlignment(Pos.CENTER);
 
                 if (pPlayer.getOwner() == FlowManager.getInstance().getUserID()) {
+                    Button delete = new Button("x");
+                    delete.getStyleClass().add("delete");
+                    delete.setMaxWidth(10);
+                    delete.setMaxHeight(10);
+
                     Button left = new Button(pPlayer.getLeftKey().getName());
                     Button right = new Button(pPlayer.getRightKey().getName());
-                    buttons.getChildren().addAll(left, right);
+                    buttons.getChildren().addAll(delete, left, right);
 
                     left.setOnAction(e -> {
                         left.setText("---");
@@ -96,6 +104,8 @@ public class PlayersBox extends VBox {
                             mListener.onPlayerEdit(pPlayer);
                         });
                     });
+
+                    delete.setOnAction(e -> mListener.onPlayerDelete(pPlayer));
 
                     setEditable(true);
                 } else {
