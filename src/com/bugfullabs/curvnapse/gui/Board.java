@@ -115,9 +115,13 @@ public class Board extends VBox {
         mainCtx.fillRect(0, 0, mWidth, mHeight);
     }
 
-    public synchronized void drawCollision(Vec2 pCollisionPoint) {
+    public synchronized void drawCollision(Vec2 pCollisionPoint, boolean pSelfKill) {
         GraphicsContext mainCtx = mMainCanvas.getGraphicsContext2D();
-        mainCtx.setFill(Color.WHITE);
+        if (pSelfKill)
+            mainCtx.setFill(Color.RED);
+        else
+            mainCtx.setFill(Color.WHITE);
+
         mainCtx.fillArc(pCollisionPoint.x - 5, pCollisionPoint.y - 5, 10, 10, 0, 360, ArcType.ROUND);
     }
 
@@ -128,6 +132,6 @@ public class Board extends VBox {
         mainCtx.setFill(Color.BLACK);
         mainCtx.fillRect(0, 0, mWidth, mHeight);
         headCtx.clearRect(0, 0, mWidth, mHeight);
-        bonusCtx.clearRect(0,0, mWidth, mHeight);
+        bonusCtx.clearRect(0, 0, mWidth, mHeight);
     }
 }

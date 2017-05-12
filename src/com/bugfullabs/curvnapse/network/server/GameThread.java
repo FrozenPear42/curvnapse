@@ -152,14 +152,13 @@ public class GameThread implements ClientThread.ClientListener {
                     for (Snake otherSnake : mSnakes.values()) {
                         if (otherSnake == snake) {
                             if (snake.checkSelfCollision()) {
-                                killSnake(snake);
+                                killSnake(snake, true);
                                 LOG.info("SELF KILL " + snake);
                                 break;
                             }
                         } else {
                             if (otherSnake.isCollisionAtPoint(snake.getPosition())) {
-                                killSnake(snake);
-                                LOG.info("KILL " + snake + " by " + otherSnake);
+                                killSnake(snake, false);
                                 break;
                             }
                         }
@@ -196,12 +195,12 @@ public class GameThread implements ClientThread.ClientListener {
     }
 
 
-    private void killSnake(Snake pSnake) {
+    private void killSnake(Snake pSnake, boolean pSelfKill) {
         if (pSnake.isDead())
             return;
 
         pSnake.kill();
-        mClients.forEach(client -> client.sendMessage(new SnakeKilledMessage(pSnake.getPosition())));
+        mClients.forEach(client -> client.sendMessage(new SnakeKilledMessage(pSnake.getPosition(), pSelfKill)));
         mSnakesAlive -= 1;
         mSnakes.forEach((player, snake) -> {
             if (snake != pSnake && !snake.isDead())

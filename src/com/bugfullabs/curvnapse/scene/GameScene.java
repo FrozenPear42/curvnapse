@@ -148,7 +148,8 @@ public class GameScene implements ServerConnector.MessageListener {
                 break;
 
             case SNAKE_KILLED:
-                Platform.runLater(() -> mBoard.drawCollision(((SnakeKilledMessage) pMessage).getPoint()));
+                SnakeKilledMessage msg = ((SnakeKilledMessage) pMessage);
+                Platform.runLater(() -> mBoard.drawCollision(msg.getPoint(), msg.isSelfKill()));
                 break;
 
             case GAME_UPDATE:
