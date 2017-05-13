@@ -11,9 +11,6 @@ import java.util.List;
 import java.util.Random;
 
 public class Snake {
-
-
-
     private enum State {
         TURNING_LEFT,
         TURNING_RIGHT,
@@ -84,10 +81,10 @@ public class Snake {
         mPowerUps.stream().filter(pair -> pair.getValue() <= 0).forEach(pair -> pair.getKey().onEnd(this));
         mPowerUps.removeIf(pair -> pair.getValue() <= 0);
 
-        if(mDead)
+        if (mDead)
             return;
 
-            mHoleTime -= pDelta;
+        mHoleTime -= pDelta;
 //        if (mHoleTime <= 0) {
 //            if (!mHoleNow) {
 //                setInvisible(true);
@@ -219,7 +216,9 @@ public class Snake {
 
     public void kill() {
         mDead = true;
-    };
+    }
+
+    ;
 
     public Vec2 getPosition() {
         return mPosition;
@@ -276,7 +275,6 @@ public class Snake {
         applyChange();
     }
 
-
     private void setInvisible(boolean pInvisible) {
         mInvisible = pInvisible;
         if (!pInvisible)
@@ -290,6 +288,14 @@ public class Snake {
 
     public boolean isInvisible() {
         return mInvisible;
+    }
+
+    public int getLinesCount() {
+        return mLineFragments.size();
+    }
+
+    public int getArcsCount() {
+        return mArcFragments.size();
     }
 
     public boolean isCollisionAtPoint(Vec2 pPoint) {
