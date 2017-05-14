@@ -12,6 +12,9 @@ import com.bugfullabs.curvnapse.scene.*;
 import javafx.application.Platform;
 import javafx.stage.Stage;
 
+/**
+ * Singleton class to manage client-side program flow
+ */
 public class FlowManager {
     private static FlowManager mInstance = new FlowManager();
 
@@ -21,14 +24,28 @@ public class FlowManager {
     private String mUsername;
     private int mUserID;
 
+    /**
+     * Returns instance of {@link FlowManager}
+     * @return instance
+     */
     public static FlowManager getInstance() {
         return mInstance;
     }
 
+    /**
+     * Initialize function - must be called before using {@link FlowManager}
+     * @param pMainStage main window
+     */
     public void initialize(Stage pMainStage) {
         mMainStage = pMainStage;
     }
 
+    /**
+     * Launches server thread with given params
+     * @param pPort port
+     * @param pMaxGames max count of running games
+     * @return success flag
+     */
     public boolean createServer(int pPort, int pMaxGames) {
         try {
             mServer = new Server(pPort, pMaxGames);
@@ -40,6 +57,12 @@ public class FlowManager {
         return true;
     }
 
+    /**
+     * Try to connect to the server
+     * @param pIP server IP
+     * @param pPort server port
+     * @return success flag
+     */
     public boolean connectToServer(String pIP, int pPort) {
         try {
             mServerConnector = new ServerConnector(pIP, pPort);
@@ -50,31 +73,57 @@ public class FlowManager {
         return true;
     }
 
+    /**
+     * Login method - must be valled in login success callback
+     * @param pName username
+     * @param pUserID userID
+     */
     public void login(String pName, int pUserID) {
         mUsername = pName;
         mUserID = pUserID;
     }
 
+    /**
+     * Put application in login mode
+     */
     public void loginScene() {
         mMainStage.setScene(new LoginScene().getScene());
     }
 
+    /**
+     * Put application in lobby mode
+     */
     public void mainLobby() {
         mMainStage.setScene(new MainLobbyScene().getScene());
     }
 
+    /**
+     * Put application in game lobby mode for given game
+     * @param pGame game for lobby
+     */
     public void gameLobby(Game pGame) {
         mMainStage.setScene(new GameLobbyScene(pGame).getScene());
     }
 
+    /**
+     * Put application in game mode for given game
+     * @param pGame game
+     */
     public void gameScene(Game pGame) {
         mMainStage.setScene(new GameScene(pGame).getScene());
     }
 
+    /**
+     * Put application in game over mode for given game
+     * @param pGame game
+     */
     public void gameOverScene(Game pGame) {
         mMainStage.setScene(new GameOverScene(pGame).getScene());
     }
 
+    /**
+     * Run simple test mode - for testing purposes
+     */
     public void testMode() {
         String ip = "localhost";
         int port = 1337;
@@ -95,14 +144,26 @@ public class FlowManager {
         mServerConnector.sendMessage(new GameCreateRequest("asd", "", 10));
     }
 
+    /**
+     * Returns client side server connector
+     * @return connector
+     */
     public ServerConnector getConnector() {
         return mServerConnector;
     }
 
+    /**
+     * Returns username used to log in
+     * @return username
+     */
     public String getUsername() {
         return mUsername;
     }
 
+    /**
+     * Returns userID generated in login process
+     * @return userID
+     */
     public int getUserID() {
         return mUserID;
     }

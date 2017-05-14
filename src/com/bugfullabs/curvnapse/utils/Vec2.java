@@ -36,6 +36,7 @@ public class Vec2 implements Serializable {
 
     /**
      * Copy of Vector
+     * @param pVec vector to copy
      */
     public Vec2(Vec2 pVec) {
         x = pVec.x;
