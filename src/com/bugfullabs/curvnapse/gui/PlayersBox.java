@@ -13,12 +13,18 @@ import javafx.scene.control.ListView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
+/**
+ * Contol class for  displaying list of player currently added to a game
+ */
 public class PlayersBox extends VBox {
     private Label mTitle;
     private Button mAddPlayerButton;
     private ListView<Player> mPlayersList;
     private PlayerBoxListener mListener;
 
+    /**
+     * Create new box
+     */
     public PlayersBox() {
         super(10.0f);
         setPadding(new Insets(10.0f));
@@ -39,24 +45,59 @@ public class PlayersBox extends VBox {
 
     }
 
+    /**
+     * Set observalble list of players in the game
+     *
+     * @param pList list of player in the game
+     */
     public void setPlayersList(ObservableList<Player> pList) {
         mPlayersList.setItems(pList);
     }
 
+    /**
+     * Set listener invoked on list changes
+     *
+     * @param pListener listener
+     */
     public void setListener(PlayerBoxListener pListener) {
         mListener = pListener;
     }
 
+    /**
+     * Listener invoked on list changes
+     */
     public interface PlayerBoxListener {
+        /**
+         * invoked when "Add local" button was pressed
+         */
         void onCreateLocal();
 
+        /**
+         * invoked when ane yf player options was edited
+         *
+         * @param pPlayer player tobe updated
+         */
         void onPlayerEdit(Player pPlayer);
 
+        /**
+         * invoked when delete button for player was pressed
+         *
+         * @param pPlayer player to delete
+         */
         void onPlayerDelete(Player pPlayer);
     }
 
+    /**
+     * Local class for ListCell
+     */
     private class PlayersListElement extends ListCell<Player> {
 
+        /**
+         * called on list redraw
+         *
+         * @param pPlayer player for cell
+         * @param pEmpty  is cell empty
+         */
         @Override
         public void updateItem(Player pPlayer, boolean pEmpty) {
             super.updateItem(pPlayer, pEmpty);

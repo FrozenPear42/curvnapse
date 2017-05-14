@@ -5,18 +5,25 @@ import javafx.scene.effect.ColorAdjust;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
+/**
+ * Control class for toggle button with image and gray-out effect
+ */
 public class ToggleImageButton extends Button {
-    private ImageView mImage;
     private boolean mIsActive;
     private ColorAdjust mColorAdjust;
     private OnToggleListener mListener;
 
+    /**
+     * Create button with graphics
+     *
+     * @param pImage button image
+     */
     public ToggleImageButton(Image pImage) {
-        mImage = new ImageView(pImage);
+        ImageView image = new ImageView(pImage);
         mColorAdjust = new ColorAdjust();
-        mImage.setEffect(mColorAdjust);
+        image.setEffect(mColorAdjust);
         mIsActive = true;
-        setGraphic(mImage);
+        setGraphic(image);
         setStyle("-fx-border-style: none");
         setOnAction(pActionEvent -> {
             setState(!mIsActive);
@@ -25,11 +32,11 @@ public class ToggleImageButton extends Button {
         });
     }
 
-
-    public void setOnToggleListener(OnToggleListener pListener) {
-        mListener = pListener;
-    }
-
+    /**
+     * Changes state of the button
+     *
+     * @param pIsOn state
+     */
     public void setState(boolean pIsOn) {
         mIsActive = pIsOn;
         if (!mIsActive) {
@@ -39,8 +46,25 @@ public class ToggleImageButton extends Button {
         }
     }
 
+    /**
+     * Sets toggel listener for the button
+     *
+     * @param pListener listener
+     */
+    public void setOnToggleListener(OnToggleListener pListener) {
+        mListener = pListener;
+    }
+
+    /**
+     * Simple lambda-friendly listener invoked on button state change
+     */
     public interface OnToggleListener {
-        void onToggle(boolean pIsActive);
+        /**
+         * Invoked on state change
+         *
+         * @param pState button state
+         */
+        void onToggle(boolean pState);
     }
 
 }

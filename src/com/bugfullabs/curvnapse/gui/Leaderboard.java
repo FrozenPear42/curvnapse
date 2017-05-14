@@ -11,28 +11,41 @@ import javafx.scene.control.ListView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
+/**
+ * Control class for Leaderboard
+ */
 public class Leaderboard extends VBox {
     private ListView<Player> mPlayersList;
-    private Label mTitle;
 
+    /**
+     * Create new leaderboard
+     */
     public Leaderboard() {
         super(10.0f);
         setPadding(new Insets(10.f));
         setAlignment(Pos.TOP_CENTER);
 
-        mTitle = new Label("Leaderboard");
-        mTitle.setStyle("-fx-font-weight: bold; -fx-font-size: 2em");
+        Label title = new Label("Leaderboard");
+        title.setStyle("-fx-font-weight: bold; -fx-font-size: 2em");
 
         mPlayersList = new ListView<>();
         mPlayersList.setCellFactory(param -> new PlayersLeaderboardListElement());
-        getChildren().addAll(mTitle, mPlayersList);
+        getChildren().addAll(title, mPlayersList);
         setMaxWidth(200);
     }
 
+    /**
+     * set observable source of players {@link ObservableList}
+     *
+     * @param pPlayers
+     */
     public void setPlayers(ObservableList<Player> pPlayers) {
         mPlayersList.setItems(pPlayers);
     }
 
+    /**
+     * Leaderboard list cell element
+     */
     private class PlayersLeaderboardListElement extends ListCell<Player> {
         @Override
         public void updateItem(Player pPlayer, boolean pEmpty) {

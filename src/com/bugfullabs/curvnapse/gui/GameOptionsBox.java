@@ -9,52 +9,95 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
-
+/**
+ * Control class for game options box (all the settings)
+ */
 public class GameOptionsBox extends VBox {
-    private HBox mHeader;
     private TextField mName;
     private PowerUpGrid mGrid;
-    private Button mSave;
     private GameOptionsChangeListener mListener;
 
-
+    /**
+     * Create new {@link GameOptionsBox}
+     */
     public GameOptionsBox() {
         super(10.0f);
         setAlignment(Pos.CENTER);
 
-        mHeader = new HBox(10.0f);
-        mHeader.setAlignment(Pos.CENTER);
+        HBox header = new HBox(10.0f);
+        header.setAlignment(Pos.CENTER);
         mName = new TextField("Test");
         mName.setPrefColumnCount(40);
         mName.setMaxWidth(200.0f);
-        mSave = new Button("Save");
-        mSave.setOnAction(event -> {
+        Button save = new Button("Save");
+        save.setOnAction(event -> {
             if (mListener != null)
                 mListener.onGameNameChange(mName.getText());
         });
-        mHeader.getChildren().addAll(mName, mSave);
+        header.getChildren().addAll(mName, save);
 
         mGrid = new PowerUpGrid();
 
-        getChildren().addAll(mHeader, mGrid);
+        getChildren().addAll(header, mGrid);
     }
 
+    /**
+     * set listener on change events
+     *
+     * @param pListener lestener
+     */
     public void setListener(GameOptionsChangeListener pListener) {
         mListener = pListener;
     }
 
+    /**
+     * Set displayed game name
+     *
+     * @param pName
+     */
     public void setName(String pName) {
         mName.setText(pName);
     }
 
+    /**
+     * update buttons in PowerUp grid
+     *
+     * @param pPowerUps list of boolean matching new buttons state
+     */
     public void updateButtons(boolean[] pPowerUps) {
         mGrid.updateButtons(pPowerUps);
     }
 
+    /**
+     * Listener on game options changes
+     */
+    public interface GameOptionsChangeListener {
+        /**
+         * Invoked when game name is changed
+         *
+         * @param pName new game name
+         */
+        void onGameNameChange(String pName);
+
+        /**
+         * invoked on button in {@link PowerUpGrid} toggled
+         *
+         * @param pType  selected button
+         * @param pState nutton state
+         */
+        void onPowerUpSelectionChange(PowerUp.PowerType pType, boolean pState);
+    }
+
+    /**
+     * Grid of PowerUp selection buttons
+     */
     class PowerUpGrid extends GridPane {
         private ToggleImageButton[] mButtons;
 
-        public PowerUpGrid() {
+        /**
+         * Create new Grid
+         */
+        PowerUpGrid() {
             setAlignment(Pos.CENTER);
             mButtons = new ToggleImageButton[PowerUp.PowerType.values().length];
 
@@ -64,19 +107,16 @@ public class GameOptionsBox extends VBox {
                 mButtons[i].setOnToggleListener(isActive -> mListener.onPowerUpSelectionChange(type, isActive));
                 add(mButtons[i], i % 4, i / 4);
             }
-
         }
 
-        public void updateButtons(boolean[] pPowerUps) {
+        /**
+         * Update buttons
+         *
+         * @param pPowerUps list of boolean matching new buttons state
+         */
+        void updateButtons(boolean[] pPowerUps) {
             for (int i = 0; i < pPowerUps.length; i++)
                 mButtons[i].setState(pPowerUps[i]);
         }
     }
-
-    public interface GameOptionsChangeListener {
-        void onGameNameChange(String pName);
-
-        void onPowerUpSelectionChange(PowerUp.PowerType pType, boolean pState);
-    }
-
 }

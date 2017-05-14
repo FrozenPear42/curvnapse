@@ -9,6 +9,9 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Represents all settings of the game
+ */
 public class Game implements Serializable, Cloneable {
     private static int UID = 0;
 
@@ -25,6 +28,14 @@ public class Game implements Serializable, Cloneable {
 
     private int mRounds;
 
+    /**
+     * Create game object
+     *
+     * @param pName       Game name
+     * @param pHostID     Host client ID
+     * @param pRounds     number of rounds
+     * @param pMaxPlayers max number of players
+     */
     public Game(String pName, int pHostID, int pRounds, int pMaxPlayers) {
         mID = UID;
         UID += 1;
@@ -86,6 +97,14 @@ public class Game implements Serializable, Cloneable {
         mRounds = pRounds;
     }
 
+
+    /**
+     * Adds player to the game
+     *
+     * @param pName  Player name
+     * @param pOwner owner client ID
+     * @return Created {@link Player} or null if cannot add
+     */
     public Player addPlayer(String pName, int pOwner) {
         if (mPlayers.size() < mMaxPlayers) {
             PlayerColor color = mColorBank.nextColor();
@@ -96,6 +115,12 @@ public class Game implements Serializable, Cloneable {
         return null;
     }
 
+    /**
+     * Decide if given {@link PowerUp} ws activated
+     *
+     * @param pType    {@link PowerUp.PowerType} type of powerup
+     * @param pEnabled enabled?
+     */
     public void setPowerUpEnabled(PowerUp.PowerType pType, boolean pEnabled) {
         mPowerUps[pType.ordinal()] = pEnabled;
     }
