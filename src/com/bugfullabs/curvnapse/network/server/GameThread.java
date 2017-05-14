@@ -4,13 +4,17 @@ package com.bugfullabs.curvnapse.network.server;
 import com.bugfullabs.curvnapse.game.Game;
 import com.bugfullabs.curvnapse.network.message.*;
 import com.bugfullabs.curvnapse.player.Player;
+import com.bugfullabs.curvnapse.player.PlayerColor;
 import com.bugfullabs.curvnapse.powerup.PowerUp;
 import com.bugfullabs.curvnapse.powerup.PowerUpEntity;
 import com.bugfullabs.curvnapse.snake.Snake;
 import com.bugfullabs.curvnapse.snake.SnakeFragment;
 import com.bugfullabs.curvnapse.utils.Vec2;
+import javafx.util.Pair;
 
 import java.util.*;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.BlockingQueue;
 import java.util.logging.Logger;
 
 public class GameThread implements ClientThread.ClientListener {
@@ -30,6 +34,7 @@ public class GameThread implements ClientThread.ClientListener {
 
     private int mRoundNumber;
 
+    private BlockingQueue<Pair<Snake, MovementAction>> mMovementQueue;
 
     public GameThread(Game pGame, List<ClientThread> pClients) {
         mClients = pClients;
@@ -37,6 +42,7 @@ public class GameThread implements ClientThread.ClientListener {
         mRandom = new Random();
         mSnakes = new HashMap<>();
         mPowerUps = new LinkedList<>();
+        mMovementQueue = new ArrayBlockingQueue<>(20);
 
         mRoundNumber = 1;
 
@@ -48,6 +54,7 @@ public class GameThread implements ClientThread.ClientListener {
         mTimer = new Timer();
         mSnakes.clear();
         mPowerUps.clear();
+        mMovementQueue.clear();
         mWalls = false;
 
         mNextPowerUpTime = mRandom.nextInt(4000) + 500;
@@ -96,6 +103,21 @@ public class GameThread implements ClientThread.ClientListener {
                     nextPowerUp();
                 }
 
+                ArrayList<Pair<Snake, MovementAction>> movement = new ArrayList<>();
+                mMovementQueue.drainTo(movement);
+                movement.forEach(p -> {
+                    switch (p.getValue()) {
+                        case LEFT:
+                            p.getKey().turnLeft();
+                            break;
+                        case RIGHT:
+                            p.getKey().turnRight();
+                            break;
+                        case STOP:
+                            p.getKey().turnEnd();
+                            break;
+                    }
+                });
 
                 mSnakes.forEach((player, snake) -> {
                     //move snake
@@ -152,12 +174,12 @@ public class GameThread implements ClientThread.ClientListener {
                     for (Snake otherSnake : mSnakes.values()) {
                         if (otherSnake == snake) {
                             if (snake.checkSelfCollision()) {
-                                killSnake(snake, true);
+                                killSnake(snake, otherSnake.getColor());
                                 break;
                             }
                         } else {
                             if (otherSnake.isCollisionAtPoint(snake.getPosition())) {
-                                killSnake(snake, false);
+                                killSnake(snake, otherSnake.getColor());
                                 break;
                             }
                         }
@@ -194,14 +216,14 @@ public class GameThread implements ClientThread.ClientListener {
     }
 
 
-    private void killSnake(Snake pSnake, boolean pSelfKill) {
+    private void killSnake(Snake pSnake, PlayerColor pKillerColor) {
         if (pSnake.isDead())
             return;
 
         LOG.info("Snake lines " + pSnake.getLinesCount() + " abd arcs: " + pSnake.getArcsCount());
 
         pSnake.kill();
-        mClients.forEach(client -> client.sendMessage(new SnakeKilledMessage(pSnake.getPosition(), pSelfKill)));
+        mClients.forEach(client -> client.sendMessage(new SnakeKilledMessage(pSnake.getPosition(), pKillerColor)));
         mSnakesAlive -= 1;
         mSnakes.forEach((player, snake) -> {
             if (snake != pSnake && !snake.isDead())
@@ -251,12 +273,19 @@ public class GameThread implements ClientThread.ClientListener {
                     .get()
                     .getValue();
 
+            LOG.info(String.format("Move %d to %s %s", msg.getPlayerID(), msg.getDirection().name(), msg.getAction().name()));
+
             if (msg.getAction() == ControlUpdateMessage.Action.UP)
-                snake.turnEnd();
+                mMovementQueue.add(new Pair<>(snake, MovementAction.STOP));
             else if (msg.getDirection() == ControlUpdateMessage.Direction.LEFT)
-                snake.turnLeft();
+                mMovementQueue.add(new Pair<>(snake, MovementAction.LEFT));
             else if (msg.getDirection() == ControlUpdateMessage.Direction.RIGHT)
-                snake.turnRight();
+                mMovementQueue.add(new Pair<>(snake, MovementAction.RIGHT));
         }
     }
+
+    public enum MovementAction {
+        LEFT, RIGHT, STOP
+    }
+
 }

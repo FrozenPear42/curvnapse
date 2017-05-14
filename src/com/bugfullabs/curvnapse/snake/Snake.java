@@ -260,6 +260,11 @@ public class Snake {
         return new HeadSnakeFragment(mColor, mSize, mPosition);
     }
 
+
+    public PlayerColor getColor() {
+        return mColor;
+    }
+
     public void setSize(double pSize) {
         mSize = pSize;
         applyChange();

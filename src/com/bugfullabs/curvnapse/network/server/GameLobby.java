@@ -21,7 +21,7 @@ public class GameLobby implements ClientThread.ClientListener {
     public GameLobby(Lobby pLobby, String pName, int pHost, int pMaxPlayers) {
         mRootLobby = pLobby;
         mClients = new LinkedList<>();
-        mGame = new Game(pName, pHost, 3, pMaxPlayers);
+        mGame = new Game(pName, pHost, 300, pMaxPlayers);
     }
 
     public void addClient(ClientThread pClient) {

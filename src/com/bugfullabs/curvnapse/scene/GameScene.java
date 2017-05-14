@@ -8,7 +8,6 @@ import com.bugfullabs.curvnapse.gui.MessageBox;
 import com.bugfullabs.curvnapse.network.client.ServerConnector;
 import com.bugfullabs.curvnapse.network.message.*;
 import com.bugfullabs.curvnapse.player.Player;
-import com.bugfullabs.curvnapse.snake.SnakeFragment;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -18,7 +17,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
 import java.util.ArrayList;
@@ -149,7 +147,7 @@ public class GameScene implements ServerConnector.MessageListener {
 
             case SNAKE_KILLED:
                 SnakeKilledMessage msg = ((SnakeKilledMessage) pMessage);
-                Platform.runLater(() -> mBoard.drawCollision(msg.getPoint(), msg.isSelfKill()));
+                Platform.runLater(() -> mBoard.drawCollision(msg.getPoint(), msg.getKillerColor()));
                 break;
 
             case GAME_UPDATE:

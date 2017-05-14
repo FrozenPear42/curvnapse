@@ -1,6 +1,7 @@
 package com.bugfullabs.curvnapse.gui;
 
 
+import com.bugfullabs.curvnapse.player.PlayerColor;
 import com.bugfullabs.curvnapse.powerup.PowerUpEntity;
 import com.bugfullabs.curvnapse.snake.ArcSnakeFragment;
 import com.bugfullabs.curvnapse.snake.HeadSnakeFragment;
@@ -115,12 +116,9 @@ public class Board extends VBox {
         mainCtx.fillRect(0, 0, mWidth, mHeight);
     }
 
-    public synchronized void drawCollision(Vec2 pCollisionPoint, boolean pSelfKill) {
+    public synchronized void drawCollision(Vec2 pCollisionPoint, PlayerColor pKillerColor) {
         GraphicsContext mainCtx = mMainCanvas.getGraphicsContext2D();
-        if (pSelfKill)
-            mainCtx.setFill(Color.RED);
-        else
-            mainCtx.setFill(Color.WHITE);
+        mainCtx.setFill(pKillerColor.toFXColor());
 
         mainCtx.fillArc(pCollisionPoint.x - 5, pCollisionPoint.y - 5, 10, 10, 0, 360, ArcType.ROUND);
     }
