@@ -182,6 +182,8 @@ public class GameThread implements ClientThread.ClientListener {
                 }));
 
                 //Propagate changes
+                fragments.clear();
+                mSnakes.forEach(((pPlayer, pSnake) -> fragments.addAll(pSnake.getFragments())));
                 mClients.forEach(client -> client.sendMessage(new SnakeFragmentsMessage(fragments)));
 
             }

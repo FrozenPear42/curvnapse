@@ -7,10 +7,12 @@ import com.bugfullabs.curvnapse.utils.Vec2;
 import javafx.util.Pair;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Random;
 
 public class Snake {
+
     private enum State {
         TURNING_LEFT,
         TURNING_RIGHT,
@@ -103,9 +105,8 @@ public class Snake {
             case FORWARD:
                 mPosition = Vec2.add(mPosition, Vec2.times(mVelocity, pDelta));
                 if (!mInvisible)
-                    mLineFragments.get(mLineFragments.size() - 1).updateHead(mPosition);
+                    mLineFragments.get(mLineFragments.size() - 1).updateHead(new Vec2(mPosition));
                 break;
-
             case TURNING_LEFT:
                 mAngle += deltaAngle;
                 mAngle = MathUtils.normalizeAngle(mAngle);
@@ -164,7 +165,7 @@ public class Snake {
         mVelocity = Vec2.directed(mSpeed, mAngle);
         mVelocity.y = -mVelocity.y;
 
-        LineSnakeFragment line = new LineSnakeFragment(mPosition, mPosition, mVelocity.angle(), mColor, mSize);
+        LineSnakeFragment line = new LineSnakeFragment(new Vec2(mPosition), new Vec2(mPosition), mVelocity.angle(), mColor, mSize);
         mLineFragments.add(line);
     }
 
@@ -315,6 +316,14 @@ public class Snake {
 
         return false;
     }
+
+    public List<SnakeFragment> getFragments() {
+        ArrayList<SnakeFragment> list = new ArrayList<>();
+        list.addAll(mLineFragments);
+        list.addAll(mArcFragments);
+        return list;
+    }
+
 
     public boolean checkSelfCollision() {
         if (mState == State.FORWARD) {
