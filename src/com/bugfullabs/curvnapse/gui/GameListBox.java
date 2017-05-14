@@ -14,41 +14,44 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
+/**
+ * Control class for list of currently available games
+ */
 public class GameListBox extends VBox {
-    private Label mTitle;
-    private ListView<Game> mGameList;
-    private HBox mButtons;
-    private Button mJoinButton;
-    private Button mCreateButton;
 
+    private ListView<Game> mGameList;
+    private Button mJoinButton;
     private GameListBoxListener mListener;
 
+    /**
+     * Create new {@link GameListBox}
+     */
     public GameListBox() {
         super(10.0f);
         setPadding(new Insets(10.0f));
         setAlignment(Pos.TOP_CENTER);
 
-        mTitle = new Label("Games");
-        mTitle.setStyle("-fx-font-size: 2em; -fx-font-weight: bold");
+        Label title = new Label("Games");
+        title.setStyle("-fx-font-size: 2em; -fx-font-weight: bold");
 
         mGameList = new ListView<>();
         mGameList.setCellFactory(pGameListView -> new GameListElement());
 
-        mButtons = new HBox(5.0f);
+        HBox buttons = new HBox(5.0f);
         mJoinButton = new Button("Join");
-        mCreateButton = new Button("Create new");
+        Button createButton = new Button("Create new");
 
-        mButtons.setAlignment(Pos.CENTER);
-        mButtons.getChildren().addAll(mJoinButton, mCreateButton);
+        buttons.setAlignment(Pos.CENTER);
+        buttons.getChildren().addAll(mJoinButton, createButton);
 
-        getChildren().addAll(mTitle, mGameList, mButtons);
+        getChildren().addAll(title, mGameList, buttons);
 
         mJoinButton.setOnAction(event -> {
             if (mListener != null)
                 mListener.onJoin(mGameList.getSelectionModel().getSelectedItem());
         });
 
-        mCreateButton.setOnAction(event -> {
+        createButton.setOnAction(event -> {
             if (mListener != null)
                 mListener.onCreate();
         });
@@ -63,20 +66,41 @@ public class GameListBox extends VBox {
 
     }
 
+    /**
+     * Set {@link Game} list source
+     * @param pGames
+     */
     public void setGames(ObservableList<Game> pGames) {
         mGameList.setItems(pGames);
     }
 
+    /**
+     * Set listener
+     * @param pListener listener
+     */
     public void setListener(GameListBoxListener pListener) {
         mListener = pListener;
     }
 
+    /**
+     * Listener invoked on game selection events
+     */
     public interface GameListBoxListener {
+        /**
+         * invoked on game selected
+         * @param pGame selected game
+         */
         void onJoin(Game pGame);
 
+        /**
+         * invoked on game created
+         */
         void onCreate();
     }
 
+    /**
+     * Game list cell
+     */
     private class GameListElement extends ListCell<Game> {
         GameListElement() {
             getStyleClass().add("game");

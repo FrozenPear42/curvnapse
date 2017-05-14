@@ -23,8 +23,10 @@ import javafx.scene.shape.StrokeLineCap;
 import java.util.LinkedList;
 import java.util.List;
 
+/**
+ * Control class for game board
+ */
 public class Board extends VBox {
-    private StackPane mRoot;
     private int mWidth;
     private int mHeight;
     private Canvas mMainCanvas;
@@ -32,11 +34,17 @@ public class Board extends VBox {
     private Canvas mBonusCanvas;
     private Canvas mGridCanvas;
 
+    /**
+     * Create board in given dimensions
+     *
+     * @param pWidth  width
+     * @param pHeight height
+     */
     public Board(int pWidth, int pHeight) {
         super(10.0f);
         setPadding(new Insets(10.0f));
         setAlignment(Pos.CENTER);
-        mRoot = new StackPane();
+        StackPane root = new StackPane();
         mWidth = pWidth;
         mHeight = pHeight;
         mMainCanvas = new Canvas(mWidth, mHeight);
@@ -44,11 +52,11 @@ public class Board extends VBox {
         mBonusCanvas = new Canvas(mWidth, mHeight);
         mGridCanvas = new Canvas(mWidth, mHeight);
 
-        mRoot.getChildren().add(mMainCanvas);
-        mRoot.getChildren().add(mHeadCanvas);
-        mRoot.getChildren().add(mBonusCanvas);
-        mRoot.getChildren().add(mGridCanvas);
-        getChildren().add(mRoot);
+        root.getChildren().add(mMainCanvas);
+        root.getChildren().add(mHeadCanvas);
+        root.getChildren().add(mBonusCanvas);
+        root.getChildren().add(mGridCanvas);
+        getChildren().add(root);
 
         GraphicsContext mainCtx = mMainCanvas.getGraphicsContext2D();
         mainCtx.setFill(Color.BLACK);
@@ -61,6 +69,11 @@ public class Board extends VBox {
         gridCtx.strokeRect(0, 0, mWidth, mHeight);
     }
 
+    /**
+     * Redraw PowerUp layer
+     *
+     * @param pPowerUp PowerUps to be drawn
+     */
     public synchronized void updatePowerUps(LinkedList<PowerUpEntity> pPowerUp) {
         GraphicsContext ctx = mBonusCanvas.getGraphicsContext2D();
         ctx.clearRect(0, 0, mWidth, mHeight);
@@ -72,6 +85,11 @@ public class Board extends VBox {
                         PowerUpEntity.HEIGHT));
     }
 
+    /**
+     * Draw given {@link SnakeFragment}s
+     *
+     * @param pSnakeFragments fragments to be drawn
+     */
     public synchronized void update(List<SnakeFragment> pSnakeFragments) {
         GraphicsContext mainCtx = mMainCanvas.getGraphicsContext2D();
         GraphicsContext headCtx = mHeadCanvas.getGraphicsContext2D();
@@ -110,12 +128,21 @@ public class Board extends VBox {
         });
     }
 
+    /**
+     * Erase board
+     */
     public synchronized void erase() {
         GraphicsContext mainCtx = mMainCanvas.getGraphicsContext2D();
         mainCtx.setFill(Color.BLACK);
         mainCtx.fillRect(0, 0, mWidth, mHeight);
     }
 
+    /**
+     * Draws collision point in given color
+     *
+     * @param pCollisionPoint collision point
+     * @param pKillerColor    color
+     */
     public synchronized void drawCollision(Vec2 pCollisionPoint, PlayerColor pKillerColor) {
         GraphicsContext mainCtx = mMainCanvas.getGraphicsContext2D();
         mainCtx.setFill(pKillerColor.toFXColor());
@@ -123,6 +150,9 @@ public class Board extends VBox {
         mainCtx.fillArc(pCollisionPoint.x - 5, pCollisionPoint.y - 5, 10, 10, 0, 360, ArcType.ROUND);
     }
 
+    /**
+     * Clear everything on board
+     */
     public synchronized void clear() {
         GraphicsContext mainCtx = mMainCanvas.getGraphicsContext2D();
         GraphicsContext headCtx = mHeadCanvas.getGraphicsContext2D();
