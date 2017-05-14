@@ -74,7 +74,7 @@ public class GameThread implements ClientThread.ClientListener {
             @Override
             public void run() {
                 if (times == 0) {
-                    mClients.forEach(client -> client.sendMessage(new ServerTextMessage(String.format("Round starts now...", times))));
+                    mClients.forEach(client -> client.sendMessage(new ServerTextMessage("Round starts now...")));
                     this.cancel();
                     runRound();
                 } else
@@ -85,27 +85,32 @@ public class GameThread implements ClientThread.ClientListener {
     }
 
     private void runRound() {
+        mMovementQueue.clear();
         mTimer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
+                // calculate delta time
+                double delta = 1000 / 60; //FIXME: WCALE NIE
+                LinkedList<SnakeFragment> fragments = new LinkedList<>();
+
+                // Count rounds
                 if (mSnakesAlive <= 1) {
                     endRound();
                     return;
                 }
 
-                double delta = 1000 / 60; //FIXME: WCALE NIE
-                LinkedList<SnakeFragment> fragments = new LinkedList<>();
-
-                //Spawn Powerups
+                // Spawn PowerUps
                 mNextPowerUpTime -= delta;
                 if (mNextPowerUpTime < 0) {
                     mNextPowerUpTime = mRandom.nextInt(4000) + 3000;
                     nextPowerUp();
                 }
 
+                // Process movement queue
                 ArrayList<Pair<Snake, MovementAction>> movement = new ArrayList<>();
                 mMovementQueue.drainTo(movement);
                 movement.forEach(p -> {
+                    System.out.println(p.getKey());
                     switch (p.getValue()) {
                         case LEFT:
                             p.getKey().turnLeft();
@@ -119,37 +124,24 @@ public class GameThread implements ClientThread.ClientListener {
                     }
                 });
 
+                // Update each snake
                 mSnakes.forEach((player, snake) -> {
+
+                    if (snake.isDead())
+                        return;
+
                     //move snake
                     snake.step(delta);
 
-                    Vec2 orgPosition = snake.getPosition();
                     //collect powerup
-                    mPowerUps.forEach(powerUp -> {
-                        if (powerUp.isCollision(snake.getPosition())) {
-                            PowerUp.Target t = PowerUp.getTarget(powerUp.getType());
+                    mPowerUps.stream()
+                            .filter(powerUp -> powerUp.isCollision(snake.getPosition()))
+                            .forEach(powerUp -> collectPowerUp(powerUp, snake));
 
-                            if (t == PowerUp.Target.SELF)
-                                snake.addPowerUp(PowerUp.fromType(powerUp.getType()));
-                            else if (t == PowerUp.Target.OTHERS)
-                                mSnakes.forEach((__, s) -> {
-                                    if (s != snake) s.addPowerUp(PowerUp.fromType(powerUp.getType()));
-                                });
-                            else if (t == PowerUp.Target.ALL)
-                                mSnakes.forEach((__, s) -> s.addPowerUp(PowerUp.fromType(powerUp.getType())));
-                            else {
-                                if (powerUp.getType() == PowerUp.PowerType.GLOBAL_ERASE) {
-                                    mSnakes.forEach((__, s) -> s.erase());
-                                    mClients.forEach(client -> client.sendMessage(new EraseMessage()));
-                                }
-                            }
-                        }
-                    });
-
-                    if (mPowerUps.removeIf(powerUp -> powerUp.isCollision(orgPosition))) {
+                    if (mPowerUps.removeIf(p -> p.isCollision(snake.getPosition())))
                         mClients.forEach(client -> client.sendMessage(new UpdatePowerUpMessage(mPowerUps)));
-                    }
 
+                    // traverse through walls
                     if (!mWalls) {
                         if (snake.getPosition().x < 0)
                             snake.teleport(new Vec2(mGame.getBoardWidth(), snake.getPosition().y));
@@ -160,13 +152,16 @@ public class GameThread implements ClientThread.ClientListener {
                             snake.teleport(new Vec2(snake.getPosition().x, mGame.getBoardHeight()));
                         else if (snake.getPosition().y > mGame.getBoardHeight())
                             snake.teleport(new Vec2(snake.getPosition().x, 0));
-
+                    } else {
+                        if (snake.getPosition().x < 0 || snake.getPosition().x > mGame.getBoardWidth() ||
+                                snake.getPosition().y < 0 || snake.getPosition().y > mGame.getBoardHeight())
+                            snake.kill();
                     }
 
-                    if (!snake.isDead())
-                        fragments.add(snake.getLastFragment());
+                    fragments.add(snake.getLastFragment());
                 });
 
+                ///Check collisions
                 mSnakes.forEach(((player, snake) -> {
                     if (snake.isInvisible() || snake.isDead())
                         return;
@@ -185,11 +180,30 @@ public class GameThread implements ClientThread.ClientListener {
                         }
                     }
                 }));
+
+                //Propagate changes
                 mClients.forEach(client -> client.sendMessage(new SnakeFragmentsMessage(fragments)));
 
             }
         }, 0, 1000 / 60);
 
+    }
+
+    private void collectPowerUp(PowerUpEntity pPowerUp, Snake pSnake) {
+        PowerUp.Target t = PowerUp.getTarget(pPowerUp.getType());
+        PowerUp p = PowerUp.fromType(pPowerUp.getType());
+
+        if (pPowerUp.getType() == PowerUp.PowerType.GLOBAL_ERASE) {
+            mSnakes.forEach((__, s) -> s.erase());
+            mClients.forEach(client -> client.sendMessage(new EraseMessage()));
+        } else if (t == PowerUp.Target.SELF)
+            pSnake.addPowerUp(PowerUp.fromType(pPowerUp.getType()));
+        else if (t == PowerUp.Target.ALL)
+            mSnakes.forEach((__, s) -> s.addPowerUp(p));
+        else if (t == PowerUp.Target.OTHERS)
+            mSnakes.forEach((__, s) -> {
+                if (s != pSnake) s.addPowerUp(p);
+            });
     }
 
 

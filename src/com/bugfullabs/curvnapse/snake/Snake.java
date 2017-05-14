@@ -77,12 +77,12 @@ public class Snake {
     }
 
     public void step(double pDelta) {
+        if (mDead)
+            return;
+
         mPowerUps.replaceAll(pair -> new Pair<>(pair.getKey(), pair.getValue() - pDelta));
         mPowerUps.stream().filter(pair -> pair.getValue() <= 0).forEach(pair -> pair.getKey().onEnd(this));
         mPowerUps.removeIf(pair -> pair.getValue() <= 0);
-
-        if (mDead)
-            return;
 
         mHoleTime -= pDelta;
 //        if (mHoleTime <= 0) {
@@ -217,8 +217,6 @@ public class Snake {
     public void kill() {
         mDead = true;
     }
-
-    ;
 
     public Vec2 getPosition() {
         return mPosition;
