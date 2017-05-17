@@ -4,6 +4,9 @@ import javafx.scene.input.KeyCode;
 
 import java.io.Serializable;
 
+/**
+ * Class representing player entity
+ */
 public class Player implements Serializable {
     private static int UID = 0;
 
@@ -15,7 +18,13 @@ public class Player implements Serializable {
     private PlayerColor mColor;
     private int mPoints;
 
-
+    /**
+     * Create player with given name, color, and owner client ID
+     *
+     * @param pName  Player name
+     * @param pColor Player color
+     * @param pOwner owner client ID
+     */
     public Player(String pName, PlayerColor pColor, int pOwner) {
         mUID = UID;
         UID += 1;

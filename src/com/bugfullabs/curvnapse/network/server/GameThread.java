@@ -133,14 +133,6 @@ public class GameThread implements ClientThread.ClientListener {
                     //move snake
                     snake.step(delta);
 
-                    //collect powerup
-                    mPowerUps.stream()
-                            .filter(powerUp -> powerUp.isCollision(snake.getPosition()))
-                            .forEach(powerUp -> collectPowerUp(powerUp, snake));
-
-                    if (mPowerUps.removeIf(p -> p.isCollision(snake.getPosition())))
-                        mClients.forEach(client -> client.sendMessage(new UpdatePowerUpMessage(mPowerUps)));
-
                     // traverse through walls
                     if (!mWalls) {
                         if (snake.getPosition().x < 0)
@@ -180,6 +172,16 @@ public class GameThread implements ClientThread.ClientListener {
                         }
                     }
                 }));
+
+                mSnakes.forEach((player, snake) -> {
+                    //collect powerup
+                    mPowerUps.stream()
+                            .filter(powerUp -> powerUp.isCollision(snake.getPosition()))
+                            .forEach(powerUp -> collectPowerUp(powerUp, snake));
+
+                    if (mPowerUps.removeIf(p -> p.isCollision(snake.getPosition())))
+                        mClients.forEach(client -> client.sendMessage(new UpdatePowerUpMessage(mPowerUps)));
+                });
 
                 //Propagate changes
                 fragments.clear();

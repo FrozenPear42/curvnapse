@@ -131,6 +131,7 @@ public class Snake {
     public void addPowerUp(PowerUp pPowerUp) {
         mPowerUps.add(0, new Pair<>(pPowerUp, pPowerUp.getDuration()));
         pPowerUp.onBegin(this);
+        applyChange();
     }
 
     public void turnLeft() {
