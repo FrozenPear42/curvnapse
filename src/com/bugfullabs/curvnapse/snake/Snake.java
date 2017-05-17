@@ -20,7 +20,7 @@ public class Snake {
         STOP
     }
 
-    private static final double DEFAULT_SPEED = 0.08f;
+    private static final double DEFAULT_SPEED = 0.10f;
     private static final double DEFAULT_SIZE = 2.5f;
     private static final double DEFAULT_TURN_RADIUS = 20.0f;
     private static final int HOLE_TIME = 3000;

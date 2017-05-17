@@ -26,6 +26,7 @@ public class FlowManager {
 
     /**
      * Returns instance of {@link FlowManager}
+     *
      * @return instance
      */
     public static FlowManager getInstance() {
@@ -34,6 +35,7 @@ public class FlowManager {
 
     /**
      * Initialize function - must be called before using {@link FlowManager}
+     *
      * @param pMainStage main window
      */
     public void initialize(Stage pMainStage) {
@@ -42,7 +44,8 @@ public class FlowManager {
 
     /**
      * Launches server thread with given params
-     * @param pPort port
+     *
+     * @param pPort     port
      * @param pMaxGames max count of running games
      * @return success flag
      */
@@ -59,7 +62,8 @@ public class FlowManager {
 
     /**
      * Try to connect to the server
-     * @param pIP server IP
+     *
+     * @param pIP   server IP
      * @param pPort server port
      * @return success flag
      */
@@ -75,7 +79,8 @@ public class FlowManager {
 
     /**
      * Login method - must be valled in login success callback
-     * @param pName username
+     *
+     * @param pName   username
      * @param pUserID userID
      */
     public void login(String pName, int pUserID) {
@@ -99,6 +104,7 @@ public class FlowManager {
 
     /**
      * Put application in game lobby mode for given game
+     *
      * @param pGame game for lobby
      */
     public void gameLobby(Game pGame) {
@@ -107,6 +113,7 @@ public class FlowManager {
 
     /**
      * Put application in game mode for given game
+     *
      * @param pGame game
      */
     public void gameScene(Game pGame) {
@@ -115,6 +122,7 @@ public class FlowManager {
 
     /**
      * Put application in game over mode for given game
+     *
      * @param pGame game
      */
     public void gameOverScene(Game pGame) {
@@ -141,11 +149,12 @@ public class FlowManager {
             }
         });
         mServerConnector.handshake("test", pID -> mUserID = pID);
-        mServerConnector.sendMessage(new GameCreateRequest("asd", "", 10));
+        mServerConnector.sendMessage(new GameCreateRequest(mUserID, "asd", "", 10));
     }
 
     /**
      * Returns client side server connector
+     *
      * @return connector
      */
     public ServerConnector getConnector() {
@@ -154,6 +163,7 @@ public class FlowManager {
 
     /**
      * Returns username used to log in
+     *
      * @return username
      */
     public String getUsername() {
@@ -162,6 +172,7 @@ public class FlowManager {
 
     /**
      * Returns userID generated in login process
+     *
      * @return userID
      */
     public int getUserID() {

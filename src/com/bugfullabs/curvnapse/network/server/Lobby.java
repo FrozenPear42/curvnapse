@@ -6,6 +6,9 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.logging.Logger;
 
+/**
+ * Class representong main lobby - place with public chat, game list, and game sub-lobbies
+ */
 public class Lobby implements ClientThread.ClientListener {
     private static final Logger LOG = Logger.getLogger(Lobby.class.getName());
 
@@ -16,6 +19,12 @@ public class Lobby implements ClientThread.ClientListener {
 
     private Server mServer;
 
+    /**
+     * Create new lobby within a server
+     *
+     * @param pServer   server
+     * @param pMaxGames maximum number of games
+     */
     public Lobby(Server pServer, int pMaxGames) {
         mServer = pServer;
         mMaxGames = pMaxGames;
@@ -23,6 +32,11 @@ public class Lobby implements ClientThread.ClientListener {
         mGameLobbies = new ArrayList<>(mMaxGames);
     }
 
+    /**
+     * Add new client to lobby
+     *
+     * @param pClientThread {@link ClientThread} of client
+     */
     public void addClient(ClientThread pClientThread) {
         LOG.info(String.format("Client %d %s has joined", pClientThread.getID(), pClientThread.getUsername()));
         mClients.forEach(client -> client.sendMessage(new ServerTextMessage(pClientThread.getUsername() + " has joined")));
@@ -30,56 +44,70 @@ public class Lobby implements ClientThread.ClientListener {
         pClientThread.registerListener(this);
     }
 
-    public void removeClient(ClientThread pClientThread) {
-        //TODO: implement
+    /**
+     * Try to create new game
+     *
+     * @param pRequest {@link GameCreateRequest} with params of game to be created
+     * @return GameLobby on success, null if failed
+     */
+    private GameLobby createGame(GameCreateRequest pRequest) {
+        if (mGameLobbies.size() < mMaxGames) {
+            GameLobby lobby = new GameLobby(this, pRequest.getName(), pRequest.getHost(), pRequest.getMaxPlayers());
+            mGameLobbies.add(lobby);
+            mClients.forEach(client -> client.sendMessage(new GameUpdateMessage(lobby.getGame())));
+            lobby.setGameUpdateListener(game -> mClients.forEach(client -> client.sendMessage(new GameUpdateMessage(game))));
+            return lobby;
+        }
+        return null;
     }
 
+    /**
+     * Client message Listener
+     *
+     * @param pClient  source
+     * @param pMessage message
+     */
     @Override
-    public synchronized void onClientMessage(ClientThread pClientThread, Message pMessage) {
+    public synchronized void onClientMessage(ClientThread pClient, Message pMessage) {
         switch (pMessage.getType()) {
             case TEXT:
-                TextMessage textMessage = (TextMessage) pMessage;
-                LOG.info(String.format("New message: %s  %s", textMessage.getAuthor(), textMessage.getMessage()));
-                for (ClientThread client : mClients)
-                    client.sendMessage(textMessage);
+                mClients.forEach(client -> client.sendMessage(pMessage));
                 break;
+
             case UPDATE_REQUEST:
-                mGameLobbies.forEach(gameLobby -> pClientThread.sendMessage(new GameUpdateMessage(gameLobby.getGame())));
+                mGameLobbies.forEach(gameLobby -> pClient.sendMessage(new GameUpdateMessage(gameLobby.getGame())));
                 break;
 
             case GAME_CREATE:
-                GameCreateRequest gameCreateRequest = (GameCreateRequest) pMessage;
-                if (mGameLobbies.size() < mMaxGames) {
-                    LOG.info("Game created"); //TODO: more detailed log
-                    GameLobby lobby = new GameLobby(this, gameCreateRequest.getName(), pClientThread.getID(), gameCreateRequest.getMaxPlayers());
-                    mGameLobbies.add(lobby);
-                    lobby.addClient(pClientThread);
-                    mClients.remove(pClientThread);
-                    pClientThread.removeListener(this);
+                GameLobby game = createGame((GameCreateRequest) pMessage);
+                if (game != null) {
+                    game.addClient(pClient);
+                    pClient.sendMessage(new JoinMessage(game.getGame()));
 
-                    lobby.setListener(game -> mClients.forEach(client -> client.sendMessage(new GameUpdateMessage(game))));
-                    pClientThread.sendMessage(new JoinMessage(lobby.getGame()));
-                    for (ClientThread client : mClients)
-                        client.sendMessage(new GameUpdateMessage(lobby.getGame()));
+                    mClients.remove(pClient); //FIXME: NO NEED?
+                    pClient.removeListener(this);
                 }
                 break;
 
             case GAME_JOIN_REQUEST:
                 JoinRequest msg = (JoinRequest) pMessage;
                 LOG.info("Join request");
-                GameLobby lobby =
-                        mGameLobbies.stream()
-                                .filter(gameLobby -> msg.getID() == gameLobby.getID())
-                                .findFirst()
-                                .get();
-                lobby.addClient(pClientThread);
-                mClients.remove(pClientThread);
-                pClientThread.removeListener(this);
-                pClientThread.sendMessage(new JoinMessage(lobby.getGame()));
+                mGameLobbies.stream()
+                        .filter(gameLobby -> msg.getID() == gameLobby.getID())
+                        .findFirst()
+                        .ifPresent(lobby -> {
+                            lobby.addClient(pClient);
+                            pClient.sendMessage(new JoinMessage(lobby.getGame()));
+
+                            mClients.remove(pClient); //FIXME: NO NEED?
+                            pClient.removeListener(this);
+                        });
                 break;
             default:
-                LOG.warning("Unsupported message");
+                break;
         }
 
     }
+
+
 }

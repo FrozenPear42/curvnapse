@@ -9,8 +9,8 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.logging.Logger;
 
+
 public class GameLobby implements ClientThread.ClientListener {
-    private static Logger LOG = Logger.getLogger(GameLobby.class.getName());
     private LinkedList<ClientThread> mClients;
     private final Game mGame;
     private GameThread mThread;
@@ -38,7 +38,7 @@ public class GameLobby implements ClientThread.ClientListener {
         return mGame;
     }
 
-    public void setListener(GameUpdateListener pListener) {
+    public void setGameUpdateListener(GameUpdateListener pListener) {
         mListener = pListener;
     }
 

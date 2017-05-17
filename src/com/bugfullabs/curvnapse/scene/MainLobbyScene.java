@@ -73,7 +73,7 @@ public class MainLobbyScene implements ServerConnector.MessageListener {
 
             @Override
             public void onCreate() {
-                mConnector.sendMessage(new GameCreateRequest("Wichrowski ciota", "", 10));
+                mConnector.sendMessage(new GameCreateRequest(FlowManager.getInstance().getUserID(),"Great Game", "", 10));
             }
         });
     }

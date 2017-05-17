@@ -10,6 +10,9 @@ import java.net.Socket;
 import java.util.LinkedList;
 import java.util.logging.Logger;
 
+/**
+ * Main server thread - accepts new connections, and sends them to lobby
+ */
 public class Server extends Thread implements ClientThread.ClientListener {
     private static final Logger LOG = Logger.getLogger(Server.class.getName());
 
@@ -17,46 +20,59 @@ public class Server extends Thread implements ClientThread.ClientListener {
     private LinkedList<ClientThread> mClients;
 
     private Lobby mLobby;
-    private LinkedList<GameLobby> mGameLobbies;
 
+    /**
+     * Create new server thread
+     *
+     * @param pPort     server port
+     * @param pMaxGames maximum count of games running simultaneously
+     * @throws IOException thrown when could not create socket
+     */
     public Server(int pPort, int pMaxGames) throws IOException {
         mServerSocket = new ServerSocket(pPort);
         mClients = new LinkedList<>();
         mLobby = new Lobby(this, pMaxGames);
-        mGameLobbies = new LinkedList<>();
     }
 
+    /**
+     * Stop accepting new connections and disconnect form all the clients
+     */
     public void close() {
         try {
             mServerSocket.close();
-            for (ClientThread client : mClients)
-                client.disconnect();
+            mClients.forEach(ClientThread::disconnect);
             LOG.info("Closed server socket");
         } catch (Exception e) {
             LOG.warning("Could not stop server socket");
         }
     }
 
+    /**
+     * Thread main function - accept new connections, create client threads for them and register to Handshake message listener
+     */
     @Override
     public void run() {
-        Socket clientSocket;
-        ClientThread clientThread;
-
         LOG.info("Accepting connections...");
+
         while (!mServerSocket.isClosed()) {
             try {
-                clientSocket = mServerSocket.accept();
-                clientThread = new ClientThread(clientSocket);
+                Socket clientSocket = mServerSocket.accept();
+                ClientThread clientThread = new ClientThread(clientSocket);
                 clientThread.registerListener(this);
                 clientThread.start();
                 mClients.add(clientThread);
                 LOG.info("Connection from " + clientSocket.getInetAddress());
             } catch (IOException e) {
-                System.out.print("Could not accept client: " + e.getMessage());
+                LOG.warning("Could not accept client: " + e.getMessage());
             }
         }
     }
 
+    /**
+     * Listener on client messages - here only listen on Handshake message required to join the lobby
+     * @param pClientThread Sender client thread
+     * @param pMessage message
+     */
     @Override
     public synchronized void onClientMessage(ClientThread pClientThread, Message pMessage) {
         switch (pMessage.getType()) {
