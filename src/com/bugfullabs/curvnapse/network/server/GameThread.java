@@ -17,6 +17,10 @@ import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.logging.Logger;
 
+
+/**
+ * Main Game Logic class, actually that is not a {@link Thread}, but uses them via {@link Timer}
+ */
 public class GameThread implements ClientThread.ClientMessageListener {
     private static final Logger LOG = Logger.getLogger(GameThread.class.getName());
 
@@ -36,6 +40,12 @@ public class GameThread implements ClientThread.ClientMessageListener {
 
     private BlockingQueue<Pair<Snake, MovementAction>> mMovementQueue;
 
+    /**
+     * Create new Game with given options
+     *
+     * @param pGame    game options
+     * @param pClients clients involved in game
+     */
     public GameThread(Game pGame, List<ClientThread> pClients) {
         mClients = pClients;
         mGame = pGame;
@@ -50,6 +60,9 @@ public class GameThread implements ClientThread.ClientMessageListener {
         startRoundCounter();
     }
 
+    /**
+     * Prepare new round - reset all the collections, timers, generate new start positions
+     */
     private void prepareRound() {
         mTimer = new Timer();
         mSnakes.clear();
@@ -67,6 +80,9 @@ public class GameThread implements ClientThread.ClientMessageListener {
         mClients.forEach(client -> client.sendMessage(new SnakeFragmentsMessage(fragments)));
     }
 
+    /**
+     * Start new round countdown
+     */
     private void startRoundCounter() {
         new Timer().scheduleAtFixedRate(new TimerTask() {
             int times = 3;
@@ -84,6 +100,9 @@ public class GameThread implements ClientThread.ClientMessageListener {
         }, 0, 1000);
     }
 
+    /**
+     * Start actual round
+     */
     private void runRound() {
         mMovementQueue.clear();
         mTimer.scheduleAtFixedRate(new TimerTask() {
@@ -193,6 +212,12 @@ public class GameThread implements ClientThread.ClientMessageListener {
 
     }
 
+    /**
+     * Collect PowerUp entity
+     *
+     * @param pPowerUp PowerUp Entity to be collected
+     * @param pSnake   Snake which collected that PowerUp
+     */
     private void collectPowerUp(PowerUpEntity pPowerUp, Snake pSnake) {
         PowerUp.Target t = PowerUp.getTarget(pPowerUp.getType());
         PowerUp p = PowerUp.fromType(pPowerUp.getType());
@@ -210,7 +235,9 @@ public class GameThread implements ClientThread.ClientMessageListener {
             });
     }
 
-
+    /**
+     * End round - keep board for several seconds before wiping it out, than check if all rounds are done
+     */
     private void endRound() {
         mTimer.cancel();
         mRoundNumber += 1;
@@ -229,11 +256,12 @@ public class GameThread implements ClientThread.ClientMessageListener {
         }, 1000);
     }
 
-    public void stop() {
-        mTimer.cancel();
-    }
-
-
+    /**
+     * Kill given snake with given color(for killer indication)
+     *
+     * @param pSnake       Snake to be killed
+     * @param pKillerColor kill indicator color
+     */
     private void killSnake(Snake pSnake, PlayerColor pKillerColor) {
         if (pSnake.isDead())
             return;
@@ -251,7 +279,9 @@ public class GameThread implements ClientThread.ClientMessageListener {
         mClients.forEach((client) -> client.sendMessage(new GameUpdateMessage(mGame)));
     }
 
-
+    /**
+     * Spawn {@link PowerUpEntity}
+     */
     private void nextPowerUp() {
         int id;
         do
@@ -265,6 +295,11 @@ public class GameThread implements ClientThread.ClientMessageListener {
         mClients.forEach(client -> client.sendMessage(new UpdatePowerUpMessage(mPowerUps)));
     }
 
+    /**
+     * Generate random position
+     *
+     * @return position
+     */
     private Vec2 randomPosition() {
         int margin = 50;
         int x = mRandom.nextInt(mGame.getBoardWidth() - margin * 2) + margin;
@@ -272,6 +307,12 @@ public class GameThread implements ClientThread.ClientMessageListener {
         return new Vec2(x, y);
     }
 
+    /**
+     * Create new Snake for given Player
+     *
+     * @param pPlayer Player
+     * @return Snake
+     */
     private Snake createNewSnake(Player pPlayer) {
         Random rnd = new Random();
         //TODO: avoid conflict
@@ -299,6 +340,10 @@ public class GameThread implements ClientThread.ClientMessageListener {
                 mMovementQueue.add(new Pair<>(snake, MovementAction.LEFT));
             else if (msg.getDirection() == ControlUpdateMessage.Direction.RIGHT)
                 mMovementQueue.add(new Pair<>(snake, MovementAction.RIGHT));
+        }
+        if (pMessage.getType() == Message.Type.DISCONNECT) {
+            //TODO: fix game when player leaves
+            LOG.warning("Player left");
         }
     }
 
