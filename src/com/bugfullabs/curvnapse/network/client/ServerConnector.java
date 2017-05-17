@@ -119,4 +119,7 @@ public class ServerConnector extends Thread {
          */
         void onHandshakeResult(int pID);
     }
+
+    //TODO: Add Listener on server connection lost - to reset client to login scene
+
 }

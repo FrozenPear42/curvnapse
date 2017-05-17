@@ -11,7 +11,7 @@ import java.util.TimerTask;
 /**
  * Class for specyfic GameLobby
  */
-public class GameLobby implements ClientThread.ClientListener {
+public class GameLobby implements ClientThread.ClientMessageListener {
     private LinkedList<ClientThread> mClients;
     private final Game mGame;
     private GameThread mThread;
@@ -21,9 +21,10 @@ public class GameLobby implements ClientThread.ClientListener {
 
     /**
      * Create new lobby
-     * @param pLobby Main (root) lobby
-     * @param pName Game name
-     * @param pHost Host clientID
+     *
+     * @param pLobby      Main (root) lobby
+     * @param pName       Game name
+     * @param pHost       Host clientID
      * @param pMaxPlayers max players in game
      */
     public GameLobby(Lobby pLobby, String pName, int pHost, int pMaxPlayers) {
@@ -49,6 +50,7 @@ public class GameLobby implements ClientThread.ClientListener {
 
     /**
      * Get game
+     *
      * @return Game object
      */
     public Game getGame() {
@@ -57,6 +59,7 @@ public class GameLobby implements ClientThread.ClientListener {
 
     /**
      * Set listener
+     *
      * @param pListener listener
      */
     public void setGameLobbyChangeListener(GameLobbyChangeListener pListener) {
@@ -65,8 +68,9 @@ public class GameLobby implements ClientThread.ClientListener {
 
     /**
      * Add new player to Game
+     *
      * @param pName player name
-     * @param pID owner clientID
+     * @param pID   owner clientID
      */
     private void addPlayer(String pName, int pID) {
         Player p = mGame.addPlayer(pName, pID);
@@ -100,9 +104,9 @@ public class GameLobby implements ClientThread.ClientListener {
     /**
      * Remove Client from the Lobby
      *
-     * @param pClient
+     * @param pClient client to be removed
      */
-    private void leaveGame(ClientThread pClient) {
+    private void leaveGame(ClientThread pClient, boolean pReturnToLobby) {
         mGame.getPlayers().removeIf(player -> player.getOwner() == pClient.getID());
         mClients.remove(pClient);
         pClient.removeListener(this);
@@ -114,7 +118,9 @@ public class GameLobby implements ClientThread.ClientListener {
                 mGame.setHostID(mClients.getFirst().getID());
             }
         }
-        mRootLobby.addClient(pClient);
+        if (pReturnToLobby)
+            mRootLobby.addClient(pClient);
+
         propagateUpdate();
     }
 
@@ -140,7 +146,8 @@ public class GameLobby implements ClientThread.ClientListener {
 
     /**
      * Listener on client messages
-     * @param pClient source client
+     *
+     * @param pClient  source client
      * @param pMessage message
      */
     @Override
@@ -175,8 +182,11 @@ public class GameLobby implements ClientThread.ClientListener {
                 deletePlayer(((PlayerDeleteRequest) pMessage).getPlayer());
                 break;
 
+            case DISCONNECT:
+                leaveGame(pClient, false);
+                break;
             case LEAVE_GAME:
-                leaveGame(pClient);
+                leaveGame(pClient, true);
                 break;
 
             case GAME_START_REQUEST:
@@ -209,6 +219,7 @@ public class GameLobby implements ClientThread.ClientListener {
     public interface GameLobbyChangeListener {
         /**
          * Invoked on Game update
+         *
          * @param pGame game
          */
         void onGameUpdate(Game pGame);

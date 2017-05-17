@@ -10,7 +10,7 @@ import java.util.logging.Logger;
 /**
  * Class representong main lobby - place with public chat, game list, and game sub-lobbies
  */
-public class Lobby implements ClientThread.ClientListener {
+public class Lobby implements ClientThread.ClientMessageListener {
     private static final Logger LOG = Logger.getLogger(Lobby.class.getName());
 
     private LinkedList<ClientThread> mClients;

@@ -17,7 +17,7 @@ import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.logging.Logger;
 
-public class GameThread implements ClientThread.ClientListener {
+public class GameThread implements ClientThread.ClientMessageListener {
     private static final Logger LOG = Logger.getLogger(GameThread.class.getName());
 
     private Timer mTimer;

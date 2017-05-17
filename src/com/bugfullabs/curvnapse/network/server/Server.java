@@ -2,6 +2,7 @@ package com.bugfullabs.curvnapse.network.server;
 
 import com.bugfullabs.curvnapse.network.message.HandshakeMessage;
 import com.bugfullabs.curvnapse.network.message.Message;
+import com.bugfullabs.curvnapse.network.message.ServerTextMessage;
 import com.bugfullabs.curvnapse.network.message.WelcomeMessage;
 
 import java.io.IOException;
@@ -13,7 +14,7 @@ import java.util.logging.Logger;
 /**
  * Main server thread - accepts new connections, and sends them to lobby
  */
-public class Server extends Thread implements ClientThread.ClientListener {
+public class Server extends Thread implements ClientThread.ClientMessageListener {
     private static final Logger LOG = Logger.getLogger(Server.class.getName());
 
     private ServerSocket mServerSocket;
@@ -57,7 +58,11 @@ public class Server extends Thread implements ClientThread.ClientListener {
         while (!mServerSocket.isClosed()) {
             try {
                 Socket clientSocket = mServerSocket.accept();
-                ClientThread clientThread = new ClientThread(clientSocket);
+                ClientThread clientThread = new ClientThread(clientSocket, client -> {
+                    client.disconnect();
+                    mClients.remove(client);
+                    mClients.forEach(c -> c.sendMessage(new ServerTextMessage(String.format("%s is gone :<", client.getUsername()))));
+                });
                 clientThread.registerListener(this);
                 clientThread.start();
                 mClients.add(clientThread);
@@ -70,8 +75,9 @@ public class Server extends Thread implements ClientThread.ClientListener {
 
     /**
      * Listener on client messages - here only listen on Handshake message required to join the lobby
+     *
      * @param pClientThread Sender client thread
-     * @param pMessage message
+     * @param pMessage      message
      */
     @Override
     public synchronized void onClientMessage(ClientThread pClientThread, Message pMessage) {

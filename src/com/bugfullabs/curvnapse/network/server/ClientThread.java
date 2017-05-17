@@ -1,5 +1,6 @@
 package com.bugfullabs.curvnapse.network.server;
 
+import com.bugfullabs.curvnapse.network.message.DisconnectMessage;
 import com.bugfullabs.curvnapse.network.message.Message;
 
 import java.io.IOException;
@@ -18,7 +19,8 @@ public class ClientThread extends Thread {
     private static final Logger LOG = Logger.getAnonymousLogger();
     private static int UID = 0;
     private final Socket mSocket;
-    private final CopyOnWriteArrayList<ClientListener> mListeners;
+    private final ClientConnectionListener mConnectionListener;
+    private final CopyOnWriteArrayList<ClientMessageListener> mListeners;
     private final ObjectOutputStream mObjectOutputStream;
     private final ObjectInputStream mObjectInputStream;
     private int mUID;
@@ -27,11 +29,13 @@ public class ClientThread extends Thread {
     /**
      * Crate new client thread with given socket.
      * Thread will manage connection and all the received and sent messages
+     *
      * @param pSocket client socket
      * @throws IOException Thrown when could not create object stream via socket
      */
-    public ClientThread(Socket pSocket) throws IOException {
+    public ClientThread(Socket pSocket, ClientConnectionListener pListener) throws IOException {
         mSocket = pSocket;
+        mConnectionListener = pListener;
         mUID = UID;
         UID += 1;
         mObjectOutputStream = new ObjectOutputStream(mSocket.getOutputStream());
@@ -50,10 +54,10 @@ public class ClientThread extends Thread {
         while (!mSocket.isClosed() && mSocket.isConnected()) {
             try {
                 message = (Message) mObjectInputStream.readObject();
-                for (ClientListener listener : mListeners)
+                for (ClientMessageListener listener : mListeners)
                     listener.onClientMessage(this, message);
             } catch (SocketException e) {
-                LOG.warning("Socket fail: " + e.getMessage());
+                mConnectionListener.onDisconnect(this);
                 break;
             } catch (IOException | ClassNotFoundException e) {
                 e.printStackTrace();
@@ -64,6 +68,7 @@ public class ClientThread extends Thread {
 
     /**
      * Send given message to client
+     *
      * @param pMessage Message to be sent
      */
     public synchronized void sendMessage(Message pMessage) {
@@ -71,7 +76,7 @@ public class ClientThread extends Thread {
             mObjectOutputStream.writeObject(pMessage);
             mObjectOutputStream.reset();
         } catch (IOException e) {
-            LOG.warning(e.getMessage());
+            mConnectionListener.onDisconnect(this);
         }
     }
 
@@ -80,7 +85,11 @@ public class ClientThread extends Thread {
      */
     public void disconnect() {
         try {
+            mListeners.forEach(listener -> listener.onClientMessage(this, new DisconnectMessage()));
             mSocket.close();
+            mListeners.clear();
+            mObjectInputStream.close();
+            mObjectInputStream.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -88,24 +97,27 @@ public class ClientThread extends Thread {
 
     /**
      * Register message listener
-     * @param pClientListener listener
+     *
+     * @param pClientMessageListener listener
      */
-    public void registerListener(ClientListener pClientListener) {
-        mListeners.add(pClientListener);
+    public void registerListener(ClientMessageListener pClientMessageListener) {
+        mListeners.add(pClientMessageListener);
 
     }
 
     /**
      * Remove message listener
-     * @param pClientListener listener
+     *
+     * @param pClientMessageListener listener
      */
-    public void removeListener(ClientListener pClientListener) {
-        mListeners.remove(pClientListener);
+    public void removeListener(ClientMessageListener pClientMessageListener) {
+        mListeners.remove(pClientMessageListener);
 
     }
 
     /**
      * Set Client username
+     *
      * @param pName username
      */
     public void setUserName(String pName) {
@@ -114,6 +126,7 @@ public class ClientThread extends Thread {
 
     /**
      * Get clientID
+     *
      * @return clientID
      */
     public int getID() {
@@ -122,6 +135,7 @@ public class ClientThread extends Thread {
 
     /**
      * Get username
+     *
      * @return client's username
      */
     public String getUsername() {
@@ -131,7 +145,15 @@ public class ClientThread extends Thread {
     /**
      * Listener on client's messages
      */
-    public interface ClientListener {
+    public interface ClientMessageListener {
         void onClientMessage(ClientThread pClientThread, Message pMessage);
     }
+
+    /**
+     * Listener on connection status
+     */
+    public interface ClientConnectionListener {
+        void onDisconnect(ClientThread pClientThread);
+    }
+
 }
