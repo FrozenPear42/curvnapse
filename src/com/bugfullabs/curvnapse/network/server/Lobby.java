@@ -1,5 +1,6 @@
 package com.bugfullabs.curvnapse.network.server;
 
+import com.bugfullabs.curvnapse.game.Game;
 import com.bugfullabs.curvnapse.network.message.*;
 
 import java.util.ArrayList;
@@ -55,7 +56,17 @@ public class Lobby implements ClientThread.ClientListener {
             GameLobby lobby = new GameLobby(this, pRequest.getName(), pRequest.getHost(), pRequest.getMaxPlayers());
             mGameLobbies.add(lobby);
             mClients.forEach(client -> client.sendMessage(new GameUpdateMessage(lobby.getGame())));
-            lobby.setGameUpdateListener(game -> mClients.forEach(client -> client.sendMessage(new GameUpdateMessage(game))));
+            lobby.setGameLobbyChangeListener(new GameLobby.GameLobbyChangeListener() {
+                @Override
+                public void onGameUpdate(Game pGame) {
+                    mClients.forEach(client -> client.sendMessage(new GameUpdateMessage(pGame)));
+                }
+
+                @Override
+                public void onLobbyEmpty() {
+                    mGameLobbies.remove(lobby);
+                }
+            });
             return lobby;
         }
         return null;
