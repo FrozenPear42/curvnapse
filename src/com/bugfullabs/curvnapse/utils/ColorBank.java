@@ -8,28 +8,38 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Class that yields available colors for new players
+ */
 public class ColorBank {
-    private List<PlayerColor> mColors;
     private Map<PlayerColor, Boolean> mTaken;
 
+    /**
+     * Create new ColorBank
+     */
     public ColorBank() {
-        mColors = new ArrayList<>();
+
+        List<PlayerColor> colors = new ArrayList<>();
         mTaken = new HashMap<>();
 
-        mColors.add(new PlayerColor(Color.RED));
-        mColors.add(new PlayerColor(Color.BLUE));
-        mColors.add(new PlayerColor(Color.DARKSLATEGRAY));
-        mColors.add(new PlayerColor(Color.ORANGE));
-        mColors.add(new PlayerColor(Color.DARKMAGENTA));
-        mColors.add(new PlayerColor(Color.AQUA));
-        mColors.add(new PlayerColor(Color.BLUEVIOLET));
-        mColors.add(new PlayerColor(Color.VIOLET));
-        mColors.add(new PlayerColor(Color.DARKCYAN));
-        mColors.add(new PlayerColor(Color.DARKGOLDENROD));
+        colors.add(new PlayerColor(Color.RED));
+        colors.add(new PlayerColor(Color.BLUE));
+        colors.add(new PlayerColor(Color.DARKSLATEGRAY));
+        colors.add(new PlayerColor(Color.ORANGE));
+        colors.add(new PlayerColor(Color.DARKMAGENTA));
+        colors.add(new PlayerColor(Color.AQUA));
+        colors.add(new PlayerColor(Color.BLUEVIOLET));
+        colors.add(new PlayerColor(Color.VIOLET));
+        colors.add(new PlayerColor(Color.DARKCYAN));
+        colors.add(new PlayerColor(Color.DARKGOLDENROD));
 
-        mColors.forEach(pPlayerColor -> mTaken.put(pPlayerColor, false));
+        colors.forEach(pPlayerColor -> mTaken.put(pPlayerColor, false));
     }
 
+    /**
+     * Yield next color
+     * @return Color
+     */
     public PlayerColor nextColor() {
         PlayerColor color = mTaken.entrySet().stream()
                 .filter(entry -> !entry.getValue())
@@ -40,6 +50,10 @@ public class ColorBank {
         return color;
     }
 
+    /**
+     * Return color to bank
+     * @param pColor color to be returned
+     */
     public void returnColor(PlayerColor pColor) {
         mTaken.replaceAll((color, used) -> pColor.equals(color) ? false : used);
     }

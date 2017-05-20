@@ -13,6 +13,10 @@ import javafx.scene.layout.HBox;
 
 import java.util.logging.Logger;
 
+
+/**
+ * Represents Login screen in application
+ */
 public class LoginScene implements LoginBox.LoginListener {
     private static final Logger LOG = Logger.getLogger(MainLobbyScene.class.getName());
     private Scene mScene;
@@ -21,6 +25,9 @@ public class LoginScene implements LoginBox.LoginListener {
     private Label mTitle;
     private LoginBox mLoginBox;
 
+    /**
+     * Create new login screen
+     */
     public LoginScene() {
         mRoot = new BorderPane();
 
@@ -40,10 +47,20 @@ public class LoginScene implements LoginBox.LoginListener {
         mScene.getStylesheets().add("resources/JMetro.css");
     }
 
+    /**
+     * Get JFX Scene of the screen
+     */
     public Scene getScene() {
         return mScene;
     }
 
+    /**
+     * Callback called when login data is provided
+     * @param pName username
+     * @param pIP   IP
+     * @param pPort Port number
+     * @param pHost create server?
+     */
     @Override
     public void onLogin(String pName, String pIP, String pPort, boolean pHost) {
         if (pName.isEmpty())

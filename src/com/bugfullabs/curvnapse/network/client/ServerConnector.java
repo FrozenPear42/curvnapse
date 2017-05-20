@@ -22,10 +22,11 @@ public class ServerConnector extends Thread {
     private final CopyOnWriteArrayList<ServerConnector.MessageListener> mListeners;
 
     /**
-     *  Create connector connected to given server
-     * @param pIP Server IP
+     * Create connector connected to given server
+     *
+     * @param pIP   Server IP
      * @param pPort Server Port
-     * @throws IOException
+     * @throws IOException thrown on connection error
      */
     public ServerConnector(String pIP, int pPort) throws IOException {
         mSocket = new Socket(pIP, pPort);
@@ -36,6 +37,7 @@ public class ServerConnector extends Thread {
 
     /**
      * Send message to server
+     *
      * @param pMessage message to sent
      */
     public synchronized void sendMessage(Message pMessage) {
@@ -49,6 +51,7 @@ public class ServerConnector extends Thread {
 
     /**
      * Register listener on messages received from server
+     *
      * @param pListener listener
      */
     public void registerListener(MessageListener pListener) {
@@ -57,6 +60,7 @@ public class ServerConnector extends Thread {
 
     /**
      * Remove registered listener
+     *
      * @param pListener listener to be removed
      */
     public void unregisterListener(MessageListener pListener) {
@@ -65,7 +69,8 @@ public class ServerConnector extends Thread {
 
     /**
      * Send handshake message to server
-     * @param pName username
+     *
+     * @param pName     username
      * @param pListener handshake callback function
      */
     public void handshake(String pName, HandshakeResultListener pListener) {
@@ -99,11 +104,11 @@ public class ServerConnector extends Thread {
 
     /**
      * Client message listener
-     *
      */
     public interface MessageListener {
         /**
          * Invoked on message received
+         *
          * @param pMessage received message
          */
         void onClientMessage(Message pMessage);
@@ -115,6 +120,7 @@ public class ServerConnector extends Thread {
     public interface HandshakeResultListener {
         /**
          * Invoked on handshake message accept
+         *
          * @param pID userID received from server
          */
         void onHandshakeResult(int pID);

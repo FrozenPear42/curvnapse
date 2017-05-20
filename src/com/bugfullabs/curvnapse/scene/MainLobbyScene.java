@@ -16,18 +16,12 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 
+import java.util.Collections;
 import java.util.logging.Logger;
 
 public class MainLobbyScene implements ServerConnector.MessageListener {
     private static final Logger LOG = Logger.getLogger(MainLobbyScene.class.getName());
-    private BorderPane mRoot;
     private Scene mScene;
-
-    private HBox mTopBox;
-    private Label mTitle;
-
-    private MessageBox mMessageBox;
-    private GameListBox mGameListBox;
 
     private ServerConnector mConnector;
 
@@ -35,37 +29,38 @@ public class MainLobbyScene implements ServerConnector.MessageListener {
     private ObservableList<Game> mGames;
 
     public MainLobbyScene() {
-        mRoot = new BorderPane();
-        mRoot.setPadding(new Insets(10.0f));
 
-        mTopBox = new HBox(10.0f);
-        mTopBox.setPadding(new Insets(10.0f));
-        mTopBox.setAlignment(Pos.CENTER);
-        mTitle = new Label("Lobby");
-        mTitle.setStyle("-fx-font-size: 3em; -fx-font-weight: bold");
-        mTopBox.getChildren().add(mTitle);
+        BorderPane root = new BorderPane();
+        root.setPadding(new Insets(10.0f));
 
-        mMessageBox = new MessageBox();
-        mGameListBox = new GameListBox();
+        HBox topBox = new HBox(10.0f);
+        topBox.setPadding(new Insets(10.0f));
+        topBox.setAlignment(Pos.CENTER);
+        Label title = new Label("Lobby");
+        title.setStyle("-fx-font-size: 3em; -fx-font-weight: bold");
+        topBox.getChildren().add(title);
 
-        mRoot.setTop(mTopBox);
-        mRoot.setLeft(mMessageBox);
-        mRoot.setCenter(mGameListBox);
+        MessageBox messageBox = new MessageBox();
+        GameListBox gameListBox = new GameListBox();
 
-        mScene = new Scene(mRoot);
+        root.setTop(topBox);
+        root.setLeft(messageBox);
+        root.setCenter(gameListBox);
+
+        mScene = new Scene(root);
         mScene.getStylesheets().add("resources/JMetro.css");
-        
+
         mConnector = FlowManager.getInstance().getConnector();
         mConnector.sendMessage(new UpdateRequest());
         mConnector.registerListener(this);
 
         mMessages = FXCollections.observableArrayList();
-        mMessageBox.setMessages(mMessages);
-        mMessageBox.setSendListener(pMessage -> mConnector.sendMessage(new TextMessage(FlowManager.getInstance().getUsername(), pMessage)));
+        messageBox.setMessages(mMessages);
+        messageBox.setSendListener(pMessage -> mConnector.sendMessage(new TextMessage(FlowManager.getInstance().getUsername(), pMessage)));
 
         mGames = FXCollections.observableArrayList();
-        mGameListBox.setGames(mGames);
-        mGameListBox.setListener(new GameListBox.GameListBoxListener() {
+        gameListBox.setGames(mGames);
+        gameListBox.setListener(new GameListBox.GameListBoxListener() {
             @Override
             public void onJoin(Game pGame) {
                 mConnector.sendMessage(new JoinRequest(pGame.getID()));
@@ -73,7 +68,7 @@ public class MainLobbyScene implements ServerConnector.MessageListener {
 
             @Override
             public void onCreate() {
-                mConnector.sendMessage(new GameCreateRequest(FlowManager.getInstance().getUserID(),"Great Game", "", 10));
+                mConnector.sendMessage(new GameCreateRequest(FlowManager.getInstance().getUserID(), "Great Game", "", 10));
             }
         });
     }
