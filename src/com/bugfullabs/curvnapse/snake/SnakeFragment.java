@@ -1,6 +1,6 @@
 package com.bugfullabs.curvnapse.snake;
 
-import com.bugfullabs.curvnapse.player.PlayerColor;
+import com.bugfullabs.curvnapse.utils.SerializableColor;
 import com.bugfullabs.curvnapse.utils.Vec2;
 
 import java.io.Serializable;
@@ -12,10 +12,10 @@ public abstract class SnakeFragment implements Serializable {
 
     private Type mType;
     private long mUID;
-    private PlayerColor mColor;
+    private SerializableColor mColor;
     private double mWidth;
 
-    public SnakeFragment(Type pType, PlayerColor pColor, double pWidth) {
+    public SnakeFragment(Type pType, SerializableColor pColor, double pWidth) {
         mType = pType;
         mColor = pColor;
         mWidth = pWidth;
@@ -27,7 +27,7 @@ public abstract class SnakeFragment implements Serializable {
         return mType;
     }
 
-    public PlayerColor getColor() {
+    public SerializableColor getColor() {
         return mColor;
     }
 
@@ -35,10 +35,10 @@ public abstract class SnakeFragment implements Serializable {
         return mWidth;
     }
 
-    public abstract boolean isCollision(Vec2 pPoint);
-
     public long getUID() {
         return mUID;
     }
+
+    public abstract boolean isCollision(Vec2 pPoint);
 
 }

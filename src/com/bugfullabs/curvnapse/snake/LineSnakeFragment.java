@@ -1,10 +1,13 @@
 package com.bugfullabs.curvnapse.snake;
 
-import com.bugfullabs.curvnapse.player.PlayerColor;
+import com.bugfullabs.curvnapse.utils.SerializableColor;
 import com.bugfullabs.curvnapse.utils.Vec2;
 
 import java.io.Serializable;
 
+/**
+ * Class for line snake fragments with it's own collision detection
+ */
 public class LineSnakeFragment extends SnakeFragment implements Serializable {
     private Vec2 mBegin;
     private Vec2 mEnd;
@@ -13,7 +16,16 @@ public class LineSnakeFragment extends SnakeFragment implements Serializable {
     private Vec2 mEdge;
     private double mAngle;
 
-    public LineSnakeFragment(Vec2 pBegin, Vec2 pEnd, double pAngle, PlayerColor pColor, double pWidth) {
+    /**
+     * Create new line fragment
+     *
+     * @param pBegin line begin vector
+     * @param pEnd   line end vector
+     * @param pAngle line angle
+     * @param pColor line color
+     * @param pWidth line width
+     */
+    public LineSnakeFragment(Vec2 pBegin, Vec2 pEnd, double pAngle, SerializableColor pColor, double pWidth) {
         super(Type.LINE, pColor, pWidth);
         mBegin = pBegin;
         mEnd = pEnd;
@@ -23,11 +35,20 @@ public class LineSnakeFragment extends SnakeFragment implements Serializable {
         mAngle = pAngle;
     }
 
+    /**
+     * Update head of the fragment
+     * @param pEnd new line end
+     */
     public void updateHead(Vec2 pEnd) {
         mEnd = pEnd;
         mEdge = new Vec2(mBegin, mEnd);
     }
 
+    /**
+     * Check collision at given point
+     * @param pPoint point to collide with
+     * @return true if collision
+     */
     @Override
     public boolean isCollision(Vec2 pPoint) {
         Vec2 origin = Vec2.sub(mBegin, Vec2.times(mConstEdge, 0.5));
@@ -36,7 +57,7 @@ public class LineSnakeFragment extends SnakeFragment implements Serializable {
         double dotA = Vec2.dot(mConstEdge, point);
         double dotB = Vec2.dot(mEdge, point);
 
-        return  0 <= dotA && dotA <= Vec2.dot(mConstEdge, mConstEdge) &&
+        return 0 <= dotA && dotA <= Vec2.dot(mConstEdge, mConstEdge) &&
                 0 <= dotB && dotB <= Vec2.dot(mEdge, mEdge);
     }
 

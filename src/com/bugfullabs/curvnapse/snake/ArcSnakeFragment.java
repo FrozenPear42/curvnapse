@@ -1,6 +1,6 @@
 package com.bugfullabs.curvnapse.snake;
 
-import com.bugfullabs.curvnapse.player.PlayerColor;
+import com.bugfullabs.curvnapse.utils.SerializableColor;
 import com.bugfullabs.curvnapse.utils.MathUtils;
 import com.bugfullabs.curvnapse.utils.Vec2;
 
@@ -17,7 +17,7 @@ public class ArcSnakeFragment extends SnakeFragment implements Serializable {
 
     private Vec2 mCenter;
 
-    public ArcSnakeFragment(double pStartAngle, double pRadius, Vec2 pCenter, PlayerColor pColor, double pWidth) {
+    public ArcSnakeFragment(double pStartAngle, double pRadius, Vec2 pCenter, SerializableColor pColor, double pWidth) {
         super(Type.ARC, pColor, pWidth);
         mStartAngle = pStartAngle;
         mAngle = 0;

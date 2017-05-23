@@ -1,7 +1,7 @@
 package com.bugfullabs.curvnapse.gui;
 
 
-import com.bugfullabs.curvnapse.player.PlayerColor;
+import com.bugfullabs.curvnapse.utils.SerializableColor;
 import com.bugfullabs.curvnapse.powerup.PowerUpEntity;
 import com.bugfullabs.curvnapse.snake.ArcSnakeFragment;
 import com.bugfullabs.curvnapse.snake.HeadSnakeFragment;
@@ -143,7 +143,7 @@ public class Board extends VBox {
      * @param pCollisionPoint collision point
      * @param pKillerColor    color
      */
-    public synchronized void drawCollision(Vec2 pCollisionPoint, PlayerColor pKillerColor) {
+    public synchronized void drawCollision(Vec2 pCollisionPoint, SerializableColor pKillerColor) {
         GraphicsContext mainCtx = mMainCanvas.getGraphicsContext2D();
         mainCtx.setFill(pKillerColor.toFXColor());
 

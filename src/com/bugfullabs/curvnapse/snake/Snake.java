@@ -1,18 +1,23 @@
 package com.bugfullabs.curvnapse.snake;
 
-import com.bugfullabs.curvnapse.player.PlayerColor;
+import com.bugfullabs.curvnapse.utils.SerializableColor;
 import com.bugfullabs.curvnapse.powerup.PowerUp;
 import com.bugfullabs.curvnapse.utils.MathUtils;
 import com.bugfullabs.curvnapse.utils.Vec2;
 import javafx.util.Pair;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Random;
 
+/**
+ * Class representing snake on the board, handling all the movement and generating all snake vector fragments
+ */
 public class Snake {
 
+    /**
+     * Snake state enum
+     */
     private enum State {
         TURNING_LEFT,
         TURNING_RIGHT,
@@ -37,7 +42,7 @@ public class Snake {
     private boolean mDead;
     private boolean mInvisible;
 
-    private PlayerColor mColor;
+    private SerializableColor mColor;
 
     private State mState;
 
@@ -52,7 +57,15 @@ public class Snake {
 
     private boolean mConfused;
 
-    public Snake(int pUID, Vec2 pPosition, double pAngle, PlayerColor pColor) {
+    /**
+     * Create new snake with given params
+     *
+     * @param pUID      ID
+     * @param pPosition snake head position
+     * @param pAngle    direction
+     * @param pColor    color of the snake
+     */
+    public Snake(int pUID, Vec2 pPosition, double pAngle, SerializableColor pColor) {
         mColor = pColor;
         mUID = pUID;
         mPosition = pPosition;
@@ -78,6 +91,11 @@ public class Snake {
         applyChange();
     }
 
+    /**
+     * Do step movement
+     *
+     * @param pDelta delta time in seconds
+     */
     public void step(double pDelta) {
         if (mDead)
             return;
@@ -127,41 +145,47 @@ public class Snake {
         }
     }
 
-
+    /**
+     * Activates PowerUp for the snake
+     *
+     * @param pPowerUp PowerUp to activate
+     */
     public void addPowerUp(PowerUp pPowerUp) {
         mPowerUps.add(0, new Pair<>(pPowerUp, pPowerUp.getDuration()));
         pPowerUp.onBegin(this);
         applyChange();
     }
 
+    /**
+     * Change snake movement state to left
+     */
     public void turnLeft() {
         if (mDead) return;
-        if (!mConfused) {
-            doArc(true);
-            mState = State.TURNING_LEFT;
-        } else {
-            doArc(false);
-            mState = State.TURNING_RIGHT;
-        }
+        mState = !mConfused ? State.TURNING_LEFT : State.TURNING_RIGHT;
+        applyChange();
     }
 
+    /**
+     * Change snake movement state to right
+     */
     public void turnRight() {
         if (mDead) return;
-        if (mConfused) {
-            doArc(true);
-            mState = State.TURNING_LEFT;
-        } else {
-            doArc(false);
-            mState = State.TURNING_RIGHT;
-        }
+        mState = mConfused ? State.TURNING_LEFT : State.TURNING_RIGHT;
+        applyChange();
     }
 
+    /**
+     * Stop turning, change movement type to FORWARD
+     */
     public void turnEnd() {
         if (mDead) return;
         doLine();
         mState = State.FORWARD;
     }
 
+    /**
+     * Begin line
+     */
     private void doLine() {
         mVelocity = Vec2.directed(mSpeed, mAngle);
         mVelocity.y = -mVelocity.y;
@@ -170,6 +194,11 @@ public class Snake {
         mLineFragments.add(line);
     }
 
+    /**
+     * Begin new arc
+     *
+     * @param pLeft true if turning left
+     */
     private void doArc(boolean pLeft) {
         if (pLeft) {
             double startAngle = MathUtils.normalizeAngle(mAngle - Math.PI / 2);
@@ -188,6 +217,9 @@ public class Snake {
         }
     }
 
+    /**
+     * Apply change of state
+     */
     private void applyChange() {
         switch (mState) {
             case STOP:
@@ -204,34 +236,59 @@ public class Snake {
         }
     }
 
+    /**
+     * Change head position
+     *
+     * @param pDestination new head position
+     */
     public void teleport(Vec2 pDestination) {
         mPosition = pDestination;
         applyChange();
     }
 
 
+    /**
+     * Remove all snake fragments and start new fragment
+     */
     public void erase() {
         mArcFragments.clear();
         mLineFragments.clear();
         applyChange();
     }
 
+    /**
+     * Kill the snake
+     */
     public void kill() {
         mDead = true;
     }
 
+    /**
+     * Return actual head position
+     *
+     * @return head position
+     */
     public Vec2 getPosition() {
         return mPosition;
     }
 
+    /**
+     * @return size of the snake
+     */
     public double getSize() {
         return mSize;
     }
 
+    /**
+     * @return tuen radius
+     */
     public double getTurnRadius() {
         return mTurnRadius;
     }
 
+    /**
+     * @return snake speed
+     */
     public double getSpeed() {
         return mSpeed;
     }
@@ -240,10 +297,16 @@ public class Snake {
         return mConfused;
     }
 
+    /**
+     * @return true if snake is dead
+     */
     public boolean isDead() {
         return mDead;
     }
 
+    /**
+     * @return last snake fragment
+     */
     public SnakeFragment getLastFragment() {
         if (mInvisible)
             return new HeadSnakeFragment(mColor, mSize, mPosition);
@@ -255,13 +318,17 @@ public class Snake {
         return null;
     }
 
-
+    /**
+     * @return new Snake Head Fragment for plotting while invisible
+     */
     public SnakeFragment getHead() {
         return new HeadSnakeFragment(mColor, mSize, mPosition);
     }
 
-
-    public PlayerColor getColor() {
+    /**
+     * @return snake color
+     */
+    public SerializableColor getColor() {
         return mColor;
     }
 
@@ -303,6 +370,12 @@ public class Snake {
         return mArcFragments.size();
     }
 
+    /**
+     * Check collision at given point
+     *
+     * @param pPoint point to collide with
+     * @return *true* if collision, false otherwise
+     */
     public boolean isCollisionAtPoint(Vec2 pPoint) {
 
         for (SnakeFragment fragment : mLineFragments) {
@@ -318,6 +391,11 @@ public class Snake {
         return false;
     }
 
+    /**
+     * Returns all the snake fragments
+     *
+     * @return alle the fragments gdmn
+     */
     public List<SnakeFragment> getFragments() {
         ArrayList<SnakeFragment> list = new ArrayList<>();
         list.addAll(mLineFragments);
@@ -326,6 +404,11 @@ public class Snake {
     }
 
 
+    /**
+     * Check collision with itself
+     *
+     * @return true if collision
+     */
     public boolean checkSelfCollision() {
         if (mState == State.FORWARD) {
             if (mLineFragments.size() <= 1)

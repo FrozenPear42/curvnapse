@@ -1,5 +1,6 @@
 package com.bugfullabs.curvnapse.player;
 
+import com.bugfullabs.curvnapse.utils.SerializableColor;
 import javafx.scene.input.KeyCode;
 
 import java.io.Serializable;
@@ -15,7 +16,7 @@ public class Player implements Serializable {
     private int mOwner;
     private KeyCode mLeftKey;
     private KeyCode mRightKey;
-    private PlayerColor mColor;
+    private SerializableColor mColor;
     private int mPoints;
 
     /**
@@ -25,7 +26,7 @@ public class Player implements Serializable {
      * @param pColor Player color
      * @param pOwner owner client ID
      */
-    public Player(String pName, PlayerColor pColor, int pOwner) {
+    public Player(String pName, SerializableColor pColor, int pOwner) {
         mUID = UID;
         UID += 1;
         mOwner = pOwner;
@@ -64,7 +65,7 @@ public class Player implements Serializable {
         this.mRightKey = pRightKey;
     }
 
-    public PlayerColor getColor() {
+    public SerializableColor getColor() {
         return mColor;
     }
 

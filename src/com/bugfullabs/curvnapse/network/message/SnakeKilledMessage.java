@@ -1,14 +1,14 @@
 package com.bugfullabs.curvnapse.network.message;
 
-import com.bugfullabs.curvnapse.player.PlayerColor;
+import com.bugfullabs.curvnapse.utils.SerializableColor;
 import com.bugfullabs.curvnapse.utils.Vec2;
 
 public class SnakeKilledMessage extends Message {
 
     private Vec2 mPoint;
-    private PlayerColor mKillerColor;
+    private SerializableColor mKillerColor;
 
-    public SnakeKilledMessage(Vec2 pPoint, PlayerColor pKillerColor) {
+    public SnakeKilledMessage(Vec2 pPoint, SerializableColor pKillerColor) {
         super(Type.SNAKE_KILLED);
         mPoint = pPoint;
         mKillerColor = pKillerColor;
@@ -18,7 +18,7 @@ public class SnakeKilledMessage extends Message {
         return mPoint;
     }
 
-    public PlayerColor getKillerColor() {
+    public SerializableColor getKillerColor() {
         return mKillerColor;
     }
 }

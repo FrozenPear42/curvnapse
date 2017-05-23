@@ -1,6 +1,5 @@
 package com.bugfullabs.curvnapse.utils;
 
-import com.bugfullabs.curvnapse.player.PlayerColor;
 import javafx.scene.paint.Color;
 
 import java.util.ArrayList;
@@ -12,26 +11,26 @@ import java.util.Map;
  * Class that yields available colors for new players
  */
 public class ColorBank {
-    private Map<PlayerColor, Boolean> mTaken;
+    private Map<SerializableColor, Boolean> mTaken;
 
     /**
      * Create new ColorBank
      */
     public ColorBank() {
 
-        List<PlayerColor> colors = new ArrayList<>();
+        List<SerializableColor> colors = new ArrayList<>();
         mTaken = new HashMap<>();
 
-        colors.add(new PlayerColor(Color.RED));
-        colors.add(new PlayerColor(Color.BLUE));
-        colors.add(new PlayerColor(Color.DARKSLATEGRAY));
-        colors.add(new PlayerColor(Color.ORANGE));
-        colors.add(new PlayerColor(Color.DARKMAGENTA));
-        colors.add(new PlayerColor(Color.AQUA));
-        colors.add(new PlayerColor(Color.BLUEVIOLET));
-        colors.add(new PlayerColor(Color.VIOLET));
-        colors.add(new PlayerColor(Color.DARKCYAN));
-        colors.add(new PlayerColor(Color.DARKGOLDENROD));
+        colors.add(new SerializableColor(Color.RED));
+        colors.add(new SerializableColor(Color.BLUE));
+        colors.add(new SerializableColor(Color.DARKSLATEGRAY));
+        colors.add(new SerializableColor(Color.ORANGE));
+        colors.add(new SerializableColor(Color.DARKMAGENTA));
+        colors.add(new SerializableColor(Color.AQUA));
+        colors.add(new SerializableColor(Color.BLUEVIOLET));
+        colors.add(new SerializableColor(Color.VIOLET));
+        colors.add(new SerializableColor(Color.DARKCYAN));
+        colors.add(new SerializableColor(Color.DARKGOLDENROD));
 
         colors.forEach(pPlayerColor -> mTaken.put(pPlayerColor, false));
     }
@@ -40,8 +39,8 @@ public class ColorBank {
      * Yield next color
      * @return Color
      */
-    public PlayerColor nextColor() {
-        PlayerColor color = mTaken.entrySet().stream()
+    public SerializableColor nextColor() {
+        SerializableColor color = mTaken.entrySet().stream()
                 .filter(entry -> !entry.getValue())
                 .findFirst()
                 .get()
@@ -54,7 +53,7 @@ public class ColorBank {
      * Return color to bank
      * @param pColor color to be returned
      */
-    public void returnColor(PlayerColor pColor) {
+    public void returnColor(SerializableColor pColor) {
         mTaken.replaceAll((color, used) -> pColor.equals(color) ? false : used);
     }
 }

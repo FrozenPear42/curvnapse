@@ -1,4 +1,4 @@
-package com.bugfullabs.curvnapse.player;
+package com.bugfullabs.curvnapse.utils;
 
 import javafx.scene.paint.Color;
 
@@ -7,7 +7,7 @@ import java.io.Serializable;
 /**
  * Serializable color class
  */
-public class PlayerColor implements Serializable {
+public class SerializableColor implements Serializable {
     private double mR;
     private double mG;
     private double mB;
@@ -18,7 +18,7 @@ public class PlayerColor implements Serializable {
      * @param pG G
      * @param pB B
      */
-    public PlayerColor(double pR, double pG, double pB) {
+    public SerializableColor(double pR, double pG, double pB) {
         mR = pR;
         mG = pG;
         mB = pB;
@@ -28,7 +28,7 @@ public class PlayerColor implements Serializable {
      * Create color form JFX Color
      * @param pColor JFX Color
      */
-    public PlayerColor(Color pColor) {
+    public SerializableColor(Color pColor) {
         mR = pColor.getRed();
         mG = pColor.getGreen();
         mB = pColor.getBlue();
@@ -71,9 +71,9 @@ public class PlayerColor implements Serializable {
      */
     @Override
     public boolean equals(Object pObject) {
-        if(!(pObject instanceof PlayerColor))
+        if(!(pObject instanceof SerializableColor))
             return false;
-        return mR == ((PlayerColor)pObject).mR && mG == ((PlayerColor)pObject).mG && mB == ((PlayerColor)pObject).mB;
+        return mR == ((SerializableColor)pObject).mR && mG == ((SerializableColor)pObject).mG && mB == ((SerializableColor)pObject).mB;
 
     }
 }

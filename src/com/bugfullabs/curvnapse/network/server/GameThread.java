@@ -4,7 +4,7 @@ package com.bugfullabs.curvnapse.network.server;
 import com.bugfullabs.curvnapse.game.Game;
 import com.bugfullabs.curvnapse.network.message.*;
 import com.bugfullabs.curvnapse.player.Player;
-import com.bugfullabs.curvnapse.player.PlayerColor;
+import com.bugfullabs.curvnapse.utils.SerializableColor;
 import com.bugfullabs.curvnapse.powerup.PowerUp;
 import com.bugfullabs.curvnapse.powerup.PowerUpEntity;
 import com.bugfullabs.curvnapse.snake.Snake;
@@ -262,7 +262,7 @@ public class GameThread implements ClientThread.ClientMessageListener {
      * @param pSnake       Snake to be killed
      * @param pKillerColor kill indicator color
      */
-    private void killSnake(Snake pSnake, PlayerColor pKillerColor) {
+    private void killSnake(Snake pSnake, SerializableColor pKillerColor) {
         if (pSnake.isDead())
             return;
 
