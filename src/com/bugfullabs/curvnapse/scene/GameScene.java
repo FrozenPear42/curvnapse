@@ -25,18 +25,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
+/**
+ * Represents game screen in application
+ */
 public class GameScene implements ServerConnector.MessageListener {
     private static final Logger LOG = Logger.getLogger(GameScene.class.getName());
-    private BorderPane mRoot;
     private Scene mScene;
     private Board mBoard;
-    private MessageBox mMessageBox;
-    private Leaderboard mLeaderboard;
 
-    private VBox mGameInfoBox;
-    private Label mGameNameLabel;
     private Label mRoundLabel;
-
 
     private Game mGame;
 
@@ -48,6 +45,11 @@ public class GameScene implements ServerConnector.MessageListener {
 
     private ServerConnector mConnector;
 
+    /**
+     * Create new screen for given game
+     *
+     * @param pGame game
+     */
     public GameScene(Game pGame) {
         mGame = pGame;
 
@@ -65,34 +67,34 @@ public class GameScene implements ServerConnector.MessageListener {
                     mKeys.put(pPlayer.getRightKey(), pPlayer);
                 });
 
-        mRoot = new BorderPane();
-        mMessageBox = new MessageBox();
+        BorderPane root = new BorderPane();
+        MessageBox messageBox = new MessageBox();
         mBoard = new Board(mGame.getBoardWidth(), mGame.getBoardHeight());
-        mLeaderboard = new Leaderboard();
-        mRoot.setLeft(mMessageBox);
-        mRoot.setCenter(mBoard);
-        mRoot.setRight(mLeaderboard);
-        mScene = new Scene(mRoot);
+        Leaderboard leaderboard = new Leaderboard();
+        root.setLeft(messageBox);
+        root.setCenter(mBoard);
+        root.setRight(leaderboard);
+        mScene = new Scene(root);
         mScene.getStylesheets().add("resources/JMetro.css");
 
         mConnector.registerListener(this);
-        mMessageBox.setSendListener(pMessage -> mConnector.sendMessage(new TextMessage(FlowManager.getInstance().getUsername(), pMessage)));
-        mMessageBox.setMessages(mMessages);
+        messageBox.setSendListener(pMessage -> mConnector.sendMessage(new TextMessage(FlowManager.getInstance().getUsername(), pMessage)));
+        messageBox.setMessages(mMessages);
 
-        mLeaderboard.setPlayers(mPlayers);
+        leaderboard.setPlayers(mPlayers);
 
-        mGameInfoBox = new VBox();
-        mGameInfoBox.setAlignment(Pos.CENTER);
-        mGameInfoBox.setPadding(new Insets(10.0f));
+        VBox gameInfoBox = new VBox();
+        gameInfoBox.setAlignment(Pos.CENTER);
+        gameInfoBox.setPadding(new Insets(10.0f));
 
-        mGameNameLabel = new Label(mGame.getName());
-        mGameNameLabel.setStyle("-fx-font-size: 3em; -fx-font-weight: bold");
+        Label gameNameLabel = new Label(mGame.getName());
+        gameNameLabel.setStyle("-fx-font-size: 3em; -fx-font-weight: bold");
         mRoundLabel = new Label(String.format("Round %d/%d", 1, mGame.getRounds()));
         mRoundLabel.setStyle("-fx-font-size: 2em");
 
-        mGameInfoBox.getChildren().add(mGameNameLabel);
-        mGameInfoBox.getChildren().add(mRoundLabel);
-        mRoot.setTop(mGameInfoBox);
+        gameInfoBox.getChildren().add(gameNameLabel);
+        gameInfoBox.getChildren().add(mRoundLabel);
+        root.setTop(gameInfoBox);
 
         mScene.setOnKeyPressed(event -> {
             KeyCode code = event.getCode();
@@ -128,10 +130,20 @@ public class GameScene implements ServerConnector.MessageListener {
         });
     }
 
+    /**
+     * Returns JFX scene for this screen
+     *
+     * @return JFX {@link Scene}
+     */
     public Scene getScene() {
         return mScene;
     }
 
+    /**
+     * Listens on server messages
+     *
+     * @param pMessage received message
+     */
     @Override
     public void onClientMessage(Message pMessage) {
         switch (pMessage.getType()) {

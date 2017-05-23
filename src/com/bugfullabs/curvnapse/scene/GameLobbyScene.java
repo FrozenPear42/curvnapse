@@ -23,20 +23,14 @@ import javafx.scene.layout.HBox;
 import javax.xml.ws.soap.MTOM;
 import java.util.logging.Logger;
 
-
+/**
+ * Represents Lobby scene for given {@link Game}
+ */
 public class GameLobbyScene implements ServerConnector.MessageListener {
     private static final Logger LOG = Logger.getLogger(GameLobbyScene.class.getName());
-    private BorderPane mRoot;
     private Scene mScene;
 
-    private HBox mTopBox;
-    private Label mTitle;
-
-    private MessageBox mMessageBox;
     private GameOptionsBox mGameOptionsBox;
-    private PlayersBox mPlayersBox;
-    private HBox mButtons;
-    private Button mBackButton;
     private Button mStartButton;
 
     private ServerConnector mConnector;
@@ -45,49 +39,54 @@ public class GameLobbyScene implements ServerConnector.MessageListener {
     private ObservableList<TextMessage> mMessages;
 
 
+    /**
+     * Create new screen for given {@link Game}
+     *
+     * @param pGame game for screen to be created with
+     */
     public GameLobbyScene(Game pGame) {
         mConnector = FlowManager.getInstance().getConnector();
         mGame = pGame;
 
-        mRoot = new BorderPane();
-        mScene = new Scene(mRoot);
+        BorderPane root = new BorderPane();
+        mScene = new Scene(root);
         mScene.getStylesheets().add("resources/JMetro.css");
 
-        mTopBox = new HBox(10.0f);
-        mTopBox.setPadding(new Insets(10.0f));
-        mTopBox.setAlignment(Pos.CENTER);
-        mTitle = new Label("Game Lobby");
-        mTitle.setStyle("-fx-font-size: 3em; -fx-font-weight: bold");
-        mTopBox.getChildren().add(mTitle);
+        HBox topBox = new HBox(10.0f);
+        topBox.setPadding(new Insets(10.0f));
+        topBox.setAlignment(Pos.CENTER);
+        Label title = new Label("Game Lobby");
+        title.setStyle("-fx-font-size: 3em; -fx-font-weight: bold");
+        topBox.getChildren().add(title);
 
-        mMessageBox = new MessageBox();
+        MessageBox messageBox = new MessageBox();
         mGameOptionsBox = new GameOptionsBox();
-        mPlayersBox = new PlayersBox();
-        mButtons = new HBox(5.0f);
+        PlayersBox playersBox = new PlayersBox();
+        HBox buttons = new HBox(5.0f);
 
-        mBackButton = new Button("Back");
+        Button backButton = new Button("Back");
         mStartButton = new Button("Start");
 
-        mButtons.setAlignment(Pos.CENTER);
-        mButtons.getChildren().addAll(mBackButton, mStartButton);
+        buttons.setAlignment(Pos.CENTER);
+        buttons.getChildren().addAll(backButton, mStartButton);
 
-        mRoot.setTop(mTopBox);
-        mRoot.setLeft(mMessageBox);
-        mRoot.setCenter(mGameOptionsBox);
-        mRoot.setRight(mPlayersBox);
-        mRoot.setBottom(mButtons);
-        mRoot.setPadding(new Insets(10.0f));
+        root.setTop(topBox);
+        root.setLeft(messageBox);
+        root.setCenter(mGameOptionsBox);
+        root.setRight(playersBox);
+        root.setBottom(buttons);
+        root.setPadding(new Insets(10.0f));
 
         mConnector.registerListener(this);
 
         mMessages = FXCollections.observableArrayList();
-        mMessageBox.setMessages(mMessages);
-        mMessageBox.setSendListener(pMessage -> mConnector.sendMessage(new TextMessage(FlowManager.getInstance().getUsername(), pMessage)));
+        messageBox.setMessages(mMessages);
+        messageBox.setSendListener(pMessage -> mConnector.sendMessage(new TextMessage(FlowManager.getInstance().getUsername(), pMessage)));
 
         mPlayers = FXCollections.observableArrayList();
-        mPlayersBox.setPlayersList(mPlayers);
+        playersBox.setPlayersList(mPlayers);
 
-        mPlayersBox.setListener(new PlayersBox.PlayerBoxListener() {
+        playersBox.setListener(new PlayersBox.PlayerBoxListener() {
             @Override
             public void onCreateLocal() {
                 mConnector.sendMessage(new NewPlayerRequest(FlowManager.getInstance().getUsername() + " "));
@@ -117,7 +116,7 @@ public class GameLobbyScene implements ServerConnector.MessageListener {
         });
 
         mStartButton.setOnAction(event -> mConnector.sendMessage(new GameStartRequest()));
-        mBackButton.setOnAction(event -> {
+        backButton.setOnAction(event -> {
             mConnector.sendMessage(new LeaveGameRequest());
             FlowManager.getInstance().mainLobby();
             mConnector.unregisterListener(this);
@@ -126,10 +125,20 @@ public class GameLobbyScene implements ServerConnector.MessageListener {
         update(mGame);
     }
 
+    /**
+     * Returns JFX scene for this screen
+     *
+     * @return JFX {@link Scene}
+     */
     public Scene getScene() {
         return mScene;
     }
 
+    /**
+     * Update game settings
+     *
+     * @param pGame new Game object (descriptor)
+     */
     private void update(Game pGame) {
         mGame = pGame;
         mPlayers.clear();
@@ -140,6 +149,11 @@ public class GameLobbyScene implements ServerConnector.MessageListener {
         mStartButton.setDisable((mGame.getHostID() != FlowManager.getInstance().getUserID()));
     }
 
+    /**
+     * Listens on server messages
+     *
+     * @param pMessage received message
+     */
     @Override
     public void onClientMessage(Message pMessage) {
         switch (pMessage.getType()) {

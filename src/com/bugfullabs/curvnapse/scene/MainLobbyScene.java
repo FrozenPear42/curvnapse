@@ -19,6 +19,9 @@ import javafx.scene.layout.HBox;
 import java.util.Collections;
 import java.util.logging.Logger;
 
+/**
+ * Represents MainLobby screen in application
+ */
 public class MainLobbyScene implements ServerConnector.MessageListener {
     private static final Logger LOG = Logger.getLogger(MainLobbyScene.class.getName());
     private Scene mScene;
@@ -28,6 +31,9 @@ public class MainLobbyScene implements ServerConnector.MessageListener {
     private ObservableList<TextMessage> mMessages;
     private ObservableList<Game> mGames;
 
+    /**
+     * Create new MainLobby screen
+     */
     public MainLobbyScene() {
 
         BorderPane root = new BorderPane();
@@ -73,10 +79,20 @@ public class MainLobbyScene implements ServerConnector.MessageListener {
         });
     }
 
+    /**
+     * Returns JFX scene
+     *
+     * @return JFX {@link Scene} for this screen
+     */
     public Scene getScene() {
         return mScene;
     }
 
+    /**
+     * Listener on server messages
+     *
+     * @param pMessage received message
+     */
     @Override
     public void onClientMessage(Message pMessage) {
         if (pMessage.getType() == Message.Type.TEXT)

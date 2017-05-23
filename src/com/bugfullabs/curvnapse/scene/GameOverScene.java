@@ -19,61 +19,60 @@ import java.util.logging.Logger;
 public class GameOverScene {
     private static final Logger LOG = Logger.getLogger(MainLobbyScene.class.getName());
     private Scene mScene;
-    private BorderPane mRoot;
 
-    private HBox mTopBox;
-    private Label mTitle;
-
-    private VBox mStatsBox;
-    private Label mWinnerLabel;
-    private Leaderboard mLeaderboard;
-
-    private HBox mButtonsBox;
-    private Button mDoneButton;
-
+    /**
+     * Create new GameOver screen for given Game
+     *
+     * @param pGame game
+     */
     public GameOverScene(Game pGame) {
-        mRoot = new BorderPane();
+        BorderPane root = new BorderPane();
 
-        mTopBox = new HBox(10.0f);
-        mTopBox.setPadding(new Insets(50.0f, 10.0f, 10.0f, 10.0f));
-        mTopBox.setAlignment(Pos.CENTER);
+        HBox topBox = new HBox(10.0f);
+        topBox.setPadding(new Insets(50.0f, 10.0f, 10.0f, 10.0f));
+        topBox.setAlignment(Pos.CENTER);
 
-        mTitle = new Label("Game Over");
-        mTitle.setStyle("-fx-font-size: 5em; -fx-font-weight: bold");
-        mTopBox.getChildren().add(mTitle);
+        Label title = new Label("Game Over");
+        title.setStyle("-fx-font-size: 5em; -fx-font-weight: bold");
+        topBox.getChildren().add(title);
 
-        mStatsBox = new VBox(10.0f);
-        mStatsBox.setPadding(new Insets(10.0f));
-        mStatsBox.setAlignment(Pos.CENTER);
+        VBox statsBox = new VBox(10.0f);
+        statsBox.setPadding(new Insets(10.0f));
+        statsBox.setAlignment(Pos.CENTER);
 
-        mWinnerLabel = new Label("The Winner is: " + pGame.getPlayers().get(0).getName());
-        mWinnerLabel.setStyle("-fx-font-size: 3em; -fx-font-weight: bold");
+        Label winnerLabel = new Label("The Winner is: " + pGame.getPlayers().get(0).getName());
+        winnerLabel.setStyle("-fx-font-size: 3em; -fx-font-weight: bold");
 
-        mLeaderboard = new Leaderboard();
-        mLeaderboard.setPlayers(FXCollections.observableArrayList(pGame.getPlayers()));
+        Leaderboard leaderboard = new Leaderboard();
+        leaderboard.setPlayers(FXCollections.observableArrayList(pGame.getPlayers()));
 
-        mStatsBox.getChildren().addAll(mWinnerLabel, mLeaderboard);
+        statsBox.getChildren().addAll(winnerLabel, leaderboard);
 
-        mButtonsBox = new HBox(10.0f);
-        mButtonsBox.setPadding(new Insets(10.0f));
-        mButtonsBox.setAlignment(Pos.CENTER);
+        HBox buttonsBox = new HBox(10.0f);
+        buttonsBox.setPadding(new Insets(10.0f));
+        buttonsBox.setAlignment(Pos.CENTER);
 
-        mDoneButton = new Button("Done");
-        mButtonsBox.getChildren().addAll(mDoneButton);
+        Button doneButton = new Button("Done");
+        buttonsBox.getChildren().addAll(doneButton);
 
-        mRoot.setTop(mTopBox);
-        mRoot.setCenter(mStatsBox);
-        mRoot.setBottom(mButtonsBox);
+        root.setTop(topBox);
+        root.setCenter(statsBox);
+        root.setBottom(buttonsBox);
 
-        mScene = new Scene(mRoot);
+        mScene = new Scene(root);
         mScene.getStylesheets().add("resources/JMetro.css");
 
-        mDoneButton.setOnAction(action -> {
+        doneButton.setOnAction(action -> {
 
             FlowManager.getInstance().gameLobby(pGame);
         });
     }
 
+    /**
+     * ReturnsJFX scene for this screen
+     *
+     * @return JFX {@link Scene}
+     */
     public Scene getScene() {
         return mScene;
     }
