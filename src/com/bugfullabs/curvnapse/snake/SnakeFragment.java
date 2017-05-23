@@ -5,8 +5,16 @@ import com.bugfullabs.curvnapse.utils.Vec2;
 
 import java.io.Serializable;
 
+/**
+ * Abstract class for snakefragment of any type
+ */
 public abstract class SnakeFragment implements Serializable {
-    public enum Type {LINE, HEAD, ARC}
+    /**
+     * Snake fragment types
+     */
+    public enum Type {
+        LINE, HEAD, ARC
+    }
 
     private static long UID = 0;
 
@@ -15,6 +23,13 @@ public abstract class SnakeFragment implements Serializable {
     private SerializableColor mColor;
     private double mWidth;
 
+    /**
+     * Create new snake fragment
+     *
+     * @param pType  type
+     * @param pColor snake color
+     * @param pWidth snake wwidth
+     */
     public SnakeFragment(Type pType, SerializableColor pColor, double pWidth) {
         mType = pType;
         mColor = pColor;
@@ -39,6 +54,12 @@ public abstract class SnakeFragment implements Serializable {
         return mUID;
     }
 
+    /**
+     * Check collision at given point
+     *
+     * @param pPoint point to collide with
+     * @return true if collision
+     */
     public abstract boolean isCollision(Vec2 pPoint);
 
 }
