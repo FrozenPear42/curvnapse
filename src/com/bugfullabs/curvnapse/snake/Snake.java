@@ -332,6 +332,10 @@ public class Snake {
         return mColor;
     }
 
+    /**
+     * Cjhange snake size to given size
+     * @param pSize
+     */
     public void setSize(double pSize) {
         mSize = pSize;
         applyChange();

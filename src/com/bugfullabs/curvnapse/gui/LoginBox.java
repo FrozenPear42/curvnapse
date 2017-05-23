@@ -46,8 +46,6 @@ public class LoginBox extends VBox {
                 mJoinButton.setText("Join");
             }
         });
-
-        //FIXME: good or not
         mNameBox.setText("User");
         mIPBox.setText("127.0.0.1");
         mPortBox.setText("1337");

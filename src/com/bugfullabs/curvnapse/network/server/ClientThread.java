@@ -60,7 +60,7 @@ public class ClientThread extends Thread {
                 mConnectionListener.onDisconnect(this);
                 break;
             } catch (IOException | ClassNotFoundException e) {
-                e.printStackTrace();
+                LOG.warning("Somenthing wrong");
             }
         }
     }

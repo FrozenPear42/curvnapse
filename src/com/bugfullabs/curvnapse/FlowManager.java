@@ -40,6 +40,7 @@ public class FlowManager {
      */
     public void initialize(Stage pMainStage) {
         mMainStage = pMainStage;
+        mMainStage.setOnCloseRequest(event -> exit());
     }
 
     /**
@@ -53,7 +54,6 @@ public class FlowManager {
         try {
             mServer = new Server(pPort, pMaxGames);
             mServer.start();
-            mMainStage.setOnCloseRequest(event -> mServer.close());
         } catch (Exception e) {
             return false;
         }
@@ -150,6 +150,16 @@ public class FlowManager {
         });
         mServerConnector.handshake("test", pID -> mUserID = pID);
         mServerConnector.sendMessage(new GameCreateRequest(mUserID, "asd", "", 10));
+    }
+
+    /**
+     * Ends all the connections and closes the app
+     */
+    private void exit() {
+        if (mServerConnector != null)
+            mServerConnector.disconnect();
+        if (mServer != null)
+            mServer.close();
     }
 
     /**

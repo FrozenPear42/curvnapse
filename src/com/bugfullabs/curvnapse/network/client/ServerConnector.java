@@ -1,5 +1,6 @@
 package com.bugfullabs.curvnapse.network.client;
 
+import com.bugfullabs.curvnapse.network.message.DisconnectMessage;
 import com.bugfullabs.curvnapse.network.message.HandshakeMessage;
 import com.bugfullabs.curvnapse.network.message.Message;
 import com.bugfullabs.curvnapse.network.message.WelcomeMessage;
@@ -99,6 +100,18 @@ public class ServerConnector extends Thread {
                 LOG.warning("Ups, could not fetch message from server");
                 break;
             }
+        }
+    }
+
+    /**
+     * Disconnects fromm the server
+     */
+    public void disconnect() {
+        mListeners.forEach(l -> l.onClientMessage(new DisconnectMessage()));
+        try {
+            mSocket.close();
+        } catch (Exception e) {
+            LOG.warning("Could not close client socket");
         }
     }
 
