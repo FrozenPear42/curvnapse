@@ -1,4 +1,4 @@
-package com.bugfullabs.curvnapse.player;
+package com.bugfullabs.curvnapse.game;
 
 import com.bugfullabs.curvnapse.utils.SerializableColor;
 import javafx.scene.input.KeyCode;

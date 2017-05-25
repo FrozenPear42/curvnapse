@@ -1,6 +1,6 @@
 package com.bugfullabs.curvnapse.network.server;
 
-import com.bugfullabs.curvnapse.network.message.DisconnectMessage;
+import com.bugfullabs.curvnapse.network.message.control.DisconnectMessage;
 import com.bugfullabs.curvnapse.network.message.Message;
 
 import java.io.IOException;
@@ -8,9 +8,6 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.net.SocketException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.logging.Logger;

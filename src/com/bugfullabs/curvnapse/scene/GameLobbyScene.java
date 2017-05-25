@@ -7,7 +7,9 @@ import com.bugfullabs.curvnapse.gui.MessageBox;
 import com.bugfullabs.curvnapse.gui.PlayersBox;
 import com.bugfullabs.curvnapse.network.client.ServerConnector;
 import com.bugfullabs.curvnapse.network.message.*;
-import com.bugfullabs.curvnapse.player.Player;
+import com.bugfullabs.curvnapse.game.Player;
+import com.bugfullabs.curvnapse.network.message.control.TextMessage;
+import com.bugfullabs.curvnapse.network.message.lobby.*;
 import com.bugfullabs.curvnapse.powerup.PowerUp;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -20,7 +22,6 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 
-import javax.xml.ws.soap.MTOM;
 import java.util.logging.Logger;
 
 /**
@@ -111,13 +112,13 @@ public class GameLobbyScene implements ServerConnector.MessageListener {
 
             @Override
             public void onPowerUpSelectionChange(PowerUp.PowerType pType, boolean pState) {
-                mConnector.sendMessage(new GamePowerUpUpdateRequest(pType, pState));
+                mConnector.sendMessage(new GamePowerUpStateRequest(pType, pState));
             }
         });
 
         mStartButton.setOnAction(event -> mConnector.sendMessage(new GameStartRequest()));
         backButton.setOnAction(event -> {
-            mConnector.sendMessage(new LeaveGameRequest());
+            mConnector.sendMessage(new LeaveGameLobbyRequest());
             FlowManager.getInstance().mainLobby();
             mConnector.unregisterListener(this);
         });

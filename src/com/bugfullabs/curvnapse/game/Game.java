@@ -1,6 +1,5 @@
 package com.bugfullabs.curvnapse.game;
 
-import com.bugfullabs.curvnapse.player.Player;
 import com.bugfullabs.curvnapse.utils.SerializableColor;
 import com.bugfullabs.curvnapse.powerup.PowerUp;
 import com.bugfullabs.curvnapse.utils.ColorBank;

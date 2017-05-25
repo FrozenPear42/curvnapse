@@ -1,4 +1,6 @@
-package com.bugfullabs.curvnapse.network.message;
+package com.bugfullabs.curvnapse.network.message.lobby;
+
+import com.bugfullabs.curvnapse.network.message.Message;
 
 public class NewPlayerRequest extends Message {
     private String mName;

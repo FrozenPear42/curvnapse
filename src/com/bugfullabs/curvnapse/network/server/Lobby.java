@@ -2,6 +2,10 @@ package com.bugfullabs.curvnapse.network.server;
 
 import com.bugfullabs.curvnapse.game.Game;
 import com.bugfullabs.curvnapse.network.message.*;
+import com.bugfullabs.curvnapse.network.message.control.ServerTextMessage;
+import com.bugfullabs.curvnapse.network.message.lobby.GameCreateRequest;
+import com.bugfullabs.curvnapse.network.message.lobby.JoinMessage;
+import com.bugfullabs.curvnapse.network.message.lobby.JoinRequest;
 
 import java.util.ArrayList;
 import java.util.LinkedList;

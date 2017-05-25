@@ -1,6 +1,7 @@
-package com.bugfullabs.curvnapse.network.message;
+package com.bugfullabs.curvnapse.network.message.control;
 
 
+import com.bugfullabs.curvnapse.network.message.Message;
 import com.bugfullabs.curvnapse.utils.SerializableColor;
 import javafx.scene.paint.Color;
 

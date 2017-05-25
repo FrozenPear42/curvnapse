@@ -3,7 +3,9 @@ package com.bugfullabs.curvnapse.network.server;
 
 import com.bugfullabs.curvnapse.game.Game;
 import com.bugfullabs.curvnapse.network.message.*;
-import com.bugfullabs.curvnapse.player.Player;
+import com.bugfullabs.curvnapse.game.Player;
+import com.bugfullabs.curvnapse.network.message.control.ServerTextMessage;
+import com.bugfullabs.curvnapse.network.message.game.*;
 import com.bugfullabs.curvnapse.powerup.PowerUpFactory;
 import com.bugfullabs.curvnapse.utils.SerializableColor;
 import com.bugfullabs.curvnapse.powerup.PowerUp;

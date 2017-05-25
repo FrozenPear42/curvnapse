@@ -1,5 +1,6 @@
-package com.bugfullabs.curvnapse.network.message;
+package com.bugfullabs.curvnapse.network.message.game;
 
+import com.bugfullabs.curvnapse.network.message.Message;
 import com.bugfullabs.curvnapse.utils.SerializableColor;
 import com.bugfullabs.curvnapse.utils.Vec2;
 

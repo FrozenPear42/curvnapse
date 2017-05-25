@@ -2,7 +2,10 @@ package com.bugfullabs.curvnapse.network.server;
 
 import com.bugfullabs.curvnapse.game.Game;
 import com.bugfullabs.curvnapse.network.message.*;
-import com.bugfullabs.curvnapse.player.Player;
+import com.bugfullabs.curvnapse.game.Player;
+import com.bugfullabs.curvnapse.network.message.control.ServerTextMessage;
+import com.bugfullabs.curvnapse.network.message.control.TextMessage;
+import com.bugfullabs.curvnapse.network.message.lobby.*;
 
 import java.util.LinkedList;
 import java.util.Timer;
@@ -166,7 +169,7 @@ public class GameLobby implements ClientThread.ClientMessageListener {
                 break;
 
             case POWERUP_UPDATE:
-                GamePowerUpUpdateRequest req = (GamePowerUpUpdateRequest) pMessage;
+                GamePowerUpStateRequest req = (GamePowerUpStateRequest) pMessage;
                 mGame.setPowerUpEnabled(req.getPowerType(), req.getState());
                 propagateUpdate();
                 break;

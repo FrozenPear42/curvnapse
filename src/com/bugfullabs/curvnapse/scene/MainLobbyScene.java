@@ -6,6 +6,11 @@ import com.bugfullabs.curvnapse.gui.GameListBox;
 import com.bugfullabs.curvnapse.gui.MessageBox;
 import com.bugfullabs.curvnapse.network.client.ServerConnector;
 import com.bugfullabs.curvnapse.network.message.*;
+import com.bugfullabs.curvnapse.network.message.control.TextMessage;
+import com.bugfullabs.curvnapse.network.message.lobby.GameCreateRequest;
+import com.bugfullabs.curvnapse.network.message.lobby.JoinMessage;
+import com.bugfullabs.curvnapse.network.message.lobby.JoinRequest;
+import com.bugfullabs.curvnapse.network.message.lobby.UpdateRequest;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -16,7 +21,6 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 
-import java.util.Collections;
 import java.util.logging.Logger;
 
 /**

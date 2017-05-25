@@ -1,8 +1,7 @@
 package com.bugfullabs.curvnapse.gui;
 
 import com.bugfullabs.curvnapse.FlowManager;
-import com.bugfullabs.curvnapse.player.Player;
-import javafx.application.Platform;
+import com.bugfullabs.curvnapse.game.Player;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;

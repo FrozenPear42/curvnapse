@@ -1,6 +1,7 @@
-package com.bugfullabs.curvnapse.network.message;
+package com.bugfullabs.curvnapse.network.message.lobby;
 
-import com.bugfullabs.curvnapse.player.Player;
+import com.bugfullabs.curvnapse.game.Player;
+import com.bugfullabs.curvnapse.network.message.Message;
 
 public class PlayerDeleteRequest extends Message {
     private Player mPlayer;

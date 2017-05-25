@@ -1,9 +1,9 @@
 package com.bugfullabs.curvnapse.network.client;
 
-import com.bugfullabs.curvnapse.network.message.DisconnectMessage;
-import com.bugfullabs.curvnapse.network.message.HandshakeMessage;
+import com.bugfullabs.curvnapse.network.message.control.DisconnectMessage;
+import com.bugfullabs.curvnapse.network.message.control.HandshakeMessage;
 import com.bugfullabs.curvnapse.network.message.Message;
-import com.bugfullabs.curvnapse.network.message.WelcomeMessage;
+import com.bugfullabs.curvnapse.network.message.control.WelcomeMessage;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;

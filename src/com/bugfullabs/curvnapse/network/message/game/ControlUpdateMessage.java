@@ -1,4 +1,6 @@
-package com.bugfullabs.curvnapse.network.message;
+package com.bugfullabs.curvnapse.network.message.game;
+
+import com.bugfullabs.curvnapse.network.message.Message;
 
 public class ControlUpdateMessage extends Message {
     private int mPlayerID;

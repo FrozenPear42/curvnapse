@@ -1,7 +1,7 @@
 package com.bugfullabs.curvnapse.gui;
 
 
-import com.bugfullabs.curvnapse.network.message.TextMessage;
+import com.bugfullabs.curvnapse.network.message.control.TextMessage;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;

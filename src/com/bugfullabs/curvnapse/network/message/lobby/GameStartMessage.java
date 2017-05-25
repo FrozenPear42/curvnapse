@@ -1,6 +1,7 @@
-package com.bugfullabs.curvnapse.network.message;
+package com.bugfullabs.curvnapse.network.message.lobby;
 
 import com.bugfullabs.curvnapse.game.Game;
+import com.bugfullabs.curvnapse.network.message.Message;
 
 public class GameStartMessage extends Message {
     Game mGame;

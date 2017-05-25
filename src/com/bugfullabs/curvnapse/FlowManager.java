@@ -2,11 +2,11 @@ package com.bugfullabs.curvnapse;
 
 import com.bugfullabs.curvnapse.game.Game;
 import com.bugfullabs.curvnapse.network.client.ServerConnector;
-import com.bugfullabs.curvnapse.network.message.GameCreateRequest;
-import com.bugfullabs.curvnapse.network.message.GameStartRequest;
+import com.bugfullabs.curvnapse.network.message.lobby.GameCreateRequest;
+import com.bugfullabs.curvnapse.network.message.lobby.GameStartRequest;
 import com.bugfullabs.curvnapse.network.message.GameUpdateMessage;
 import com.bugfullabs.curvnapse.network.message.Message.Type;
-import com.bugfullabs.curvnapse.network.message.NewPlayerRequest;
+import com.bugfullabs.curvnapse.network.message.lobby.NewPlayerRequest;
 import com.bugfullabs.curvnapse.network.server.Server;
 import com.bugfullabs.curvnapse.scene.*;
 import javafx.application.Platform;
