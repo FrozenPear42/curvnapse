@@ -50,7 +50,7 @@ public class Game implements Serializable, Cloneable {
         mBoardHeight = 500;
         mPowerUps = new boolean[PowerUp.PowerType.values().length];
         for (int i = 0; i < mPowerUps.length; i++)
-            mPowerUps[i] = true;
+            mPowerUps[i] = false;
     }
 
     public int getID() {
@@ -131,5 +131,11 @@ public class Game implements Serializable, Cloneable {
 
     public ColorBank getColorBank() {
         return mColorBank;
+    }
+
+    public boolean anyPowerUps() {
+        for (boolean b : mPowerUps)
+            if (b) return true;
+        return false;
     }
 }

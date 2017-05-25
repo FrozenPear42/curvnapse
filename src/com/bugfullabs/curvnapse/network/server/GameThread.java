@@ -105,11 +105,14 @@ public class GameThread implements ClientThread.ClientMessageListener {
      */
     private void runRound() {
         mMovementQueue.clear();
+        mLastTime = System.nanoTime();
         mTimer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
                 // calculate delta time
-                double delta = 1000 / 60; //FIXME: WCALE NIE
+                double delta = (System.nanoTime() - mLastTime)/1000000;
+                mLastTime = System.nanoTime();
+
                 LinkedList<SnakeFragment> fragments = new LinkedList<>();
 
                 // Count rounds
@@ -119,12 +122,13 @@ public class GameThread implements ClientThread.ClientMessageListener {
                 }
 
                 // Spawn PowerUps
-                mNextPowerUpTime -= delta;
-                if (mNextPowerUpTime < 0) {
-                    mNextPowerUpTime = mRandom.nextInt(4000) + 3000;
-                    nextPowerUp();
+                if(mGame.anyPowerUps()) {
+                    mNextPowerUpTime -= delta;
+                    if (mNextPowerUpTime < 0) {
+                        mNextPowerUpTime = mRandom.nextInt(4000) + 3000;
+                        nextPowerUp();
+                    }
                 }
-
                 // Process movement queue
                 ArrayList<Pair<Snake, MovementAction>> movement = new ArrayList<>();
                 mMovementQueue.drainTo(movement);
@@ -320,6 +324,12 @@ public class GameThread implements ClientThread.ClientMessageListener {
         return new Snake(pPlayer.getID(), randomPosition(), angle, pPlayer.getColor());
     }
 
+    /**
+     * Listens on client message
+     *
+     * @param pClientThread source
+     * @param pMessage      message
+     */
     @Override
     public synchronized void onClientMessage(ClientThread pClientThread, Message pMessage) {
         if (pMessage.getType() == Message.Type.CONTROL_UPDATE) {

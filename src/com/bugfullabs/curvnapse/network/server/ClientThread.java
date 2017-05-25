@@ -8,6 +8,10 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.net.SocketException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.logging.Logger;
 
@@ -20,7 +24,7 @@ public class ClientThread extends Thread {
     private static int UID = 0;
     private final Socket mSocket;
     private final ClientConnectionListener mConnectionListener;
-    private final CopyOnWriteArrayList<ClientMessageListener> mListeners;
+    private final List<ClientMessageListener> mListeners;
     private final ObjectOutputStream mObjectOutputStream;
     private final ObjectInputStream mObjectInputStream;
     private int mUID;
@@ -50,12 +54,13 @@ public class ClientThread extends Thread {
      */
     @Override
     public void run() {
-        Message message;
+
         while (!mSocket.isClosed() && mSocket.isConnected()) {
             try {
-                message = (Message) mObjectInputStream.readObject();
-                for (ClientMessageListener listener : mListeners)
-                    listener.onClientMessage(this, message);
+                final Message message = (Message) mObjectInputStream.readObject();
+
+                mListeners.forEach(l -> l.onClientMessage(this, message));
+
             } catch (SocketException e) {
                 mConnectionListener.onDisconnect(this);
                 break;
@@ -85,7 +90,7 @@ public class ClientThread extends Thread {
      */
     public void disconnect() {
         try {
-            mListeners.forEach(listener -> listener.onClientMessage(this, new DisconnectMessage()));
+            mListeners.forEach(l -> l.onClientMessage(this, new DisconnectMessage()));
             mSocket.close();
             mListeners.clear();
             mObjectInputStream.close();
@@ -102,7 +107,6 @@ public class ClientThread extends Thread {
      */
     public void registerListener(ClientMessageListener pClientMessageListener) {
         mListeners.add(pClientMessageListener);
-
     }
 
     /**
@@ -112,7 +116,6 @@ public class ClientThread extends Thread {
      */
     public void removeListener(ClientMessageListener pClientMessageListener) {
         mListeners.remove(pClientMessageListener);
-
     }
 
     /**
