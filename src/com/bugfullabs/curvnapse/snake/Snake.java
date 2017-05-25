@@ -354,7 +354,7 @@ public class Snake {
         applyChange();
     }
 
-    private void setInvisible(boolean pInvisible) {
+    public void setInvisible(boolean pInvisible) {
         mInvisible = pInvisible;
         if (!pInvisible)
             applyChange();

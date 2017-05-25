@@ -4,6 +4,7 @@ package com.bugfullabs.curvnapse.network.server;
 import com.bugfullabs.curvnapse.game.Game;
 import com.bugfullabs.curvnapse.network.message.*;
 import com.bugfullabs.curvnapse.player.Player;
+import com.bugfullabs.curvnapse.powerup.PowerUpFactory;
 import com.bugfullabs.curvnapse.utils.SerializableColor;
 import com.bugfullabs.curvnapse.powerup.PowerUp;
 import com.bugfullabs.curvnapse.powerup.PowerUpEntity;
@@ -225,14 +226,14 @@ public class GameThread implements ClientThread.ClientMessageListener {
      * @param pSnake   Snake which collected that PowerUp
      */
     private void collectPowerUp(PowerUpEntity pPowerUp, Snake pSnake) {
-        PowerUp.Target t = PowerUp.getTarget(pPowerUp.getType());
-        PowerUp p = PowerUp.fromType(pPowerUp.getType());
+        PowerUp p = PowerUpFactory.fromType(pPowerUp.getType());
+        PowerUp.Target t = p.getTarget();
 
         if (pPowerUp.getType() == PowerUp.PowerType.GLOBAL_ERASE) {
             mSnakes.forEach((__, s) -> s.erase());
             mClients.forEach(client -> client.sendMessage(new EraseMessage()));
         } else if (t == PowerUp.Target.SELF)
-            pSnake.addPowerUp(PowerUp.fromType(pPowerUp.getType()));
+            pSnake.addPowerUp(p);
         else if (t == PowerUp.Target.ALL)
             mSnakes.forEach((__, s) -> s.addPowerUp(p));
         else if (t == PowerUp.Target.OTHERS)
