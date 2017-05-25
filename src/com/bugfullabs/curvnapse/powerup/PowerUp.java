@@ -22,10 +22,10 @@ public abstract class PowerUp {
         ENEMY_SLOW,
         ENEMY_CONFUSION,
         ENEMY_LARGE_RADIUS,
-        ALL_TRAVERSE,
-        GLOBAL_RANDOM_DEATH,
-        GLOBAL_RAIN,
-        GLOBAL_XD
+//        ALL_TRAVERSE,
+//        GLOBAL_RANDOM_DEATH,
+//        GLOBAL_RAIN,
+//        GLOBAL_XD
     }
 
     /**

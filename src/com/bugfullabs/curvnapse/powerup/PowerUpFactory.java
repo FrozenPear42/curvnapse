@@ -91,11 +91,12 @@ public class PowerUpFactory {
                         s -> s.setInvisible(false));
 
             case SELF_TRAVERSE:
-            case ALL_TRAVERSE:
-            case GLOBAL_RAIN:
             case GLOBAL_ERASE:
-            case GLOBAL_RANDOM_DEATH:
-            case GLOBAL_XD:
+
+//            case ALL_TRAVERSE:
+//            case GLOBAL_RAIN:
+//            case GLOBAL_RANDOM_DEATH:
+//            case GLOBAL_XD:
             default:
                 return build(PowerUp.Target.GLOBAL, 0, null, null);
         }
