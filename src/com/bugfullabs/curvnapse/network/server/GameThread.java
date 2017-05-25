@@ -19,7 +19,7 @@ import java.util.logging.Logger;
 
 
 /**
- * Main Game Logic class, actually that is not a {@link Thread}, but uses them via {@link Timer}
+ * Main Game Logic class, actually that is not a {@link Thread}, but uses threading via {@link Timer}
  */
 public class GameThread implements ClientThread.ClientMessageListener {
     private static final Logger LOG = Logger.getLogger(GameThread.class.getName());
@@ -52,7 +52,7 @@ public class GameThread implements ClientThread.ClientMessageListener {
         mRandom = new Random();
         mSnakes = new HashMap<>();
         mPowerUps = new LinkedList<>();
-        mMovementQueue = new ArrayBlockingQueue<>(20);
+        mMovementQueue = new ArrayBlockingQueue<>(100);
 
         mRoundNumber = 1;
 
@@ -110,7 +110,7 @@ public class GameThread implements ClientThread.ClientMessageListener {
             @Override
             public void run() {
                 // calculate delta time
-                double delta = (System.nanoTime() - mLastTime)/1000000;
+                double delta = (System.nanoTime() - mLastTime) / 1000000;
                 mLastTime = System.nanoTime();
 
                 LinkedList<SnakeFragment> fragments = new LinkedList<>();
@@ -122,7 +122,7 @@ public class GameThread implements ClientThread.ClientMessageListener {
                 }
 
                 // Spawn PowerUps
-                if(mGame.anyPowerUps()) {
+                if (mGame.anyPowerUps()) {
                     mNextPowerUpTime -= delta;
                     if (mNextPowerUpTime < 0) {
                         mNextPowerUpTime = mRandom.nextInt(4000) + 3000;
@@ -196,8 +196,8 @@ public class GameThread implements ClientThread.ClientMessageListener {
                     }
                 }));
 
+                //collect powerup
                 mSnakes.forEach((player, snake) -> {
-                    //collect powerup
                     mPowerUps.stream()
                             .filter(powerUp -> powerUp.isCollision(snake.getPosition()))
                             .forEach(powerUp -> collectPowerUp(powerUp, snake));
@@ -207,8 +207,10 @@ public class GameThread implements ClientThread.ClientMessageListener {
                 });
 
                 //Propagate changes
+
                 fragments.clear();
                 mSnakes.forEach(((pPlayer, pSnake) -> fragments.addAll(pSnake.getFragments())));
+
                 mClients.forEach(client -> client.sendMessage(new SnakeFragmentsMessage(fragments)));
 
             }

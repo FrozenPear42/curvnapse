@@ -21,8 +21,7 @@ public class Snake {
     private enum State {
         TURNING_LEFT,
         TURNING_RIGHT,
-        FORWARD,
-        STOP
+        FORWARD
     }
 
     private static final double DEFAULT_SPEED = 0.10f;
@@ -153,7 +152,6 @@ public class Snake {
     public void addPowerUp(PowerUp pPowerUp) {
         mPowerUps.add(0, new Pair<>(pPowerUp, pPowerUp.getDuration()));
         pPowerUp.onBegin(this);
-        applyChange();
     }
 
     /**
@@ -161,8 +159,10 @@ public class Snake {
      */
     public void turnLeft() {
         if (mDead) return;
-        mState = !mConfused ? State.TURNING_LEFT : State.TURNING_RIGHT;
-        applyChange();
+        if (mState != State.TURNING_LEFT) {
+            mState = !mConfused ? State.TURNING_LEFT : State.TURNING_RIGHT;
+            applyChange();
+        }
     }
 
     /**
@@ -170,8 +170,10 @@ public class Snake {
      */
     public void turnRight() {
         if (mDead) return;
-        mState = mConfused ? State.TURNING_LEFT : State.TURNING_RIGHT;
-        applyChange();
+        if (mState != State.TURNING_RIGHT) {
+            mState = mConfused ? State.TURNING_LEFT : State.TURNING_RIGHT;
+            applyChange();
+        }
     }
 
     /**
@@ -179,8 +181,10 @@ public class Snake {
      */
     public void turnEnd() {
         if (mDead) return;
-        doLine();
-        mState = State.FORWARD;
+        if (mState != State.FORWARD) {
+            doLine();
+            mState = State.FORWARD;
+        }
     }
 
     /**
@@ -222,8 +226,6 @@ public class Snake {
      */
     private void applyChange() {
         switch (mState) {
-            case STOP:
-                break;
             case FORWARD:
                 doLine();
                 break;
@@ -334,6 +336,7 @@ public class Snake {
 
     /**
      * Cjhange snake size to given size
+     *
      * @param pSize
      */
     public void setSize(double pSize) {
@@ -427,7 +430,8 @@ public class Snake {
                 if (fragment.isCollision(mPosition))
                     return true;
             }
-        } else if (mState != State.STOP) {
+
+        } else {
 
             for (SnakeFragment fragment : mLineFragments) {
                 if (fragment.isCollision(mPosition))

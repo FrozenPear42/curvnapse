@@ -133,6 +133,10 @@ public class Game implements Serializable, Cloneable {
         return mColorBank;
     }
 
+    /**
+     * Check if there are any PowerUps enabled
+     * @return true if one or more PowerUps are enabled
+     */
     public boolean anyPowerUps() {
         for (boolean b : mPowerUps)
             if (b) return true;
