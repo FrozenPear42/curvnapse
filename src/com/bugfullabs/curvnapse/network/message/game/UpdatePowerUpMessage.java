@@ -5,6 +5,9 @@ import com.bugfullabs.curvnapse.powerup.PowerUpEntity;
 
 import java.util.LinkedList;
 
+/**
+ * Oh baby, we have new PowerUp, better draw it on board then!
+ */
 public class UpdatePowerUpMessage extends Message {
 
     private LinkedList<PowerUpEntity> mPowerUp;

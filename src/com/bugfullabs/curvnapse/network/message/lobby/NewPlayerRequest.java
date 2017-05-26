@@ -2,6 +2,9 @@ package com.bugfullabs.curvnapse.network.message.lobby;
 
 import com.bugfullabs.curvnapse.network.message.Message;
 
+/**
+ * Want new player in game
+ */
 public class NewPlayerRequest extends Message {
     private String mName;
 

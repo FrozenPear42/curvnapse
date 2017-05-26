@@ -5,6 +5,9 @@ import com.bugfullabs.curvnapse.snake.SnakeFragment;
 
 import java.util.LinkedList;
 
+/**
+ * Here you are, some new Fragments created by server game logic step
+ */
 public class SnakeFragmentsMessage extends Message {
     private LinkedList<SnakeFragment> mSnakeFragments;
 

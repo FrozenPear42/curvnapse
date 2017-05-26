@@ -117,7 +117,7 @@ public class MessageBox extends VBox {
                 Label text = new Label(pMessage.getMessage());
                 name.setTextFill(pMessage.getTextColor().toFXColor());
                 text.setTextFill(pMessage.getTextColor().toFXColor());
-                text.setMaxWidth(220);
+                text.setMaxWidth(240);
                 text.setWrapText(true);
                 box.getChildren().add(name);
                 box.getChildren().add(text);

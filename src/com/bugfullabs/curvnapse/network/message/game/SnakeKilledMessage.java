@@ -4,6 +4,10 @@ import com.bugfullabs.curvnapse.network.message.Message;
 import com.bugfullabs.curvnapse.utils.SerializableColor;
 import com.bugfullabs.curvnapse.utils.Vec2;
 
+/**
+ * One of the snakes just died poorly...
+ * Wondering which?
+ */
 public class SnakeKilledMessage extends Message {
 
     private Vec2 mPoint;

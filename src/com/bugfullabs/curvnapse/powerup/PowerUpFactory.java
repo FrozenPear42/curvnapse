@@ -9,7 +9,7 @@ public class PowerUpFactory {
 
     private static final double RADIUS_FACTOR = 1.6;
     private static final double SPEED_FACTOR = 1.6;
-    private static final double SIZE_FACTOR = 1.6;
+    private static final double SIZE_FACTOR = 2.5;
     private static final double DEFAULT_TIME = 4000;
 
 

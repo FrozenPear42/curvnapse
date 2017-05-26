@@ -2,6 +2,9 @@ package com.bugfullabs.curvnapse.network.message.control;
 
 import com.bugfullabs.curvnapse.network.message.Message;
 
+/**
+ * sserver accepts client and gives it unique client ID
+ */
 public class WelcomeMessage extends Message {
 
     private int mUserID;

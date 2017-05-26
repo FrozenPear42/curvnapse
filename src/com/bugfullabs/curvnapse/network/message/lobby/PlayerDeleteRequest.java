@@ -3,6 +3,9 @@ package com.bugfullabs.curvnapse.network.message.lobby;
 import com.bugfullabs.curvnapse.game.Player;
 import com.bugfullabs.curvnapse.network.message.Message;
 
+/**
+ * Hate tthat player, wanna remove it from the game
+ */
 public class PlayerDeleteRequest extends Message {
     private Player mPlayer;
 

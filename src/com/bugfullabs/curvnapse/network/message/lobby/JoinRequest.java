@@ -2,6 +2,9 @@ package com.bugfullabs.curvnapse.network.message.lobby;
 
 import com.bugfullabs.curvnapse.network.message.Message;
 
+/**
+ * Client likes the description of the Game and wants to join it
+ */
 public class JoinRequest extends Message {
     private int mID;
 

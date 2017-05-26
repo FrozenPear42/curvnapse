@@ -1,12 +1,13 @@
 package com.bugfullabs.curvnapse.network.message.control;
 
-import com.bugfullabs.curvnapse.network.message.control.TextMessage;
+import com.bugfullabs.curvnapse.utils.SerializableColor;
+import javafx.scene.paint.Color;
 
 /**
- * Created by wojciech on 29.03.17.
+ * Text message with server header
  */
 public class ServerTextMessage extends TextMessage {
     public ServerTextMessage(String pMessage) {
-        super("Server", pMessage);
+        super("Server", pMessage, new SerializableColor(Color.RED));
     }
 }

@@ -3,6 +3,9 @@ package com.bugfullabs.curvnapse.network.message.lobby;
 import com.bugfullabs.curvnapse.network.message.Message;
 import com.bugfullabs.curvnapse.powerup.PowerUp;
 
+/**
+ * Im so tired of playing with this PowerUp, can we please turn it off?
+ */
 public class GamePowerUpStateRequest extends Message {
     private PowerUp.PowerType pType;
     private boolean mState;

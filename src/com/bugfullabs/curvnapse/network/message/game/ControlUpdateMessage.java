@@ -2,6 +2,10 @@ package com.bugfullabs.curvnapse.network.message.game;
 
 import com.bugfullabs.curvnapse.network.message.Message;
 
+/**
+ * Yeah, key was pressed or is no longer being pressed...
+ * Basically message for informing server about keys being pressed
+ */
 public class ControlUpdateMessage extends Message {
     private int mPlayerID;
     private Direction mDirection;
