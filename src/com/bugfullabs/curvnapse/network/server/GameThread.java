@@ -362,6 +362,9 @@ public class GameThread implements ClientThread.ClientMessageListener {
         }
     }
 
+    /**
+     * Action determined by {@link ControlUpdateMessage} for movement management
+     */
     public enum MovementAction {
         LEFT, RIGHT, STOP
     }

@@ -11,11 +11,17 @@ public class ControlUpdateMessage extends Message {
     private Direction mDirection;
     private Action mAction;
 
+    /**
+     * Moving direction
+     */
     public enum Direction {
         LEFT,
         RIGHT
     }
 
+    /**
+     * Key status
+     */
     public enum Action {
         UP,
         DOWN

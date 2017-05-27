@@ -16,6 +16,9 @@ import javafx.scene.layout.VBox;
 
 import java.util.logging.Logger;
 
+/**
+ * Represents Game Over scene for given {@link Game}
+ */
 public class GameOverScene {
     private static final Logger LOG = Logger.getLogger(MainLobbyScene.class.getName());
     private Scene mScene;

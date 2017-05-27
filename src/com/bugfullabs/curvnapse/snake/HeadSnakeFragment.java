@@ -4,7 +4,7 @@ import com.bugfullabs.curvnapse.utils.SerializableColor;
 import com.bugfullabs.curvnapse.utils.Vec2;
 
 /**
- * class representing non-colliding, point snake fragment
+ * Class representing non-colliding, point snake fragment
  */
 public class HeadSnakeFragment extends SnakeFragment {
 

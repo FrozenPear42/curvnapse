@@ -31,7 +31,8 @@ public class ClientThread extends Thread {
      * Crate new client thread with given socket.
      * Thread will manage connection and all the received and sent messages
      *
-     * @param pSocket client socket
+     * @param pSocket   client socket
+     * @param pListener listener on connection status
      * @throws IOException Thrown when could not create object stream via socket
      */
     public ClientThread(Socket pSocket, ClientConnectionListener pListener) throws IOException {
@@ -146,6 +147,12 @@ public class ClientThread extends Thread {
      * Listener on client's messages
      */
     public interface ClientMessageListener {
+        /**
+         * Invoked on new message from client
+         *
+         * @param pClientThread source
+         * @param pMessage      message
+         */
         void onClientMessage(ClientThread pClientThread, Message pMessage);
     }
 
@@ -153,6 +160,11 @@ public class ClientThread extends Thread {
      * Listener on connection status
      */
     public interface ClientConnectionListener {
+        /**
+         * Invoked when client disconnects
+         *
+         * @param pClientThread client that has disconnected
+         */
         void onDisconnect(ClientThread pClientThread);
     }
 

@@ -3,7 +3,7 @@ package com.bugfullabs.curvnapse.network.message;
 import java.io.Serializable;
 
 /**
- * Abstract class for messages using in client <-> server communication
+ * Abstract class for messages using in client - server communication
  */
 public abstract class Message implements Serializable {
 

@@ -68,7 +68,7 @@ public class GameListBox extends VBox {
 
     /**
      * Set {@link Game} list source
-     * @param pGames
+     * @param pGames games to be displayed
      */
     public void setGames(ObservableList<Game> pGames) {
         mGameList.setItems(pGames);

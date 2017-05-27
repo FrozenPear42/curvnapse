@@ -53,7 +53,7 @@ public class GameOptionsBox extends VBox {
     /**
      * Set displayed game name
      *
-     * @param pName
+     * @param pName game name
      */
     public void setName(String pName) {
         mName.setText(pName);

@@ -337,7 +337,7 @@ public class Snake {
     /**
      * Cjhange snake size to given size
      *
-     * @param pSize
+     * @param pSize snake size
      */
     public void setSize(double pSize) {
         mSize = pSize;

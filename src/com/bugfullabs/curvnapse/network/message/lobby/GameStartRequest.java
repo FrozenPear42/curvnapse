@@ -3,7 +3,7 @@ package com.bugfullabs.curvnapse.network.message.lobby;
 import com.bugfullabs.curvnapse.network.message.Message;
 
 /**
- * Everyone is ready? Lets go! Begin the game now!
+ * Everyone is ready so Lets go! Begin the game now!
  */
 public class GameStartRequest extends Message {
     public GameStartRequest() {

@@ -37,7 +37,7 @@ public class Leaderboard extends VBox {
     /**
      * set observable source of players {@link ObservableList}
      *
-     * @param pPlayers
+     * @param pPlayers players to be displayed
      */
     public void setPlayers(ObservableList<Player> pPlayers) {
         mPlayersList.setItems(pPlayers);

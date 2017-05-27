@@ -49,6 +49,7 @@ public class LoginScene implements LoginBox.LoginListener {
 
     /**
      * Get JFX Scene of the screen
+     * @return JFX Scene
      */
     public Scene getScene() {
         return mScene;
