@@ -83,9 +83,12 @@ public class Snake {
         mSize = DEFAULT_SIZE;
         mState = State.FORWARD;
         mDead = false;
-        mInvisible = false;
-        mHoleNow = false;
         mConfused = false;
+
+        /* start as invisible */
+        mInvisible = true;
+        mHoleNow = true;
+        mHoleTime = 2000;
 
         applyChange();
     }
@@ -104,17 +107,18 @@ public class Snake {
         mPowerUps.removeIf(pair -> pair.getValue() <= 0);
 
         mHoleTime -= pDelta;
-//        if (mHoleTime <= 0) {
-//            if (!mHoleNow) {
-//                setInvisible(true);
-//                mHoleNow = true;
-//                mHoleTime = mRandom.nextInt(1000) + 100;
-//            } else {
-//                setInvisible(false);
-//                mHoleNow = false;
-//                mHoleTime = mRandom.nextInt(3000) + 3000;
-//            }
-//        }
+
+        if (mHoleTime <= 0) {
+            if (!mHoleNow) {
+                setInvisible(true);
+                mHoleNow = true;
+                mHoleTime = mRandom.nextInt(150) + 100;
+            } else {
+                setInvisible(false);
+                mHoleNow = false;
+                mHoleTime = mRandom.nextInt(1000) + 1000;
+            }
+        }
 
 
         double deltaAngle = (mVelocity.length() / mTurnRadius) * pDelta;
@@ -195,7 +199,8 @@ public class Snake {
         mVelocity.y = -mVelocity.y;
 
         LineSnakeFragment line = new LineSnakeFragment(new Vec2(mPosition), new Vec2(mPosition), mVelocity.angle(), mColor, mSize);
-        mLineFragments.add(line);
+        if (!mInvisible)
+            mLineFragments.add(line);
     }
 
     /**
@@ -210,14 +215,18 @@ public class Snake {
             mTurnCenter.y = mPosition.y - mTurnRadius * Math.cos(mAngle);
             Vec2 turnCenter = new Vec2(mTurnCenter.x, mTurnCenter.y);
             ArcSnakeFragment arc = new ArcSnakeFragment(startAngle, mTurnRadius, turnCenter, mColor, mSize);
-            mArcFragments.add(arc);
+
+            if (!mInvisible)
+                mArcFragments.add(arc);
         } else {
             double startAngle = MathUtils.normalizeAngle(mAngle + Math.PI / 2);
             mTurnCenter.x = mPosition.x + mTurnRadius * Math.sin(mAngle);
             mTurnCenter.y = mPosition.y + mTurnRadius * Math.cos(mAngle);
             Vec2 turnCenter = new Vec2(mTurnCenter.x, mTurnCenter.y);
             ArcSnakeFragment arc = new ArcSnakeFragment(startAngle, mTurnRadius, turnCenter, mColor, mSize);
-            mArcFragments.add(arc);
+
+            if (!mInvisible)
+                mArcFragments.add(arc);
         }
     }
 

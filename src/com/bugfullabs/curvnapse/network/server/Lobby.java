@@ -99,7 +99,7 @@ public class Lobby implements ClientThread.ClientMessageListener {
                     game.addClient(pClient);
                     pClient.sendMessage(new JoinMessage(game.getGame()));
 
-                    mClients.remove(pClient); //FIXME: NO NEED?
+                    mClients.remove(pClient);
                     pClient.removeListener(this);
                 }
                 break;
@@ -114,7 +114,7 @@ public class Lobby implements ClientThread.ClientMessageListener {
                             lobby.addClient(pClient);
                             pClient.sendMessage(new JoinMessage(lobby.getGame()));
 
-                            mClients.remove(pClient); //FIXME: NO NEED?
+                            mClients.remove(pClient);
                             pClient.removeListener(this);
                         });
                 break;

@@ -217,10 +217,6 @@ public class GameThread implements ClientThread.ClientMessageListener {
                 });
 
                 //Propagate changes
-
-                fragments.clear();
-                mSnakes.forEach(((pPlayer, pSnake) -> fragments.addAll(pSnake.getFragments())));
-
                 mClients.forEach(client -> client.sendMessage(new SnakeFragmentsMessage(fragments)));
 
             }
@@ -336,7 +332,6 @@ public class GameThread implements ClientThread.ClientMessageListener {
      */
     private Snake createNewSnake(Player pPlayer) {
         Random rnd = new Random();
-        //TODO: avoid conflict
         double angle = rnd.nextDouble() * Math.PI;
         return new Snake(pPlayer.getID(), randomPosition(), angle, pPlayer.getColor());
     }
