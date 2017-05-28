@@ -14,7 +14,7 @@ public abstract class PowerUp {
         SELF_SHRINK,
         SELF_SLOW,
         SELF_INVISIBLE,
-        SELF_TRAVERSE,
+        GLOBAL_RANDOM_DEATH,
         SELF_SMALL_RADIUS,
         GLOBAL_ERASE,
         ENEMY_FAST,

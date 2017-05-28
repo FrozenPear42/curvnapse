@@ -408,19 +408,6 @@ public class Snake {
     }
 
     /**
-     * Returns all the snake fragments
-     *
-     * @return alle the fragments gdmn
-     */
-    public List<SnakeFragment> getFragments() {
-        ArrayList<SnakeFragment> list = new ArrayList<>();
-        list.addAll(mLineFragments);
-        list.addAll(mArcFragments);
-        return list;
-    }
-
-
-    /**
      * Check collision with itself
      *
      * @return true if collision

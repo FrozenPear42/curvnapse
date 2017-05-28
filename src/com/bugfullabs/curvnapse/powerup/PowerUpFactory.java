@@ -90,7 +90,7 @@ public class PowerUpFactory {
                         s -> s.setInvisible(true),
                         s -> s.setInvisible(false));
 
-            case SELF_TRAVERSE:
+            case GLOBAL_RANDOM_DEATH:
             case GLOBAL_ERASE:
 
 //            case ALL_TRAVERSE:
