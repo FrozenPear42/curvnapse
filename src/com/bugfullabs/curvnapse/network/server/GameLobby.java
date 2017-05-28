@@ -37,7 +37,7 @@ public class GameLobby implements ClientThread.ClientMessageListener {
     public GameLobby(Lobby pLobby, String pName, int pHost, int pMaxPlayers) {
         mRootLobby = pLobby;
         mClients = new LinkedList<>();
-        mGame = new Game(pName, pHost, 300, pMaxPlayers);
+        mGame = new Game(pName, pHost, 10, pMaxPlayers);
         mGameIsRunning = false;
     }
 
@@ -204,10 +204,13 @@ public class GameLobby implements ClientThread.ClientMessageListener {
             case GAME_START_REQUEST:
                 if (mGame.getPlayers().isEmpty())
                     break;
+                if(mGameIsRunning)
+                    break;
+
+                mGameIsRunning = true;
 
                 new Timer().schedule(new TimerTask() {
                     private int times = 1;
-
                     @Override
                     public void run() {
                         mClients.forEach(clientThread -> clientThread.sendMessage(new TextMessage("Server", String.format("Game will start in %d...", times))));
@@ -217,7 +220,6 @@ public class GameLobby implements ClientThread.ClientMessageListener {
                             mClients.forEach(clientThread -> clientThread.sendMessage(new GameStartMessage(mGame)));
                             mThread = new GameThread(mGame, mClients, () -> mGameIsRunning = false);
                             mClients.forEach(client -> client.registerListener(mThread));
-                            mGameIsRunning = true;
                         }
                         times--;
                     }

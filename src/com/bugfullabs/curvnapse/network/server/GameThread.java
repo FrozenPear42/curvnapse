@@ -50,8 +50,9 @@ public class GameThread implements ClientThread.ClientMessageListener {
     /**
      * Create new Game with given options
      *
-     * @param pGame    game options
-     * @param pClients clients involved in game
+     * @param pGame     game options
+     * @param pClients  clients involved in game
+     * @param pListener listener on game end
      */
     public GameThread(Game pGame, List<ClientThread> pClients, FinishListener pListener) {
         mClients = pClients;

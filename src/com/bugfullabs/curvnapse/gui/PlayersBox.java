@@ -86,6 +86,8 @@ public class PlayersBox extends VBox {
 
         /**
          * Called when user requested color rotation
+         *
+         * @param pPlayer player to change color
          */
         void onColorRotation(Player pPlayer);
     }

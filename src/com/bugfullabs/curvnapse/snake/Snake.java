@@ -304,6 +304,10 @@ public class Snake {
         return mSpeed;
     }
 
+    /**
+     * Check if snake is confused
+     * @return confused?
+     */
     public boolean isConfused() {
         return mConfused;
     }
