@@ -6,7 +6,9 @@ import com.bugfullabs.curvnapse.game.Player;
 import com.bugfullabs.curvnapse.network.message.control.ServerTextMessage;
 import com.bugfullabs.curvnapse.network.message.control.TextMessage;
 import com.bugfullabs.curvnapse.network.message.lobby.*;
+import com.bugfullabs.curvnapse.utils.SerializableColor;
 
+import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -188,6 +190,10 @@ public class GameLobby implements ClientThread.ClientMessageListener {
                 deletePlayer(((PlayerDeleteRequest) pMessage).getPlayer());
                 break;
 
+            case PLAYER_COLOR_REQUEST:
+                updatePlayerColor(((PlayerColorRotationRequest) pMessage).getPlayer());
+                break;
+
             case DISCONNECT:
                 leaveGame(pClient, false);
                 break;
@@ -221,7 +227,26 @@ public class GameLobby implements ClientThread.ClientMessageListener {
     }
 
     /**
+     * Try to give player new Color
+     *
+     * @param pPlayer Player to change color
+     */
+    private void updatePlayerColor(Player pPlayer) {
+        SerializableColor color = mGame.getColorBank().nextColor();
+        if (color == null)
+            return;
+
+        mGame.getColorBank().returnColor(pPlayer.getColor());
+        mGame.getPlayers().stream()
+                .filter(p -> p.getID() == pPlayer.getID())
+                .findFirst()
+                .ifPresent(p -> p.setColor(color));
+        propagateUpdate();
+    }
+
+    /**
      * Returns number of clients in game
+     *
      * @return number of clients
      */
     public int clientCount() {

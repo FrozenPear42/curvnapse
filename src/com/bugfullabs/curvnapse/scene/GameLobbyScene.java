@@ -93,7 +93,6 @@ public class GameLobbyScene implements ServerConnector.MessageListener {
             public void onCreateLocal() {
                 mConnector.sendMessage(new NewPlayerRequest(FlowManager.getInstance().getUsername() + " "));
             }
-
             @Override
             public void onPlayerEdit(Player pPlayer) {
                 mConnector.sendMessage(new PlayerUpdateRequest(pPlayer));
@@ -102,6 +101,11 @@ public class GameLobbyScene implements ServerConnector.MessageListener {
             @Override
             public void onPlayerDelete(Player pPlayer) {
                 mConnector.sendMessage(new PlayerDeleteRequest(pPlayer));
+            }
+
+            @Override
+            public void onColorRotation(Player pPlayer) {
+                mConnector.sendMessage(new PlayerColorRotationRequest(pPlayer));
             }
         });
 

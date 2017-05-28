@@ -80,4 +80,8 @@ public class Player implements Serializable {
     public void setName(String pName) {
         mName = pName;
     }
+
+    public void setColor(SerializableColor pColor) {
+        mColor = pColor;
+    }
 }

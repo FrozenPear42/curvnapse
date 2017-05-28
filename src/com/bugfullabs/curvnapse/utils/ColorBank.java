@@ -2,10 +2,8 @@ package com.bugfullabs.curvnapse.utils;
 
 import javafx.scene.paint.Color;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Class that yields available colors for new players
@@ -37,20 +35,25 @@ public class ColorBank {
 
     /**
      * Yield next color
+     *
      * @return Color
      */
     public SerializableColor nextColor() {
-        SerializableColor color = mTaken.entrySet().stream()
-                .filter(entry -> !entry.getValue())
-                .findFirst()
-                .get()
-                .getKey();
+        List<SerializableColor> colors = mTaken.entrySet().stream()
+                .filter(entry -> !entry.getValue()).map(Map.Entry::getKey).collect(Collectors.toList());
+
+        if (colors.size() == 0)
+            return null;
+
+        SerializableColor color = colors.get(new Random().nextInt(colors.size()));
+
         mTaken.replace(color, true);
         return color;
     }
 
     /**
      * Return color to bank
+     *
      * @param pColor color to be returned
      */
     public void returnColor(SerializableColor pColor) {

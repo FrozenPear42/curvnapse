@@ -83,6 +83,11 @@ public class PlayersBox extends VBox {
          * @param pPlayer player to delete
          */
         void onPlayerDelete(Player pPlayer);
+
+        /**
+         * Called when user requested color rotation
+         */
+        void onColorRotation(Player pPlayer);
     }
 
     /**
@@ -125,10 +130,17 @@ public class PlayersBox extends VBox {
                     edit.setMinHeight(24);
                     edit.setMaxHeight(24);
 
+                    Button color = new Button("^");
+                    color.getStyleClass().add("color");
+                    color.setMinWidth(24);
+                    color.setMaxWidth(24);
+                    color.setMinHeight(24);
+                    color.setMaxHeight(24);
+
 
                     Button left = new Button(pPlayer.getLeftKey().getName());
                     Button right = new Button(pPlayer.getRightKey().getName());
-                    buttons.getChildren().addAll(delete, edit, left, right);
+                    buttons.getChildren().addAll(delete, edit, color, left, right);
 
                     left.setOnAction(e -> {
                         left.setText("---");
@@ -155,6 +167,7 @@ public class PlayersBox extends VBox {
                     });
 
                     delete.setOnAction(e -> mListener.onPlayerDelete(pPlayer));
+
                     edit.setOnAction(e -> {
                         TextInputDialog dialog = new TextInputDialog(pPlayer.getName());
                         dialog.getDialogPane().getStylesheets().add("resources/JMetro.css");
@@ -167,6 +180,8 @@ public class PlayersBox extends VBox {
                             mListener.onPlayerEdit(pPlayer);
                         });
                     });
+
+                    color.setOnAction(e -> mListener.onColorRotation(pPlayer));
 
                     setEditable(true);
                 } else {

@@ -121,6 +121,12 @@
     -fx-padding: 2 5 2 5;
 }
 
+.button.color {
+    -fx-border-width: 1;
+    -fx-background-color: #72af51;
+    -fx-padding: 2 5 2 5;
+}
+
 /*******************************************************************************
  *                                                                             *
  * Toggle Button                                                               *
