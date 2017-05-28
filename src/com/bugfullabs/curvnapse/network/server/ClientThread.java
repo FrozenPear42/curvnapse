@@ -63,7 +63,7 @@ public class ClientThread extends Thread {
                 mConnectionListener.onDisconnect(this);
                 break;
             } catch (IOException | ClassNotFoundException e) {
-                LOG.warning("Somenthing wrong");
+                LOG.warning("Could not read message from client(probably connection is closed/broken)");
             }
         }
     }

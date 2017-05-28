@@ -30,7 +30,7 @@ public class ColorBank {
         colors.add(new SerializableColor(Color.BLUEVIOLET));
         colors.add(new SerializableColor(Color.VIOLET));
         colors.add(new SerializableColor(Color.DARKCYAN));
-        colors.add(new SerializableColor(Color.DARKGOLDENROD));
+        colors.add(new SerializableColor(Color.DARKSALMON));
 
         colors.forEach(pPlayerColor -> mTaken.put(pPlayerColor, false));
     }

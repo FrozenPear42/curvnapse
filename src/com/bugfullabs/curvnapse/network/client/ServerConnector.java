@@ -21,6 +21,7 @@ public class ServerConnector extends Thread {
     private final ObjectOutputStream mObjectOutputStream;
     private final ObjectInputStream mObjectInputStream;
     private final CopyOnWriteArrayList<ServerConnector.MessageListener> mListeners;
+    private final ConnectionLostListener mConnectionLostListener;
 
     /**
      * Create connector connected to given server
@@ -29,25 +30,12 @@ public class ServerConnector extends Thread {
      * @param pPort Server Port
      * @throws IOException thrown on connection error
      */
-    public ServerConnector(String pIP, int pPort) throws IOException {
+    public ServerConnector(String pIP, int pPort, ConnectionLostListener pListener) throws IOException {
         mSocket = new Socket(pIP, pPort);
         mObjectOutputStream = new ObjectOutputStream(mSocket.getOutputStream());
         mObjectInputStream = new ObjectInputStream(mSocket.getInputStream());
         mListeners = new CopyOnWriteArrayList<>();
-    }
-
-    /**
-     * Send message to server
-     *
-     * @param pMessage message to sent
-     */
-    public synchronized void sendMessage(Message pMessage) {
-        try {
-            mObjectOutputStream.writeObject(pMessage);
-            mObjectOutputStream.reset();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        mConnectionLostListener = pListener;
     }
 
     /**
@@ -85,6 +73,22 @@ public class ServerConnector extends Thread {
     }
 
     /**
+     * Send message to server
+     *
+     * @param pMessage message to sent
+     */
+    public synchronized void sendMessage(Message pMessage) {
+        try {
+            mObjectOutputStream.writeObject(pMessage);
+            mObjectOutputStream.reset();
+        } catch (IOException e) {
+            LOG.warning("Could not send message to the server, probably connection is closed or broken");
+            disconnect();
+        }
+    }
+
+
+    /**
      * Thread run function
      * Receives messages from server
      */
@@ -98,6 +102,7 @@ public class ServerConnector extends Thread {
 
             } catch (IOException | ClassNotFoundException e) {
                 LOG.warning("Ups, could not fetch message from server");
+                disconnect();
                 break;
             }
         }
@@ -108,6 +113,8 @@ public class ServerConnector extends Thread {
      */
     public void disconnect() {
         mListeners.forEach(l -> l.onClientMessage(new DisconnectMessage()));
+        mConnectionLostListener.onConnectionLost();
+        mListeners.clear();
         try {
             mSocket.close();
         } catch (Exception e) {
@@ -139,6 +146,14 @@ public class ServerConnector extends Thread {
         void onHandshakeResult(int pID);
     }
 
-    //TODO: Add Listener on server connection lost - to reset client to login scene
+    /**
+     * Listener on connection lost
+     */
+    public interface ConnectionLostListener {
+        /**
+         * Invoked when connection with server is lost
+         */
+        void onConnectionLost();
+    }
 
 }

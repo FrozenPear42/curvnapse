@@ -99,20 +99,25 @@ public class MainLobbyScene implements ServerConnector.MessageListener {
      */
     @Override
     public void onClientMessage(Message pMessage) {
-        if (pMessage.getType() == Message.Type.TEXT)
-            Platform.runLater(() -> mMessages.add((TextMessage) pMessage));
-        else if (pMessage.getType() == Message.Type.GAME_UPDATE) {
-            GameUpdateMessage msg = (GameUpdateMessage) pMessage;
-            Platform.runLater(() -> {
-                mGames.removeIf(pGame -> msg.getGame().getID() == pGame.getID());
-                mGames.add(msg.getGame());
-            });
-        } else if (pMessage.getType() == Message.Type.GAME_JOIN) {
-            Platform.runLater(() -> {
-                FlowManager.getInstance().gameLobby(((JoinMessage) pMessage).getGame());
-                mConnector.unregisterListener(this);
-            });
-
+        switch (pMessage.getType()) {
+            case TEXT:
+                Platform.runLater(() -> mMessages.add((TextMessage) pMessage));
+                break;
+            case GAME_UPDATE:
+                GameUpdateMessage msg = (GameUpdateMessage) pMessage;
+                Platform.runLater(() -> {
+                    mGames.removeIf(pGame -> msg.getGame().getID() == pGame.getID());
+                    mGames.add(msg.getGame());
+                });
+                break;
+            case GAME_JOIN:
+                Platform.runLater(() -> {
+                    FlowManager.getInstance().gameLobby(((JoinMessage) pMessage).getGame());
+                    mConnector.unregisterListener(this);
+                });
+                break;
+            default:
+                break;
         }
     }
 }

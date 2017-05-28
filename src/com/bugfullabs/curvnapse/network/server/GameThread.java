@@ -144,7 +144,6 @@ public class GameThread implements ClientThread.ClientMessageListener {
                 ArrayList<Pair<Snake, MovementAction>> movement = new ArrayList<>();
                 mMovementQueue.drainTo(movement);
                 movement.forEach(p -> {
-                    System.out.println(p.getKey());
                     switch (p.getValue()) {
                         case LEFT:
                             p.getKey().turnLeft();
@@ -359,8 +358,6 @@ public class GameThread implements ClientThread.ClientMessageListener {
                     .findFirst()
                     .get()
                     .getValue();
-
-            LOG.info(String.format("Move %d to %s %s", msg.getPlayerID(), msg.getDirection().name(), msg.getAction().name()));
 
             if (msg.getAction() == ControlUpdateMessage.Action.UP)
                 mMovementQueue.add(new Pair<>(snake, MovementAction.STOP));

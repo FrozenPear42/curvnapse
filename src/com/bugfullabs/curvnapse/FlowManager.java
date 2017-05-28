@@ -69,7 +69,10 @@ public class FlowManager {
      */
     public boolean connectToServer(String pIP, int pPort) {
         try {
-            mServerConnector = new ServerConnector(pIP, pPort);
+            mServerConnector = new ServerConnector(pIP, pPort, () -> Platform.runLater(() -> {
+                mServerConnector = null;
+                loginScene();
+            }));
             mServerConnector.start();
         } catch (Exception e) {
             return false;
@@ -78,7 +81,7 @@ public class FlowManager {
     }
 
     /**
-     * Login method - must be valled in login success callback
+     * Login method - must be called in login success callback
      *
      * @param pName   username
      * @param pUserID userID
