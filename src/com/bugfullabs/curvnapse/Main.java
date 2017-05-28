@@ -22,7 +22,6 @@ public class Main extends Application {
         primaryStage.show();
         FlowManager.getInstance().initialize(primaryStage);
         FlowManager.getInstance().loginScene();
-        //FlowManager.getInstance().testMode();
     }
 
     /**

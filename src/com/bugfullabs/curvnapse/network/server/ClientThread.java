@@ -113,7 +113,11 @@ public class ClientThread extends Thread {
      * @param pClientMessageListener listener
      */
     public void removeListener(ClientMessageListener pClientMessageListener) {
-        mListeners.remove(pClientMessageListener);
+        try {
+            mListeners.remove(pClientMessageListener);
+        } catch (Exception e) {
+            LOG.warning("Removing nonexistent listener");
+        }
     }
 
     /**

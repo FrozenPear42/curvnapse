@@ -292,9 +292,6 @@ public class GameThread implements ClientThread.ClientMessageListener {
     private void killSnake(Snake pSnake, SerializableColor pKillerColor) {
         if (pSnake.isDead())
             return;
-
-        LOG.info("Snake lines " + pSnake.getLinesCount() + " abd arcs: " + pSnake.getArcsCount());
-
         pSnake.kill();
         mClients.forEach(client -> client.sendMessage(new SnakeKilledMessage(pSnake.getPosition(), pKillerColor)));
         mSnakesAlive -= 1;

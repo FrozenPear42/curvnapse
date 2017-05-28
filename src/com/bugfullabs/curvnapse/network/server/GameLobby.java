@@ -1,20 +1,20 @@
 package com.bugfullabs.curvnapse.network.server;
 
 import com.bugfullabs.curvnapse.game.Game;
-import com.bugfullabs.curvnapse.network.message.*;
 import com.bugfullabs.curvnapse.game.Player;
+import com.bugfullabs.curvnapse.network.message.GameUpdateMessage;
+import com.bugfullabs.curvnapse.network.message.Message;
 import com.bugfullabs.curvnapse.network.message.control.ServerTextMessage;
 import com.bugfullabs.curvnapse.network.message.control.TextMessage;
 import com.bugfullabs.curvnapse.network.message.lobby.*;
 import com.bugfullabs.curvnapse.utils.SerializableColor;
 
-import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.Timer;
 import java.util.TimerTask;
 
 /**
- * Class for specyfic GameLobby
+ * Class for specific GameLobby
  */
 public class GameLobby implements ClientThread.ClientMessageListener {
     private LinkedList<ClientThread> mClients;
@@ -118,6 +118,10 @@ public class GameLobby implements ClientThread.ClientMessageListener {
         mGame.getPlayers().removeIf(player -> player.getOwner() == pClient.getID());
         mClients.remove(pClient);
         pClient.removeListener(this);
+
+        if (mThread != null)
+            pClient.removeListener(mThread);
+
         if (mGame.getHostID() == pClient.getID()) {
             if (mClients.isEmpty()) {
                 if (mListener != null)
