@@ -5,10 +5,7 @@ import com.bugfullabs.curvnapse.game.Player;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListCell;
-import javafx.scene.control.ListView;
+import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
@@ -28,6 +25,8 @@ public class PlayersBox extends VBox {
         super(10.0f);
         setPadding(new Insets(10.0f));
         setAlignment(Pos.TOP_CENTER);
+
+        setMinWidth(320);
 
         mTitle = new Label("Players");
         mTitle.setStyle("-fx-font-size: 2em; -fx-font-weight: bold");
@@ -114,12 +113,22 @@ public class PlayersBox extends VBox {
                 if (pPlayer.getOwner() == FlowManager.getInstance().getUserID()) {
                     Button delete = new Button("x");
                     delete.getStyleClass().add("delete");
-                    delete.setMaxWidth(10);
-                    delete.setMaxHeight(10);
+                    delete.setMinWidth(24);
+                    delete.setMaxWidth(24);
+                    delete.setMinHeight(24);
+                    delete.setMaxHeight(24);
+
+                    Button edit = new Button("-");
+                    edit.getStyleClass().add("edit");
+                    edit.setMinWidth(24);
+                    edit.setMaxWidth(24);
+                    edit.setMinHeight(24);
+                    edit.setMaxHeight(24);
+
 
                     Button left = new Button(pPlayer.getLeftKey().getName());
                     Button right = new Button(pPlayer.getRightKey().getName());
-                    buttons.getChildren().addAll(delete, left, right);
+                    buttons.getChildren().addAll(delete, edit, left, right);
 
                     left.setOnAction(e -> {
                         left.setText("---");
@@ -146,6 +155,18 @@ public class PlayersBox extends VBox {
                     });
 
                     delete.setOnAction(e -> mListener.onPlayerDelete(pPlayer));
+                    edit.setOnAction(e -> {
+                        TextInputDialog dialog = new TextInputDialog(pPlayer.getName());
+                        dialog.getDialogPane().getStylesheets().add("resources/JMetro.css");
+                        dialog.getDialogPane().getStyleClass().add("dialog");
+                        dialog.setTitle("Change name");
+                        dialog.setContentText("Name: ");
+                        dialog.setHeaderText(null);
+                        dialog.showAndWait().ifPresent(name -> {
+                            pPlayer.setName(name);
+                            mListener.onPlayerEdit(pPlayer);
+                        });
+                    });
 
                     setEditable(true);
                 } else {

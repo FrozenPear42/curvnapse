@@ -102,7 +102,6 @@
 
 .button:default
 {
-    -fx-background-color: #008287;
     -fx-text-fill: #ffffff;
 }
 
@@ -116,6 +115,11 @@
     -fx-padding: 2 5 2 5;
 }
 
+.button.edit {
+    -fx-border-width: 1;
+    -fx-background-color: #43a8af;
+    -fx-padding: 2 5 2 5;
+}
 
 /*******************************************************************************
  *                                                                             *
@@ -510,3 +514,9 @@
 
 }
 
+.dialog {
+    -fx-background-color: #1d1d1d!important;
+    -fx-font-family: "Segoe UI", "Roboto", Helvetica, Arial, sans-serif;
+    -fx-font-size: 11pt;
+    -fx-text-fill: #d8d8d8;
+}
