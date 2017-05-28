@@ -115,6 +115,9 @@ public class Lobby implements ClientThread.ClientMessageListener {
                         .filter(gameLobby -> msg.getID() == gameLobby.getID())
                         .findFirst()
                         .ifPresent(lobby -> {
+                            if(lobby.isRunning())
+                                return;
+
                             lobby.addClient(pClient);
                             pClient.sendMessage(new JoinMessage(lobby.getGame()));
 

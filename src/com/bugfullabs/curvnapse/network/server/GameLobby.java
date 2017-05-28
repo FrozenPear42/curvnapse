@@ -204,13 +204,14 @@ public class GameLobby implements ClientThread.ClientMessageListener {
             case GAME_START_REQUEST:
                 if (mGame.getPlayers().isEmpty())
                     break;
-                if(mGameIsRunning)
+                if (mGameIsRunning)
                     break;
 
                 mGameIsRunning = true;
 
                 new Timer().schedule(new TimerTask() {
                     private int times = 1;
+
                     @Override
                     public void run() {
                         mClients.forEach(clientThread -> clientThread.sendMessage(new TextMessage("Server", String.format("Game will start in %d...", times))));
@@ -253,6 +254,15 @@ public class GameLobby implements ClientThread.ClientMessageListener {
      */
     public int clientCount() {
         return mClients.size();
+    }
+
+    /**
+     * Check if game is running
+     *
+     * @return is game running?
+     */
+    public boolean isRunning() {
+        return mGameIsRunning;
     }
 
     /**
