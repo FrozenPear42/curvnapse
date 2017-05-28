@@ -28,8 +28,9 @@ public class GameThread implements ClientThread.ClientMessageListener {
     private static final Logger LOG = Logger.getLogger(GameThread.class.getName());
 
     private Timer mTimer;
+    private List<Player> mPlayers;
+    private List<PowerUpEntity> mPowerUps;
     private Map<Player, Snake> mSnakes;
-    private LinkedList<PowerUpEntity> mPowerUps;
     private Game mGame;
     private long mLastTime;
     private List<ClientThread> mClients;
@@ -42,6 +43,9 @@ public class GameThread implements ClientThread.ClientMessageListener {
     private int mRoundNumber;
 
     private BlockingQueue<Pair<Snake, MovementAction>> mMovementQueue;
+    private BlockingQueue<Player> mPlayersToKick;
+
+    private FinishListener mListener;
 
     /**
      * Create new Game with given options
@@ -49,15 +53,19 @@ public class GameThread implements ClientThread.ClientMessageListener {
      * @param pGame    game options
      * @param pClients clients involved in game
      */
-    public GameThread(Game pGame, List<ClientThread> pClients) {
+    public GameThread(Game pGame, List<ClientThread> pClients, FinishListener pListener) {
         mClients = pClients;
-        mGame = pGame;
+        mGame = new Game(pGame);
         mRandom = new Random();
         mSnakes = new HashMap<>();
         mPowerUps = new LinkedList<>();
+        mPlayers = new ArrayList<>();
+        mPlayers.addAll(mGame.getPlayers());
         mMovementQueue = new ArrayBlockingQueue<>(100);
-
+        mPlayersToKick = new ArrayBlockingQueue<>(pGame.getPlayers().size());
         mRoundNumber = 1;
+
+        mListener = pListener;
 
         prepareRound();
         startRoundCounter();
@@ -74,7 +82,7 @@ public class GameThread implements ClientThread.ClientMessageListener {
         mWalls = false;
 
         mNextPowerUpTime = mRandom.nextInt(4000) + 500;
-        mGame.getPlayers().forEach(player -> mSnakes.put(player, createNewSnake(player)));
+        mPlayers.forEach(player -> mSnakes.put(player, createNewSnake(player)));
         mSnakesAlive = mSnakes.size();
         mClients.forEach(client -> client.sendMessage(new NextRoundMessage(mRoundNumber)));
 
@@ -251,6 +259,10 @@ public class GameThread implements ClientThread.ClientMessageListener {
         mTimer.cancel();
         mRoundNumber += 1;
 
+        List<Player> kickList = new ArrayList<>();
+        mPlayersToKick.drainTo(kickList);
+        mPlayers.removeAll(kickList);
+
         new Timer().schedule(new TimerTask() {
             @Override
             public void run() {
@@ -258,6 +270,7 @@ public class GameThread implements ClientThread.ClientMessageListener {
                     prepareRound();
                     startRoundCounter();
                 } else {
+                    mListener.onFinish();
                     mClients.forEach(client -> client.sendMessage(new GameOverMessage()));
                     mClients.forEach(client -> client.removeListener(GameThread.this));
                 }
@@ -357,8 +370,11 @@ public class GameThread implements ClientThread.ClientMessageListener {
                 mMovementQueue.add(new Pair<>(snake, MovementAction.RIGHT));
         }
         if (pMessage.getType() == Message.Type.DISCONNECT) {
-            //TODO: fix game when player leaves
-            LOG.warning("Player left");
+            mGame.getPlayers()
+                    .stream()
+                    .filter(p -> p.getOwner() == pClientThread.getID())
+                    .forEach(p -> mPlayersToKick.add(p));
+
         }
     }
 
@@ -367,6 +383,16 @@ public class GameThread implements ClientThread.ClientMessageListener {
      */
     public enum MovementAction {
         LEFT, RIGHT, STOP
+    }
+
+    /**
+     * Listener on game end
+     */
+    public interface FinishListener {
+        /**
+         * Invoked on game finished
+         */
+        void onFinish();
     }
 
 }

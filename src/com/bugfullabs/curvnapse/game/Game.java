@@ -1,5 +1,6 @@
 package com.bugfullabs.curvnapse.game;
 
+import com.bugfullabs.curvnapse.utils.MathUtils;
 import com.bugfullabs.curvnapse.utils.SerializableColor;
 import com.bugfullabs.curvnapse.powerup.PowerUp;
 import com.bugfullabs.curvnapse.utils.ColorBank;
@@ -50,6 +51,22 @@ public class Game implements Serializable, Cloneable {
         mPowerUps = new boolean[PowerUp.PowerType.values().length];
         for (int i = 0; i < mPowerUps.length; i++)
             mPowerUps[i] = false;
+    }
+
+    public Game(Game pGame) {
+        mID = pGame.mID;
+        mName = pGame.mName;
+        mHostID = pGame.mHostID;
+        mMaxPlayers = pGame.mMaxPlayers;
+        mRounds = pGame.mRounds;
+        mPlayers = new ArrayList<>();
+        mPlayers.addAll(pGame.mPlayers);
+        mColorBank = pGame.mColorBank;
+
+        mBoardWidth = pGame.mBoardWidth;
+        mBoardHeight = pGame.mBoardHeight;
+        mPowerUps = new boolean[PowerUp.PowerType.values().length];
+        System.arraycopy(pGame.mPowerUps, 0, mPowerUps, 0, pGame.mPowerUps.length);
     }
 
     public int getID() {
@@ -134,6 +151,7 @@ public class Game implements Serializable, Cloneable {
 
     /**
      * Check if there are any PowerUps enabled
+     *
      * @return true if one or more PowerUps are enabled
      */
     public boolean anyPowerUps() {

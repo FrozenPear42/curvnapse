@@ -20,6 +20,8 @@ public class GameLobby implements ClientThread.ClientMessageListener {
     private GameThread mThread;
     private GameLobbyChangeListener mListener;
 
+    private boolean mGameIsRunning;
+
     private Lobby mRootLobby;
 
     /**
@@ -34,6 +36,7 @@ public class GameLobby implements ClientThread.ClientMessageListener {
         mRootLobby = pLobby;
         mClients = new LinkedList<>();
         mGame = new Game(pName, pHost, 300, pMaxPlayers);
+        mGameIsRunning = false;
     }
 
     /**
@@ -123,8 +126,8 @@ public class GameLobby implements ClientThread.ClientMessageListener {
         }
         if (pReturnToLobby)
             mRootLobby.addClient(pClient);
-
-        propagateUpdate();
+        if (!mGameIsRunning)
+            propagateUpdate();
     }
 
     /**
@@ -206,8 +209,9 @@ public class GameLobby implements ClientThread.ClientMessageListener {
                             this.cancel();
                             mGame.getPlayers().forEach(player -> player.setPoints(0));
                             mClients.forEach(clientThread -> clientThread.sendMessage(new GameStartMessage(mGame)));
-                            mThread = new GameThread(mGame, mClients);
+                            mThread = new GameThread(mGame, mClients, () -> mGameIsRunning = false);
                             mClients.forEach(client -> client.registerListener(mThread));
+                            mGameIsRunning = true;
                         }
                         times--;
                     }

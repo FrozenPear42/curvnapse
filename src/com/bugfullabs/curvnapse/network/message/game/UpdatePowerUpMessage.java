@@ -4,20 +4,21 @@ import com.bugfullabs.curvnapse.network.message.Message;
 import com.bugfullabs.curvnapse.powerup.PowerUpEntity;
 
 import java.util.LinkedList;
+import java.util.List;
 
 /**
  * Oh baby, we have new PowerUp, better draw it on board then!
  */
 public class UpdatePowerUpMessage extends Message {
 
-    private LinkedList<PowerUpEntity> mPowerUp;
+    private List<PowerUpEntity> mPowerUp;
 
-    public UpdatePowerUpMessage(LinkedList<PowerUpEntity> pPowerUp) {
+    public UpdatePowerUpMessage(List<PowerUpEntity> pPowerUp) {
         super(Type.SPAWN_POWERUP);
         mPowerUp = pPowerUp;
     }
 
-    public LinkedList<PowerUpEntity> getPowerUp() {
+    public List<PowerUpEntity> getPowerUp() {
         return mPowerUp;
     }
 }

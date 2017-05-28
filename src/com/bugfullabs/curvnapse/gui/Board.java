@@ -74,7 +74,7 @@ public class Board extends VBox {
      *
      * @param pPowerUp PowerUps to be drawn
      */
-    public synchronized void updatePowerUps(LinkedList<PowerUpEntity> pPowerUp) {
+    public synchronized void updatePowerUps(List<PowerUpEntity> pPowerUp) {
         GraphicsContext ctx = mBonusCanvas.getGraphicsContext2D();
         ctx.clearRect(0, 0, mWidth, mHeight);
         pPowerUp.forEach(powerUp ->
