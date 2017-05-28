@@ -40,7 +40,9 @@ public class ColorBank {
      */
     public SerializableColor nextColor() {
         List<SerializableColor> colors = mTaken.entrySet().stream()
-                .filter(entry -> !entry.getValue()).map(Map.Entry::getKey).collect(Collectors.toList());
+                .filter(entry -> !entry.getValue())
+                .map(Map.Entry::getKey)
+                .collect(Collectors.toList());
 
         if (colors.size() == 0)
             return null;
