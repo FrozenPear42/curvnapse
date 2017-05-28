@@ -7,6 +7,7 @@ import com.bugfullabs.curvnapse.gui.MessageBox;
 import com.bugfullabs.curvnapse.network.client.ServerConnector;
 import com.bugfullabs.curvnapse.network.message.*;
 import com.bugfullabs.curvnapse.network.message.control.TextMessage;
+import com.bugfullabs.curvnapse.network.message.game.GameRemovedMessage;
 import com.bugfullabs.curvnapse.network.message.lobby.GameCreateRequest;
 import com.bugfullabs.curvnapse.network.message.lobby.JoinMessage;
 import com.bugfullabs.curvnapse.network.message.lobby.JoinRequest;
@@ -61,7 +62,6 @@ public class MainLobbyScene implements ServerConnector.MessageListener {
         mScene.getStylesheets().add("resources/JMetro.css");
 
         mConnector = FlowManager.getInstance().getConnector();
-        mConnector.sendMessage(new UpdateRequest());
         mConnector.registerListener(this);
 
         mMessages = FXCollections.observableArrayList();
@@ -81,6 +81,8 @@ public class MainLobbyScene implements ServerConnector.MessageListener {
                 mConnector.sendMessage(new GameCreateRequest(FlowManager.getInstance().getUserID(), "Great Game", "", 10));
             }
         });
+
+        mConnector.sendMessage(new UpdateRequest());
     }
 
     /**
@@ -102,6 +104,9 @@ public class MainLobbyScene implements ServerConnector.MessageListener {
         switch (pMessage.getType()) {
             case TEXT:
                 Platform.runLater(() -> mMessages.add((TextMessage) pMessage));
+                break;
+            case GAME_REMOVED:
+                Platform.runLater(() -> mGames.removeIf(g -> g.getID() == ((GameRemovedMessage) pMessage).getID()));
                 break;
             case GAME_UPDATE:
                 GameUpdateMessage msg = (GameUpdateMessage) pMessage;

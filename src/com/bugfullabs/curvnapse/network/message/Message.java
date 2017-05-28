@@ -34,7 +34,7 @@ public abstract class Message implements Serializable {
         SNAKE_KILLED,
         ROUND_UPDATE,
         GAMEOVER,
-        PLAYER_DELETE
+        GAME_REMOVED, PLAYER_DELETE
     }
 
     private Type mType;

@@ -3,6 +3,7 @@ package com.bugfullabs.curvnapse.network.server;
 import com.bugfullabs.curvnapse.game.Game;
 import com.bugfullabs.curvnapse.network.message.*;
 import com.bugfullabs.curvnapse.network.message.control.ServerTextMessage;
+import com.bugfullabs.curvnapse.network.message.game.GameRemovedMessage;
 import com.bugfullabs.curvnapse.network.message.lobby.GameCreateRequest;
 import com.bugfullabs.curvnapse.network.message.lobby.JoinMessage;
 import com.bugfullabs.curvnapse.network.message.lobby.JoinRequest;
@@ -69,6 +70,7 @@ public class Lobby implements ClientThread.ClientMessageListener {
                 @Override
                 public void onLobbyEmpty() {
                     mGameLobbies.remove(lobby);
+                    mClients.forEach(client -> client.sendMessage(new GameRemovedMessage(lobby.getGame().getID())));
                 }
             });
             return lobby;
@@ -90,7 +92,9 @@ public class Lobby implements ClientThread.ClientMessageListener {
                 break;
 
             case UPDATE_REQUEST:
-                mGameLobbies.forEach(gameLobby -> pClient.sendMessage(new GameUpdateMessage(gameLobby.getGame())));
+                mGameLobbies.stream()
+                        .filter(lobby -> lobby.clientCount() > 0)
+                        .forEach(gameLobby -> pClient.sendMessage(new GameUpdateMessage(gameLobby.getGame())));
                 break;
 
             case GAME_CREATE:

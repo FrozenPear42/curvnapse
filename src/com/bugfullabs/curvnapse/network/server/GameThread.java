@@ -237,7 +237,7 @@ public class GameThread implements ClientThread.ClientMessageListener {
         if (pPowerUp.getType() == PowerUp.PowerType.GLOBAL_ERASE) {
             mSnakes.forEach((__, s) -> s.erase());
             mClients.forEach(client -> client.sendMessage(new EraseMessage()));
-        }else if(pPowerUp.getType() == PowerUp.PowerType.GLOBAL_RANDOM_DEATH) {
+        } else if (pPowerUp.getType() == PowerUp.PowerType.GLOBAL_RANDOM_DEATH) {
             killSnake((Snake) mSnakes.values().toArray()[new Random().nextInt(mSnakes.size())], pSnake.getColor());
         } else if (t == PowerUp.Target.SELF)
             pSnake.addPowerUp(p);
@@ -259,6 +259,13 @@ public class GameThread implements ClientThread.ClientMessageListener {
         List<Player> kickList = new ArrayList<>();
         mPlayersToKick.drainTo(kickList);
         mPlayers.removeAll(kickList);
+
+        if (mPlayers.size() <= 1) {
+            mListener.onFinish();
+            mClients.forEach(client -> client.sendMessage(new GameOverMessage()));
+            mClients.forEach(client -> client.removeListener(GameThread.this));
+            return;
+        }
 
         new Timer().schedule(new TimerTask() {
             @Override

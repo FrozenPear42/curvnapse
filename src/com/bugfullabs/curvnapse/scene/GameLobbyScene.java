@@ -8,6 +8,7 @@ import com.bugfullabs.curvnapse.gui.PlayersBox;
 import com.bugfullabs.curvnapse.network.client.ServerConnector;
 import com.bugfullabs.curvnapse.network.message.*;
 import com.bugfullabs.curvnapse.game.Player;
+import com.bugfullabs.curvnapse.network.message.control.LeaveGameRequest;
 import com.bugfullabs.curvnapse.network.message.control.TextMessage;
 import com.bugfullabs.curvnapse.network.message.lobby.*;
 import com.bugfullabs.curvnapse.powerup.PowerUp;
@@ -118,7 +119,7 @@ public class GameLobbyScene implements ServerConnector.MessageListener {
 
         mStartButton.setOnAction(event -> mConnector.sendMessage(new GameStartRequest()));
         backButton.setOnAction(event -> {
-            mConnector.sendMessage(new LeaveGameLobbyRequest());
+            mConnector.sendMessage(new LeaveGameRequest());
             FlowManager.getInstance().mainLobby();
             mConnector.unregisterListener(this);
         });

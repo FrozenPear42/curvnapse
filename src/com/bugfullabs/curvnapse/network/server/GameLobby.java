@@ -126,7 +126,7 @@ public class GameLobby implements ClientThread.ClientMessageListener {
         }
         if (pReturnToLobby)
             mRootLobby.addClient(pClient);
-        if (!mGameIsRunning)
+        if (!mGameIsRunning && !mClients.isEmpty())
             propagateUpdate();
     }
 
@@ -218,6 +218,14 @@ public class GameLobby implements ClientThread.ClientMessageListener {
                 }, 0, 1000);
                 break;
         }
+    }
+
+    /**
+     * Returns number of clients in game
+     * @return number of clients
+     */
+    public int clientCount() {
+        return mClients.size();
     }
 
     /**

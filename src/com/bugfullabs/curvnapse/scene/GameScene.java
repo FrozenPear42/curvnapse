@@ -10,15 +10,18 @@ import com.bugfullabs.curvnapse.network.message.*;
 import com.bugfullabs.curvnapse.game.Player;
 import com.bugfullabs.curvnapse.network.message.control.TextMessage;
 import com.bugfullabs.curvnapse.network.message.game.*;
+import com.bugfullabs.curvnapse.network.message.control.LeaveGameRequest;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
 import java.util.ArrayList;
@@ -97,6 +100,19 @@ public class GameScene implements ServerConnector.MessageListener {
         gameInfoBox.getChildren().add(gameNameLabel);
         gameInfoBox.getChildren().add(mRoundLabel);
         root.setTop(gameInfoBox);
+
+        HBox buttonBox = new HBox(10);
+        buttonBox.setPadding(new Insets(10));
+        buttonBox.setAlignment(Pos.CENTER);
+        Button leaveButton = new Button("Leave");
+        buttonBox.getChildren().add(leaveButton);
+        root.setBottom(buttonBox);
+
+        leaveButton.setOnAction(e -> {
+            mConnector.sendMessage(new LeaveGameRequest());
+            FlowManager.getInstance().mainLobby();
+            mConnector.unregisterListener(this);
+        });
 
         mScene.setOnKeyPressed(event -> {
             KeyCode code = event.getCode();

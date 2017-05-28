@@ -17,7 +17,7 @@ public class Main extends Application {
 
         primaryStage.setTitle("Curvnapse");
         primaryStage.setWidth(1150);
-        primaryStage.setHeight(700);
+        primaryStage.setHeight(730);
         primaryStage.setResizable(false);
         primaryStage.show();
         FlowManager.getInstance().initialize(primaryStage);
