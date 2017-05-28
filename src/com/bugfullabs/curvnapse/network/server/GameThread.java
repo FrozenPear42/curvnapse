@@ -356,12 +356,16 @@ public class GameThread implements ClientThread.ClientMessageListener {
         if (pMessage.getType() == Message.Type.CONTROL_UPDATE) {
             ControlUpdateMessage msg = (ControlUpdateMessage) pMessage;
 
-            Snake snake = mSnakes.entrySet()
+            Optional<Map.Entry<Player, Snake>> entry = mSnakes.entrySet()
                     .stream()
                     .filter(e -> e.getKey().getID() == msg.getPlayerID())
-                    .findFirst()
-                    .get()
-                    .getValue();
+                    .findFirst();
+
+            if (!entry.isPresent()) {
+                LOG.warning(String.format("Got control message but could not match it with any player: %d", msg.getPlayerID()));
+                return;
+            }
+            Snake snake = entry.get().getValue();
 
             if (msg.getAction() == ControlUpdateMessage.Action.UP)
                 mMovementQueue.add(new Pair<>(snake, MovementAction.STOP));
